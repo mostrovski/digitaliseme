@@ -1,0 +1,280 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    color:  #2d3c49;
+    font-family: "Book Antiqua", Palatino, serif;
+    margin: 5px auto 5px auto;
+    width: 800px;
+}
+
+a {
+    color: #CD5C5C;
+}
+
+h1 {
+    font-size: 38px;
+    letter-spacing: 2.5px;
+    line-height: 0.62;
+    margin-bottom: 0;
+    text-transform: uppercase;
+}
+
+h2 {
+    font-size: 26px;
+    letter-spacing: 3px;
+    margin-top: 1px;
+    margin-bottom: 5px;
+    padding-left: 2px;
+}
+
+img {
+    border-radius: 4px;
+}
+
+/*
+ * Common classes
+ */
+
+.error {
+    color: #CD5C5C;
+    font-size: 17px;
+    letter-spacing: 1px;
+}
+
+.required {
+    color: #CD5C5C;
+    font-size: 16px;
+}
+
+.okay {
+    color: #3c9c90;
+    font-size: 17px;
+    letter-spacing: 1px;
+}
+
+.info {
+    font-size: 16px;
+    letter-spacing: 1px;
+    margin: 10px 0 5px 0;
+    padding: 0 5px 0 5px;
+}
+
+.green_button, .red_button, .gray_button {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    background-color: #10baa8;
+    border-radius: 4px;
+    color: #ffffff;
+    cursor: pointer;
+    display: block;
+    letter-spacing: 1px;
+    padding: 4px 5px 4px 5px;
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+}
+
+.red_button {
+    background-color: #CD5C5C;
+}
+
+.gray_button {
+    background-color: darkgray;
+}
+
+/*
+ * Header
+ */
+
+header {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 0;
+}
+
+#logo {
+    padding-top: 20px;
+    width: 75px;
+}
+
+#site_title {
+    text-align: left;
+    width: calc((100% - 75px)/2);
+}
+
+#user_info {
+    background-image: linear-gradient(to left,  #f2f2f2, #ffffff);
+    border-radius: 5px;
+    height: 60px;
+    margin-top: 20px;
+    text-align: right;
+    width: calc((100% - 75px)/2);
+}
+
+#user_info p {
+    font-size: 17px;
+    letter-spacing: 2px;
+    padding-right: 20px;
+}
+
+/*
+ * Navigation
+ */
+
+.nav {
+    background-image: linear-gradient(to top right,  #f2f2f2, #ffffff);
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+.nav ul {
+    list-style-type: none;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+}
+
+.nav li {
+    float: left;
+}
+
+.nav li a {
+    color: #2d3c49;
+    display: block;
+    font-size: 13px;
+    letter-spacing: 2px;
+    padding: 14px 14px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.nav li a:hover {
+    background-color: #10baa8;
+    border-radius: 3px;
+    color: white;
+}
+
+/*
+ * Forms
+ */
+
+input {
+    font-size: 14px;
+    outline: none;
+}
+
+input[type=text], input[type=date], input[type=password], select {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    display: inline-block;
+    margin: 8px 0;
+    padding: 12px 20px;
+    width: 100%;
+}
+
+input[type=submit], button {
+    background-color: #10baa8;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    margin: 8px 0;
+    padding: 14px 20px;
+    width: 100%;
+}
+
+input[type=submit].delete {
+    background-color: #CD5C5C;
+}
+
+input.invalid {
+    border: 1px solid #CD5C5C;
+}
+
+input.valid {
+    border: 1px solid #10baa8;
+}
+
+.form {
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    margin-top: 5px;
+    padding: 20px;
+}
+
+.field_header {
+    color: #2c3e50;
+    font-size: 17px;
+    letter-spacing: 1px;
+}
+
+.form_header {
+    color: #2c3e50;
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+/*
+ * Tables
+ */
+
+.tables {
+    font-size: 17px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+}
+
+.tables table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.tables td, .tables th {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+}
+
+.tables tr {
+    vertical-align: top;
+}
+
+.tables tr:nth-child(even) {
+    background-color: #FBFBFB;
+}
+
+.tables tr:hover {
+    background-color: #ddd;
+}
+
+.tables th {
+    background-color: #f2f2f2;
+    font-weight: normal;
+    letter-spacing: 1px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+}
+
+/*
+ * Footer
+ */
+
+footer {
+    border-top: 1px solid lightgrey;
+    margin-top: 5px;
+}
+
+.footer_header {
+    font-size: 14px;
+    letter-spacing: 2px;
+    margin-top: 5px;
+    text-align: center;
+    text-transform: uppercase;
+}

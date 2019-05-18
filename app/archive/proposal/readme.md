@@ -1,0 +1,1 @@
+A storage for documents of the type 'proposal'.
