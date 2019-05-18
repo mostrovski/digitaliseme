@@ -30,7 +30,7 @@ delete only the records they created.
 The application attempts to follow the **Model-View-Controller** pattern.
 A flow from the request to the view looks as follows:
 
-> Requested url => Controller => Model => Controller => View
+> Requested url => Controller => [Model => Controller] => View
 
 ### The structure of the application:
 
