@@ -102,7 +102,7 @@ A flow from the request to the view looks as follows:
     on your OS) with the *htdocs* subdirectory inside. If you can't locate it,
     check XAMPP documentation (accessible from XAMPP download page) for help.
  4. You may want to delete everything from the *htdocs* before moving on.
- 5. Move the folder from step 1 to the *htdocs*.
+ 5. Move the folder from step 1 to the *htdocs*; rename it to *digitaliseme*.
  6. Open *XAMPP Control Panel*.
  7. Start *Apache* and *MySQL* servers.
  8. In your browser, go to *localhost/phpmyadmin*.
@@ -115,7 +115,8 @@ A flow from the request to the view looks as follows:
     to be sure.
 13. Make sure to modify `.htaccess` in the root of your application directory
     and/or `config.php` under */config/* to reflect changes in these cases:
-    - you renamed the application folder from step 1;
+    - you renamed the application folder from step 1 to anything other than
+      *digitaliseme*;
     - you moved the contents of the application folder to *htdocs* instead
       of moving the whole folder on step 5;
     - you created the database with the name other than *digitaliseme* and/or
