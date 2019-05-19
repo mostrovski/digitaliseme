@@ -1,4 +1,4 @@
-# Digitalise Me :: document archive
+# Digitalise Me :: cozy document archive
 *the MVC application*
 
 ## The task
@@ -9,7 +9,7 @@ each document:
 
 - title;
 - date of creation;
-- name, email, and phone number of the document creator;
+- name, email, and phone number of the document agent (creator);
 - type (category) of the document;
 - information on where the physical version is stored;
 - keywords.
@@ -30,25 +30,45 @@ delete only the records they created.
 The application attempts to follow the **Model-View-Controller** pattern.
 A flow from the request to the view looks as follows:
 
-> Requested url => Controller => [Model => Controller] => View
+> Requested url -> Controller -> [Model -> Controller] -> View
 
 ### The structure of the application:
 
-- *app*
-    - archive   => storage for documents
-    - uploads   => temporal storage for uploads
-    - downloads => temporal storage for downloads
-    - public    => styles and graphics
-- *config*
+- **app**
+    - public
+        - *css*
+            - `main.css`
+        - *img*
+            - `404.png`
+            - `empty.phg`
+            - `error.png`
+            - `logo.png`
+    - archive (storage for documents arranged by type)
+        - *bill*
+        - *contract*
+        - *information*
+        - *invoice*
+        - *notice*
+        - *proposal*
+        - *reminder*
+        - *report*
+        - *request*
+        - *others*
+    - uploads
+    - downloads
+- **config**
     - `autoload.php`
     - `config.php`
-- *core*
+    - db (can be deleted after setup - see below)
+        - `digitaliseme.sql`
+        - `digitaliseme_schema.png`
+- **core**
     - `Database.php`
     - `Page.php`
     - `Helper.php`
     - `Validator.php`
-- *controllers*
-    - `Controller.php`
+- **controllers**
+    - `Controller.php` (abstract)
     - `DefaultController.php`
     - `DocumentsController.php`
     - `LoginController.php`
@@ -56,23 +76,39 @@ A flow from the request to the view looks as follows:
     - `SignupController.php`
     - `SearchController.php`
     - `UploadsController.php`
-- *models*
+- **models**
     - `User.php`
-    - `File.php`
+    - `File.php` (abstract)
     - `RawFile.php`
     - `UploadedFile.php`
     - `DocumentFile.php`
-    - `Document.php`
+    - `Document.php` (abstract)
     - `RawDocument.php`
     - `ArchiveDocument.php`
+    - `SearchDocument.php`
     - `DocumentAgent.php`
     - `DocumentType.php`
     - `DocumentStorage.php`
     - `DocumentKeyword.php`
-    - `SearchDocument.php`
-- *views*
-    - partials  => header, navigation, footer
-    - templates => specific views
+- **views**
+    - partials
+        - `header.php`
+        - `navigation.php`
+        - `footer.php`
+    - templates
+        - *uploads*
+            - `index.php`
+            - `create.php`
+        - *documents*
+            - `index.php`
+            - `show.php`
+            - `create.php`
+            - `edit.php`
+        - *search*
+            - `index.php`
+        - `login.php`
+        - `signup.php`
+        - `404.php`
 - `.htaccess`
 - `index.php`
 
