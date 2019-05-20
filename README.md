@@ -145,8 +145,8 @@ A flow from the request to the view looks as follows:
  8. In your browser, go to *localhost/phpmyadmin*.
  9. Create new database *digitaliseme* with the *utf8mb4_unicode_ci* collation.
 10. Make sure the database from step 9 is selected and go to the `Import` tab.
-11. Choose `digitaliseme.sql` file (see the [structure](#the-structure-of-the-application)),
-    and press `Go`.
+11. Choose `digitaliseme.sql` file from */config/db*
+    (see the [structure](#the-structure-of-the-application)), and press `Go`.
 12. After step 11, your database should contain all the necessary tables.
     Compare it to `digitaliseme_schema.png` from */config/db* (see step 11)
     to be sure.
