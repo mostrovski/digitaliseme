@@ -59,7 +59,7 @@ A flow from the request to the view looks as follows:
 - **config**
     - `autoload.php`
     - `config.php`
-    - db (can be deleted after setup - see below)
+    - db (can be deleted after [setup](#how-to-run-it))
         - `digitaliseme.sql`
         - `digitaliseme_schema.png`
 - **core**
@@ -129,7 +129,8 @@ A flow from the request to the view looks as follows:
 - [HTML](https://www.w3.org/html/)
 - [CSS](https://www.w3.org/Style/CSS/)
 
-## How to run it *(recommended setup)*
+## How to run it
+*(recommended setup)*
 
  1. Download and extract the repository.
  2. Make sure **XAMPP** package is installed on your computer. Otherwise,
