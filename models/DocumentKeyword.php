@@ -1,7 +1,7 @@
 <?php
 namespace Models;
 
-use \Core\Database;
+use Core\Database;
 
 class DocumentKeyword {
     // Model of the document keyword

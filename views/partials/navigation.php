@@ -1,4 +1,4 @@
-<?php if (\Core\Helper::isUserLoggedIn()) : ?>
+<?php if (Core\Helper::isUserLoggedIn()) : ?>
 <div class="nav">
   <ul>
     <li><a href="<?= HOME.'uploads/create'; ?>">upload new file</a></li>

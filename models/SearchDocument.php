@@ -1,9 +1,9 @@
 <?php
 namespace Models;
 
-use \Core\Helper;
-use \Core\Validator;
-use \Core\Database;
+use Core\Helper;
+use Core\Validator;
+use Core\Database;
 
 class SearchDocument extends Document {
     // Model of the document search

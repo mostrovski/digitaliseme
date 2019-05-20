@@ -1,7 +1,7 @@
 <?php
 namespace Models;
 
-use \Core\Database;
+use Core\Database;
 
 class DocumentAgent {
     // Model of the document agent aka document creator

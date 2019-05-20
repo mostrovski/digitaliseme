@@ -1,8 +1,8 @@
 <?php
 namespace Models;
 
-use \Core\Database;
-use \Core\Validator;
+use Core\Database;
+use Core\Validator;
 
 class User {
     // Model of the user

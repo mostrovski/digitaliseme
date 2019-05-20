@@ -1,9 +1,9 @@
 <?php
 namespace Models;
 
-use \Core\Helper;
-use \Core\Validator;
-use \Core\Database;
+use Core\Helper;
+use Core\Validator;
+use Core\Database;
 
 class RawFile extends File {
     // Model of the file that is being uploaded

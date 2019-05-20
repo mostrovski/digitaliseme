@@ -1,7 +1,7 @@
 <?php
 namespace Models;
 
-use \Core\Helper;
+use Core\Helper;
 
 class ArchiveDocument extends Document {
     // Model of the existing document

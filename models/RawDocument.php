@@ -1,7 +1,7 @@
 <?php
 namespace Models;
 
-use \Core\Helper;
+use Core\Helper;
 
 class RawDocument extends Document {
     // Model of the document that is being created

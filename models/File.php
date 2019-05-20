@@ -1,7 +1,7 @@
 <?php
 namespace Models;
 
-use \Core\Database;
+use Core\Database;
 
 abstract class File {
     // Base class for RawFile, UploadedFile, and DocumentFile

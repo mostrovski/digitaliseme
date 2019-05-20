@@ -1,7 +1,7 @@
 <?php
 namespace Models;
 
-use \Core\Database;
+use Core\Database;
 
 class DocumentType {
     // Model of the document type

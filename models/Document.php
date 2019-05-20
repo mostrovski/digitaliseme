@@ -1,9 +1,9 @@
 <?php
 namespace Models;
 
-use \Core\Helper;
-use \Core\Validator;
-use \Core\Database;
+use Core\Helper;
+use Core\Validator;
+use Core\Database;
 
 abstract class Document {
     // Base class for RawDocument, ArchiveDocument, and SearchDocument
