@@ -139,14 +139,14 @@ A flow from the request to the view looks as follows:
     on your OS) with the *htdocs* subdirectory inside. If you can't locate it,
     check XAMPP documentation (accessible from XAMPP download page) for help.
  4. You may want to delete everything from the *htdocs* before moving on.
- 5. Move the folder from step 1 to the *htdocs*; rename it to *digitaliseme*.
+ 5. Rename the folder from step 1 to *digitaliseme* and move it to the *htdocs*.
  6. Open *XAMPP Control Panel*.
  7. Start *Apache* and *MySQL* servers.
  8. In your browser, go to *localhost/phpmyadmin*.
  9. Create new database *digitaliseme* with the *utf8mb4_unicode_ci* collation.
 10. Make sure the database from step 9 is selected and go to the `Import` tab.
-11. Choose `digitaliseme.sql`, which should be found in the application directory,
-    under */config/db* (see step 5), and press `Go`.
+11. Choose `digitaliseme.sql` file (see the [structure](#the-structure-of-the-application)),
+    and press `Go`.
 12. After step 11, your database should contain all the necessary tables.
     Compare it to `digitaliseme_schema.png` from */config/db* (see step 11)
     to be sure.
