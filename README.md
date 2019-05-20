@@ -3,9 +3,9 @@
 
 - [The task](#the-task)
 - [Implementation](#implementation)
-    - [Structure](#the-structure-of-the-application)
+    - [The structure](#the-structure-of-the-application)
     - [What's in code](#whats-in-code)
-- [Dependencies](#dependencies)
+- [Dependencies](#dependencies-built-with)
 - [How to run it](#how-to-run-it)
 - [Acknowledgments](#acknowledgments)
 
