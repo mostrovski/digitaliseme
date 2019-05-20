@@ -115,6 +115,7 @@ A flow from the request to the view looks as follows:
 ### What's in code:
 
 - namespaces;
+- autoloading classes;
 - abstract classes;
 - static methods;
 - null coalescing operators;
