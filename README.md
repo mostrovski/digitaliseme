@@ -1,6 +1,14 @@
 # Digitalise Me :: cozy document archive
 *the MVC application*
 
+- [The task](#the-task)
+- [Implementation](#implementation)
+    - [Structure](#the-structure-of-the-application)
+    - [What's in code](#whats-in-code)
+- [Dependencies](#dependencies)
+- [How to run it](#how-to-run-it)
+- [Acknowledgments](#acknowledgments)
+
 ## The task
 
 A client deals with lots of physical documents. The application should store
