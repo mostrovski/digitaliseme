@@ -166,5 +166,5 @@ A flow from the request to the view looks as follows:
 
 ## Acknowledgments
 
-[Brad Traversy](https://github.com/bradtraversy) inspired the Database and Page classes;
-[Sergii Makagon](https://github.com/smakagon) provided invaluable advice and motivation.
+- [Brad Traversy](https://github.com/bradtraversy) inspired the Database and Page classes;
+- [Sergii Makagon](https://github.com/smakagon) provided invaluable advice and motivation.
