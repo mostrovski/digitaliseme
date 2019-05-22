@@ -217,7 +217,7 @@ class SearchDocument extends Document {
         $blocks = [];
         $holders = [];
         $values = [];
-        $keywords = Helper::getKeywordsFrom($this->keywords);
+        $keywords = Helper::getKeywordsArrayFrom($this->keywords);
         $index = 1;
         foreach ($keywords as $keyword) {
             $blocks[] = 'word LIKE :keyword'.$index;

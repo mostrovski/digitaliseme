@@ -16,7 +16,7 @@
         </div>
         <div id="user_info">
             <p>
-                <?= Core\Helper::setGreeting(); ?>
+                <?= Core\Helper::getGreeting(); ?>
             </p>
         </div>
     </header>

@@ -16,7 +16,7 @@ class Helper {
         exit;
     }
 
-    public static function setGreeting() {
+    public static function getGreeting() {
         $greeting = self::isUserLoggedIn() ?
         'you are in, '.$_SESSION["loggedinName"].' &check;' :
         SITE_INFO['greeting'];
@@ -170,14 +170,14 @@ class Helper {
      *                                 KEYWORDS
      *
      ************************************************************************/
-    public static function getKeywordsFrom($string) {
+    public static function getKeywordsArrayFrom($string) {
         $keywords = explode(',', $string);
         $keywords = array_map('trim', $keywords);
         $keywords = array_filter($keywords, 'strlen');
         return $keywords;
     }
 
-    public static function setKeywordsFrom($array) {
+    public static function getKeywordsStringFrom($array) {
         $keywords = implode(', ', $array);
         return $keywords;
     }

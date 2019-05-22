@@ -56,7 +56,7 @@ abstract class Document {
         foreach ($files as $file) {
             $keyArray[] = $file->word;
         }
-        return Helper::setKeywordsFrom($keyArray);
+        return Helper::getKeywordsStringFrom($keyArray);
     }
 
     protected function manageDocumentAgent() {
@@ -78,7 +78,7 @@ abstract class Document {
     }
 
     protected function manageDocumentKeywords($fileId) {
-        $keywords = Helper::getKeywordsFrom($this->keywords);
+        $keywords = Helper::getKeywordsArrayFrom($this->keywords);
         foreach ($keywords as $word) {
             $keyword = new DocumentKeyword(['word' => $word]);
             if (!$keyword->getId()) {
