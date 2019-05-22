@@ -87,7 +87,7 @@ class Database {
      *                             SELECT
      *
      ***********************************************************************/
-    public function selectFromTable($sql) {
+    public function fetchWithoutParams($sql) {
         // For selecting without parameters
         $this->statement = $this->handler->query($sql);
         return $this->statement->fetchAll();

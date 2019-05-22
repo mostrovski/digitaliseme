@@ -120,13 +120,13 @@ class Helper {
         $sql .= 'ON doctype_id = doc_types.id JOIN doc_files ';
         $sql .= 'ON file_id = doc_files.id ';
         $sql .= 'ORDER BY saved DESC';
-        return $db->selectFromTable($sql);
+        return $db->fetchWithoutParams($sql);
     }
 
     public static function fetchDocumentTypes() {
         $db = new Database();
         $sql = 'SELECT * FROM doc_types';
-        return $db->selectFromTable($sql);
+        return $db->fetchWithoutParams($sql);
     }
 
     public static function drawDocumentsTable($documents) {

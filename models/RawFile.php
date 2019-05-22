@@ -132,7 +132,7 @@ class RawFile extends File {
     protected function getUploads() {
         $db = new Database();
         $sql = 'SELECT filename FROM uploads';
-        $uploads = $db->selectFromTable($sql);
+        $uploads = $db->fetchWithoutParams($sql);
         return $uploads;
     }
 }
