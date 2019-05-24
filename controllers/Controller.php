@@ -7,12 +7,12 @@ abstract class Controller {
         return $_SERVER['REQUEST_METHOD'] == 'POST';
     }
 
-    protected function isTokenOk($token) {
+    protected function isValidToken($token) {
         if (!isset($_SESSION['token'])) return false;
         return $_SESSION['token'] === $token;
     }
 
-    protected function createToken() {
+    protected function generateToken() {
         $token = hash('sha256', uniqid());
         $_SESSION['token'] = $token;
         return $token;

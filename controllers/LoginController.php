@@ -20,14 +20,14 @@ class LoginController extends Controller {
         }
         unset($_SESSION['flash']);
         $this->destroyToken();
-        $this->data['token'] = $this->createToken();
+        $this->data['token'] = $this->generateToken();
         return $this->view('login', $this->data);
     }
 
     public function init() {
         // Log user in if the input is valid
         if (!$this->isPostRequest() ||
-            !$this->isTokenOk($_POST['token']))
+            !$this->isValidToken($_POST['token']))
         return Helper::redirect(HOME.'404');
 
         $this->destroyToken();

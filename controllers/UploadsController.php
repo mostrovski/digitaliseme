@@ -33,14 +33,14 @@ class UploadsController extends Controller {
         unset($_SESSION['flash']);
         unset($_SESSION['status']);
         $this->destroyToken();
-        $this->data['token'] = $this->createToken();
+        $this->data['token'] = $this->generateToken();
         return $this->view('uploads/create', $this->data);
     }
 
     public function store() {
         // Save the uploaded file if it's valid
         if (!$this->isPostRequest() ||
-            !$this->isTokenOk($_POST['token']))
+            !$this->isValidToken($_POST['token']))
         return Helper::redirect(HOME.'404');
 
         $this->destroyToken();

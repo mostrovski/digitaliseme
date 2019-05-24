@@ -15,14 +15,14 @@ class SearchController extends Controller {
     public function index() {
         // Show a search form
         $this->destroyToken();
-        $this->data['token'] = $this->createToken();
+        $this->data['token'] = $this->generateToken();
         return $this->view('search/index', $this->data);
     }
 
     public function find() {
         // Show search results or return a search form
         if (!$this->isPostRequest() ||
-            !$this->isTokenOk($_POST['token']))
+            !$this->isValidToken($_POST['token']))
         return Helper::redirect(HOME.'404');
 
         $this->destroyToken();

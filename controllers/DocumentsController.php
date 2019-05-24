@@ -52,7 +52,7 @@ class DocumentsController extends Controller {
         !empty($this->data['fields']['fileName']) ?:
         $this->data['fields']['fileName'] = $fileInfo->filename;
         $this->destroyToken();
-        $this->data['token'] = $this->createToken();
+        $this->data['token'] = $this->generateToken();
         $_SESSION['upfile'] = serialize($file);
 
         return $this->view('documents/create', $this->data);
@@ -61,7 +61,7 @@ class DocumentsController extends Controller {
     public function store() {
         // Save the document if user input is valid
         if (!$this->isPostRequest() ||
-            !$this->isTokenOk($_POST['token']))
+            !$this->isValidToken($_POST['token']))
         return Helper::redirect(HOME.'404');
 
         $this->destroyToken();
@@ -162,7 +162,7 @@ class DocumentsController extends Controller {
         !empty($this->data['selectedType']) ?:
         $this->data['selectedType'] = $details['data']['docType'];
         $this->data['docId'] = $id;
-        $this->data['token'] = $this->createToken();
+        $this->data['token'] = $this->generateToken();
 
         return $this->view('documents/edit', $this->data);
     }
@@ -171,7 +171,7 @@ class DocumentsController extends Controller {
         // Update the document if user input is valid
         if (!isset($id) ||
             !$this->isPostRequest() ||
-            !$this->isTokenOk($_POST['token']))
+            !$this->isValidToken($_POST['token']))
         return Helper::redirect(HOME.'404');
 
         $this->destroyToken();
@@ -214,7 +214,7 @@ class DocumentsController extends Controller {
         // Delete the document
         if (!isset($id) ||
             !$this->isPostRequest() ||
-            !$this->isTokenOk($_POST['token']))
+            !$this->isValidToken($_POST['token']))
         return Helper::redirect(HOME.'404');
 
         $this->destroyToken();

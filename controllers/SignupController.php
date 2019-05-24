@@ -19,14 +19,14 @@ class SignupController extends Controller {
             return Helper::redirect(HOME);
         }
         $this->destroyToken();
-        $this->data['token'] = $this->createToken();
+        $this->data['token'] = $this->generateToken();
         return $this->view('signup', $this->data);
     }
 
     public function init() {
         // Sign user up if the input is valid
         if (!$this->isPostRequest() ||
-            !$this->isTokenOk($_POST['token']))
+            !$this->isValidToken($_POST['token']))
         return Helper::redirect(HOME.'404');
 
         $this->destroyToken();
