@@ -4,13 +4,13 @@ namespace Core;
 class Page {
     // Renders the page based on the requested url
     protected static $controller = 'Controllers\DefaultController';
-    protected static $method = 'index';
+    protected static $action = 'index';
     protected static $params = [];
 
     public static function render() {
         self::defineController();
         self::instantiate(self::$controller);
-        self::invoke(self::$controller, self::$method, self::$params);
+        self::invoke(self::$controller, self::$action, self::$params);
     }
 
     protected static function defineController() {
@@ -21,41 +21,41 @@ class Page {
 
         if (!isset($_GET['url'])) return;
 
-        $requested = self::transform($_GET['url']);
+        $request = self::transform($_GET['url']);
 
-        if (!in_array($requested['resource'], $public) &&
-            !in_array($requested['resource'], $private)) {
+        if (!in_array($request['resource'], $public) &&
+            !in_array($request['resource'], $private)) {
             return;
         }
 
-        if (!$loggedIn && in_array($requested['resource'], $private)) {
+        if (!$loggedIn && in_array($request['resource'], $private)) {
             $_SESSION['flash'] = AUTHENTICATION_ERROR;
             return Helper::redirect(HOME);
         }
 
-        self::parse($requested);
+        self::parse($request);
     }
 
     protected static function instantiate($controller) {
         self::$controller = new $controller;
     }
 
-    protected static function invoke($controller, $method, $params) {
-        call_user_func_array([$controller, $method], $params);
+    protected static function invoke($controller, $action, $params) {
+        call_user_func_array([$controller, $action], $params);
     }
 
-    protected static function parse($requested) {
-        // Map requested url to controllers, methods, and parameters
-        $controller = 'Controllers\\'.ucfirst($requested['resource']);
+    protected static function parse($request) {
+        // Map requested url to controller, action, and parameters
+        $controller = 'Controllers\\'.ucfirst($request['resource']);
         $controller .= 'Controller';
         self::$controller = $controller;
 
-        if (!isset($requested['method']) ||
-            !method_exists(self::$controller, $requested['method']))
+        if (!isset($request['action']) ||
+            !method_exists(self::$controller, $request['action']))
         return;
 
-        self::$method = $requested['method'];
-        self::$params = $requested['parameters'];
+        self::$action = $request['action'];
+        self::$params = $request['parameters'];
     }
 
     protected static function transform($url) {
@@ -66,7 +66,7 @@ class Page {
 
         return [
             'resource'   => $url[0],
-            'method'     => $url[1] ?? NULL,
+            'action'     => $url[1] ?? NULL,
             'parameters' => array_slice($url, 2),
         ];
     }
