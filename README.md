@@ -139,40 +139,9 @@ A flow from the request to the view looks as follows:
 - [CSS](https://www.w3.org/Style/CSS/)
 
 ## How to run it
-*(recommended setup)*
+*(Homestead)*
 
- 1. Download and extract the repository.
- 2. Make sure **XAMPP** package is installed on your computer. Otherwise,
-    download and install it from [here](https://www.apachefriends.org/download.html).
- 3. After step 2, you should have the *xampp* directory (or similar, depending
-    on your OS) with the *htdocs* subdirectory inside. If you can't locate it,
-    check XAMPP documentation (accessible from XAMPP download page) for help.
- 4. You may want to delete everything from the *htdocs* before moving on.
- 5. Rename the folder from step 1 to *digitaliseme* and move it to the *htdocs*.
- 6. Open *XAMPP Control Panel*.
- 7. Start *Apache* and *MySQL* servers.
- 8. In your browser, go to *localhost/phpmyadmin*.
- 9. Create new database *digitaliseme* with the *utf8mb4_unicode_ci* collation.
-10. Make sure the database from step 9 is selected and go to the `Import` tab.
-11. Choose `digitaliseme.sql` file from */config/db*
-    (see the [structure](#the-structure-of-the-application)), and press `Go`.
-12. After step 11, your database should contain all the necessary tables.
-    Compare it to `digitaliseme_schema.png` from */config/db* (see step 11)
-    to be sure.
-13. Make sure to modify `.htaccess` in the root of your application directory
-    and/or `config.php` under */config/* to reflect changes in these cases:
-    - you renamed the application folder from step 1 to anything other than
-      *digitaliseme*;
-    - you moved the contents of the application folder to *htdocs* instead
-      of moving the whole folder on step 5;
-    - you created the database with the name other than *digitaliseme* and/or
-      charset other than *utf8mb4* on step 9;
-    - you changed default settings (host, user, password) for your database;
-    Skip this step if none of the above applies.
-14. If *Apache* and *MySQL* are running (see step 7), you should be able to
-    access and use the application.
-15. In your browser, open *localhost/digitaliseme* or *localhost/[your_name]*
-    (see step 13).
+ @TODO
 
 ## Acknowledgments
 
