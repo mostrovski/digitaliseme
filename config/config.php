@@ -5,8 +5,8 @@
  *
  ***************************************************************************/
 const DB_HOST = 'localhost';
-const DB_USER = 'root';
-const DB_PASSWORD = '';
+const DB_USER = 'homestead';
+const DB_PASSWORD = 'secret';
 const DB_NAME = 'digitaliseme';
 const DB_CHARSET = 'utf8mb4';
 /****************************************************************************
@@ -15,7 +15,7 @@ const DB_CHARSET = 'utf8mb4';
  *
  ***************************************************************************/
 define('ROOT', dirname(dirname(__FILE__)));
-const HOME = 'http://localhost/digitaliseme/';
+const HOME = 'http://digitaliseme.test/';
 const PUBLIC_ROUTES = ['signup', 'login', 'logout'];
 const PRIVATE_ROUTES = ['uploads', 'documents', 'search'];
 const DEFAULT_ROUTES = [

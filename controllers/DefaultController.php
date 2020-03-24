@@ -6,7 +6,7 @@ use Core\Helper;
 class DefaultController extends Controller {
     // Loads public default, private default, or 404
     public function index() {
-        if (isset($_GET['url'])) return $this->view('404', ['title'=>'404']);
+        if ($_SERVER['REQUEST_URI'] !== '/') return $this->view('404', ['title'=>'404']);
         $loggedIn = Helper::isUserLoggedIn();
         return $loggedIn ? $this->show('private') : $this->show('public');
     }

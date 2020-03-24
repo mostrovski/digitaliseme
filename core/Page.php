@@ -19,9 +19,9 @@ class Page {
         $private = PRIVATE_ROUTES;
         $loggedIn = Helper::isUserLoggedIn();
 
-        if (!isset($_GET['url'])) return;
+        if ($_SERVER['REQUEST_URI'] === '/') return;
 
-        $request = self::transform($_GET['url']);
+        $request = self::transform($_SERVER['REQUEST_URI']);
 
         if (!in_array($request['resource'], $public) &&
             !in_array($request['resource'], $private)) {
@@ -61,8 +61,11 @@ class Page {
     protected static function transform($url) {
         // Turn the url into an associative array
         $url = rtrim($url, '/');
+        $url = ltrim($url, '/');
         $url = filter_var($url, FILTER_SANITIZE_URL);
         $url = explode('/', $url);
+        //die(var_dump($_SERVER['REQUEST_URI']));
+        //die(var_dump($url));
 
         return [
             'resource'   => $url[0],
