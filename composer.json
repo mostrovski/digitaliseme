@@ -1,0 +1,17 @@
+{
+  "name": "mostrovski/digitaliseme",
+  "description": "Cozy document archive.",
+  "keywords": [
+    "php",
+    "MVC"
+  ],
+  "type": "project",
+  "require": {
+    "php": "^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Digitaliseme\\": "src/"
+    }
+  }
+}

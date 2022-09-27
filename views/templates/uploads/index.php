@@ -22,14 +22,14 @@
 <?php if (!isset($data['uploads']) && $data['status'] === 'okay') : ?>
     <p>
         <a href="<?= HOME.'uploads/create'; ?>">
-            <img src="<?= HOME.'app/public/img/empty.png'; ?>">
+            <img src="<?= HOME.'img/empty.png'; ?>">
         </a>
     </p>
 <?php endif; ?>
 <?php if ($data['status'] === 'error') : ?>
     <p>
         <a href="<?= HOME.'uploads'; ?>">
-            <img src="<?= HOME.'app/public/img/error.png'; ?>">
+            <img src="<?= HOME.'img/error.png'; ?>">
         </a>
     </p>
 <?php endif; ?>

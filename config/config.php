@@ -20,11 +20,11 @@ const PUBLIC_ROUTES = ['signup', 'login', 'logout'];
 const PRIVATE_ROUTES = ['uploads', 'documents', 'search'];
 const DEFAULT_ROUTES = [
     'public'  => [
-        'controller' => 'Controllers\LoginController',
+        'controller' => 'Digitaliseme\Controllers\LoginController',
         'method'     => 'index',
     ],
     'private' => [
-        'controller' => 'Controllers\UploadsController',
+        'controller' => 'Digitaliseme\Controllers\UploadsController',
         'method'     => 'create',
     ]
 ];

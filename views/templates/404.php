@@ -4,7 +4,7 @@
     </p>
     <p>
         <a href="<?= HOME; ?>">
-            <img src="<?= HOME.'app/public/img/404.png'; ?>">
+            <img src="<?= HOME.'img/404.png'; ?>">
         </a>
     </p>
 </div>
