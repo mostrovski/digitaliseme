@@ -231,4 +231,3 @@ const UPLOAD_DELETE_OK = '&#8921; file was successfully deleted';
 const NEW_DOC_OK = '&#8921; document was successfully saved';
 const UPDATE_DOC_OK = '&#8921; document details were successfully updated';
 const DELETE_DOC_OK = '&#8921; document was successfully deleted';
-?>

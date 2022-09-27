@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Models;
 
 use Digitaliseme\Core\Helper;
@@ -106,4 +107,3 @@ class RawDocument extends Document {
         $this->uploadedFile = $file;
     }
 }
-?>

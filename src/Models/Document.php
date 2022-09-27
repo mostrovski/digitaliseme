@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Models;
 
 use Digitaliseme\Core\Helper;
@@ -275,4 +276,3 @@ abstract class Document {
         $this->sanitized['keywords'] = $sanitized['result'];
     }
 }
-?>

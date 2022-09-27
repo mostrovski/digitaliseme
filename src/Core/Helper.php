@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Core;
 
 class Helper {
@@ -182,4 +183,3 @@ class Helper {
         return $keywords;
     }
 }
-?>

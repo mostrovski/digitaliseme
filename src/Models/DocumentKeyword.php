@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Models;
 
 use Digitaliseme\Core\Database;
@@ -78,4 +79,3 @@ class DocumentKeyword {
         $this->word = $word;
     }
 }
-?>

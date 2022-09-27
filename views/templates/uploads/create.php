@@ -1,7 +1,7 @@
 <span class="form_header">&nbsp;&#10064; Upload new file </span>
-<span class="<?= $data['status']; ?>"><?= $data['message']; ?></span>
+<span class="<?= $data['status'] ?>"><?= $data['message'] ?></span>
 <div class="form">
-    <form action="<?= HOME.'uploads/store'; ?>" method="POST" enctype="multipart/form-data">
+    <form action="<?= HOME.'uploads/store' ?>" method="POST" enctype="multipart/form-data">
         <label for="docfile" class="field_header">
             Choose the file to upload
         </label><br><br>
@@ -12,6 +12,6 @@
 
         <input type="submit" value="Upload" name="upload">
 
-        <input type="hidden" id="token" name="token" value="<?= $data['token']; ?>">
+        <input type="hidden" id="token" name="token" value="<?= $data['token'] ?>">
     </form>
 </div>

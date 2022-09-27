@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Models;
 
 class DocumentFile extends File {
@@ -141,4 +142,3 @@ class DocumentFile extends File {
         $this->path = $path;
     }
 }
-?>

@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Controllers;
 
 use Digitaliseme\Core\Helper;
@@ -10,4 +11,3 @@ class LogoutController extends Controller {
         return Helper::redirect(HOME);
     }
 }
-?>

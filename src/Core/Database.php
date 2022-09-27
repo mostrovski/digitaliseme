@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Core;
 
 class Database {
@@ -138,4 +139,3 @@ class Database {
         return $this->statement->rowCount();
     }
 }
-?>

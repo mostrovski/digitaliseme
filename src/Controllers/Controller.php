@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Controllers;
 
 abstract class Controller {
@@ -29,4 +30,3 @@ abstract class Controller {
         require_once ROOT.'/views/partials/footer.php';
     }
 }
-?>

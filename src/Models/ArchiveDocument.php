@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Models;
 
 use Digitaliseme\Core\Helper;
@@ -290,4 +291,3 @@ class ArchiveDocument extends Document {
         $this->userId = $id;
     }
 }
-?>

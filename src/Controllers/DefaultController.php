@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Controllers;
 
 use Digitaliseme\Core\Helper;
@@ -18,4 +19,3 @@ class DefaultController extends Controller {
         return $controller->$method();
     }
 }
-?>

@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Core;
 
 class Validator {
@@ -322,4 +323,3 @@ class Validator {
         ['result' => true,  'error' => '',     'class' => 'valid'];
     }
 }
-?>

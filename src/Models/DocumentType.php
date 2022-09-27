@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Models;
 
 use Digitaliseme\Core\Database;
@@ -50,4 +51,3 @@ class DocumentType {
         $this->type = $type;
     }
 }
-?>

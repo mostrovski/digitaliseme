@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Models;
 
 use Digitaliseme\Core\Database;
@@ -91,4 +92,3 @@ abstract class File {
         return $deleted ? true : false;
     }
 }
-?>

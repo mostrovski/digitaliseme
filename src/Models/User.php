@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Models;
 
 use Digitaliseme\Core\Database;
@@ -186,4 +187,3 @@ class User {
         $this->password = $password;
     }
 }
-?>

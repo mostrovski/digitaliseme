@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Models;
 
 class UploadedFile extends File {
@@ -76,4 +77,3 @@ class UploadedFile extends File {
         $this->userId = $userId;
     }
 }
-?>

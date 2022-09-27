@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Controllers;
 
 use Digitaliseme\Core\Helper;
@@ -286,4 +287,3 @@ class DocumentsController extends Controller {
         ];
     }
 }
-?>

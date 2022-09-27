@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Core;
 
 class Page {
@@ -74,4 +75,3 @@ class Page {
         ];
     }
 }
-?>

@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Models;
 
 use Digitaliseme\Core\Database;
@@ -72,4 +73,3 @@ class DocumentStorage {
         $this->place = $place;
     }
 }
-?>

@@ -1,4 +1,5 @@
 <?php
+
 namespace Digitaliseme\Controllers;
 
 use Digitaliseme\Core\Helper;
@@ -89,4 +90,3 @@ class SignupController extends Controller {
         ];
     }
 }
-?>
