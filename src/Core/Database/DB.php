@@ -18,7 +18,7 @@ class DB
      * @throws PDOException
      */
     final public function __construct() {
-        $this->handler = Connection::resolve()->handle();
+        $this->handler = Connection::resolve()->handler();
         $this->query = new Query;
     }
 

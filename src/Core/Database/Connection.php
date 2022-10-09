@@ -38,7 +38,7 @@ class Connection
         return self::$instance;
     }
 
-    public function handle(): PDO
+    public function handler(): PDO
     {
         return $this->connection;
     }
