@@ -22,7 +22,7 @@ class Query
      */
     public function build(): string
     {
-        if ($this->table === null) {
+        if (empty($this->table)) {
             throw DatabaseException::missingTable();
         }
 

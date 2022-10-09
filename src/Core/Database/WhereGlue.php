@@ -2,7 +2,7 @@
 
 namespace Digitaliseme\Core\Database;
 
-enum Connector: string
+enum WhereGlue: string
 {
     case And = 'AND';
     case Or = 'OR';

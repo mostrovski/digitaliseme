@@ -4,35 +4,35 @@ namespace Digitaliseme\Exceptions;
 
 use Exception;
 
-class DatabaseException extends Exception
+final class DatabaseException extends Exception
 {
-    public static function missingTable(): static
+    public static function missingTable(): self
     {
-        return new static('DB table is not specified.');
+        return new self('DB table is not specified.');
     }
 
-    public static function missingAction(): static
+    public static function missingAction(): self
     {
-        return new static('Action (SELECT, INSERT, etc.) is not specified.');
+        return new self('Action (SELECT, INSERT, etc.) is not specified.');
     }
 
-    public static function missingInsertData(): static
+    public static function missingInsertData(): self
     {
-        return new static('Data for the insert is not specified.');
+        return new self('Data for the insert is not specified.');
     }
 
-    public static function missingUpdateData(): static
+    public static function missingUpdateData(): self
     {
-        return new static('Data for the update is not specified.');
+        return new self('Data for the update is not specified.');
     }
 
-    public static function handlerNotSet(): static
+    public static function handlerNotSet(): self
     {
-        return new static('DB handler is not set.');
+        return new self('DB handler is not set.');
     }
 
-    public static function statementNotSet(): static
+    public static function statementNotSet(): self
     {
-        return new static('SQL statement is not set.');
+        return new self('SQL statement is not set.');
     }
 }

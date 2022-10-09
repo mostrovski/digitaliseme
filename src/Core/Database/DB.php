@@ -8,36 +8,20 @@ use PDOException;
 use PDOStatement;
 
 // TODO: handle Exceptions
-class DB {
-
-    protected string $host = DB_HOST;
-    protected string $user = DB_USER;
-    protected string $password = DB_PASSWORD;
-    protected string $name = DB_NAME;
-    protected string $charset = DB_CHARSET;
+class DB
+{
     protected ?PDO $handler = null;
     protected ?PDOStatement $statement = null;
     protected Query $query;
 
     /**
-     * Connect.
-     *
      * @throws PDOException
      */
     final public function __construct() {
-        $this->handler = new PDO(
-            $this->dataSourceName(),
-            $this->user,
-            $this->password,
-            $this->handlerOptions(),
-        );
-
+        $this->handler = Connection::resolve()->handle();
         $this->query = new Query;
     }
 
-    /**
-     * Disconnect.
-     */
     final public function __destruct() {
         $this->statement = null;
         $this->handler = null;
@@ -62,7 +46,7 @@ class DB {
         return $this;
     }
 
-    public function where(string $column, string $operator, mixed $value, Connector $connector = Connector::And): static
+    public function where(string $column, string $operator, mixed $value, WhereGlue $glue = WhereGlue::And): static
     {
         if ($this->query->hasNoWhereClauses()) {
             $this->query->addWhereClause(new WhereClause($column, $operator, $value));
@@ -70,29 +54,29 @@ class DB {
             return $this;
         }
 
-        $this->query->addWhereClause(new WhereClause($column, $operator, $value, $connector));
+        $this->query->addWhereClause(new WhereClause($column, $operator, $value, $glue));
 
         return $this;
     }
 
-    public function whereNull(string $column, Connector $connector = Connector::And): static
+    public function whereNull(string $column, WhereGlue $glue = WhereGlue::And): static
     {
-        return $this->where($column, 'IS', null, $connector);
+        return $this->where($column, 'IS', null, $glue);
     }
 
-    public function whereNotNull(string $column, Connector $connector = Connector::And): static
+    public function whereNotNull(string $column, WhereGlue $glue = WhereGlue::And): static
     {
-        return $this->where($column, 'IS NOT', null, $connector);
+        return $this->where($column, 'IS NOT', null, $glue);
     }
 
-    public function whereIn(string $column, array $values, Connector $connector = Connector::And): static
+    public function whereIn(string $column, array $values, WhereGlue $glue = WhereGlue::And): static
     {
-        return $this->where($column, 'IN', $values, $connector);
+        return $this->where($column, 'IN', $values, $glue);
     }
 
-    public function whereNotIn(string $column, array $values, Connector $connector = Connector::And): static
+    public function whereNotIn(string $column, array $values, WhereGlue $glue = WhereGlue::And): static
     {
-        return $this->where($column, 'NOT IN', $values, $connector);
+        return $this->where($column, 'NOT IN', $values, $glue);
     }
 
     /**
@@ -161,19 +145,6 @@ class DB {
         $this->execute();
 
         return $this->statement->rowCount();
-    }
-
-    protected function dataSourceName(): string
-    {
-        return "mysql:host={$this->host};dbname={$this->name};charset={$this->charset}";
-    }
-
-    protected function handlerOptions(): array
-    {
-        return [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
-        ];
     }
 
     /**

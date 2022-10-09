@@ -8,7 +8,7 @@ class WhereClause
         protected string $column,
         protected string $operator,
         protected mixed $value,
-        protected ?Connector $connector = null,
+        protected ?WhereGlue $glue = null,
     ) {}
 
     public function sql(): string
@@ -27,7 +27,7 @@ class WhereClause
 
     protected function where(): string
     {
-        return $this->connector instanceof Connector ? $this->connector->value : 'WHERE';
+        return $this->glue instanceof WhereGlue ? $this->glue->value : 'WHERE';
     }
 
     protected function placeholder(): string
