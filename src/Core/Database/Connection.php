@@ -7,7 +7,7 @@ use PDOException;
 
 class Connection
 {
-    private static ?self $handler = null;
+    private static ?self $instance = null;
 
     private string $host = DB_HOST;
     private string $user = DB_USER;
@@ -31,11 +31,11 @@ class Connection
 
     public static function resolve(): self
     {
-        if (self::$handler === null) {
-            self::$handler = new self;
+        if (self::$instance === null) {
+            self::$instance = new self;
         }
 
-        return self::$handler;
+        return self::$instance;
     }
 
     public function handle(): PDO
