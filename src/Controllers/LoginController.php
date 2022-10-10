@@ -16,8 +16,8 @@ class LoginController extends Controller {
     public function index() {
         // Show the login form
         if (Helper::isUserLoggedIn()) {
-            $_SESSION['flash'] = LOGIN_ALREADY;
-            return Helper::redirect(HOME);
+            $_SESSION['flash'] = config('app.messages.info.LOGIN_ALREADY');
+            return Helper::redirect(config('app.url'));
         }
         unset($_SESSION['flash']);
         $this->destroyToken();
@@ -29,7 +29,7 @@ class LoginController extends Controller {
         // Log user in if the input is valid
         if (!$this->isPostRequest() ||
             !$this->isValidToken($_POST['token']))
-        return Helper::redirect(HOME.'404');
+        return Helper::redirect(config('app.url').'404');
 
         $this->destroyToken();
 
@@ -50,12 +50,12 @@ class LoginController extends Controller {
         }
 
         $_SESSION['flash'] = $login['message'];
-        return Helper::redirect(HOME);
+        return Helper::redirect(config('app.url'));
     }
 
     protected function setData() {
         $this->data = [
-            'title'   => PAGE_TITLES['login'],
+            'title'   => config('app.page.titles')['login'],
             'message' => $_SESSION['flash'] ?? '',
             'fields'  => [
                 'username' => '',

@@ -3,8 +3,8 @@
         Oooops... Apparently, this page doesn't exist!
     </p>
     <p>
-        <a href="<?= HOME ?>">
-            <img src="<?= HOME.'img/404.png' ?>">
+        <a href="<?= config('app.url') ?>">
+            <img src="<?= config('app.url').'img/404.png' ?>">
         </a>
     </p>
 </div>

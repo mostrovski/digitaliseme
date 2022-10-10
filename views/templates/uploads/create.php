@@ -1,7 +1,7 @@
 <span class="form_header">&nbsp;&#10064; Upload new file </span>
 <span class="<?= $data['status'] ?>"><?= $data['message'] ?></span>
 <div class="form">
-    <form action="<?= HOME.'uploads/store' ?>" method="POST" enctype="multipart/form-data">
+    <form action="<?= config('app.url').'uploads/store' ?>" method="POST" enctype="multipart/form-data">
         <label for="docfile" class="field_header">
             Choose the file to upload
         </label><br><br>

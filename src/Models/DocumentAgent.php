@@ -65,7 +65,7 @@ class DocumentAgent {
         if (!$created) {
             return [
                 'success' => false,
-                'error'   => AGENT_DB_FAILURE,
+                'error'   => config('app.messages.error.AGENT_DB_FAILURE'),
             ];
         } else {
             return [
@@ -84,7 +84,7 @@ class DocumentAgent {
             $field,
             $newValue
         );
-        $error = $updated ? NULL : AGENT_DB_FAILURE;
+        $error = $updated ? NULL : config('app.messages.error.AGENT_DB_FAILURE');
         return [
             'success' => $updated,
             'error'   => $error ?? false,

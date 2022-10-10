@@ -21,15 +21,15 @@
 <?php endif; ?>
 <?php if (!isset($data['uploads']) && $data['status'] === 'okay') : ?>
     <p>
-        <a href="<?= HOME.'uploads/create' ?>">
-            <img src="<?= HOME.'img/empty.png' ?>">
+        <a href="<?= config('app.url').'uploads/create' ?>">
+            <img src="<?= config('app.url').'img/empty.png' ?>">
         </a>
     </p>
 <?php endif; ?>
 <?php if ($data['status'] === 'error') : ?>
     <p>
-        <a href="<?= HOME.'uploads' ?>">
-            <img src="<?= HOME.'img/error.png' ?>">
+        <a href="<?= config('app.url').'uploads' ?>">
+            <img src="<?= config('app.url').'img/error.png' ?>">
         </a>
     </p>
 <?php endif; ?>

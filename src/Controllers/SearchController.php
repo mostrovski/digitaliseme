@@ -24,7 +24,7 @@ class SearchController extends Controller {
         // Show search results or return a search form
         if (!$this->isPostRequest() ||
             !$this->isValidToken($_POST['token']))
-        return Helper::redirect(HOME.'404');
+        return Helper::redirect(config('app.url').'404');
 
         $this->destroyToken();
 
@@ -66,7 +66,7 @@ class SearchController extends Controller {
 
     protected function setData() {
         $this->data = [
-            'title'        => PAGE_TITLES['search'],
+            'title'        => config('app.page.titles')['search'],
             'message'      => '',
             'status'       => 'okay',
             'docTypes'     => Helper::fetchDocumentTypes(),

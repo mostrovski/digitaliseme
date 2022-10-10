@@ -33,7 +33,7 @@
         <input type="text" name="keywords" id="keywords" value="<?= $data['fields']['keywords'] ?>" readonly>
     </form>
     <?php if ($data['userId'] === $_SESSION['loggedinID']) : ?>
-        <a href="<?= HOME.'documents/edit/'.$data['docId'] ?>">
+        <a href="<?= config('app.url').'documents/edit/'.$data['docId'] ?>">
             <button>Edit</button>
         </a>
     <?php endif; ?>
@@ -41,8 +41,8 @@
 <?php endif; ?>
 <?php if ($data['status'] === 'error') : ?>
     <p>
-        <a href="<?= HOME.'documents' ?>">
-            <img src="<?= HOME.'img/error.png' ?>">
+        <a href="<?= config('app.url').'documents' ?>">
+            <img src="<?= config('app.url').'img/error.png' ?>">
         </a>
     </p>
 <?php endif; ?>

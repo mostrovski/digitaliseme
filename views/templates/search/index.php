@@ -21,7 +21,7 @@
 <?php endif; ?>
 <?php if (!isset($data['results'])) : ?>
 <div class="form">
-    <form action="<?= HOME.'search/find' ?>" method="POST">
+    <form action="<?= config('app.url').'search/find' ?>" method="POST">
         <label for="doctitle" class="field_header">Document Title </label>
         <span class="required"><?= $data['errors']['docTitle'] ?></span>
         <input type="text" class="<?= $data['classes']['docTitle'] ?>" name="doctitle" id="doctitle" value="<?= $data['fields']['docTitle'] ?>">

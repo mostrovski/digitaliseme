@@ -24,9 +24,9 @@ abstract class Controller {
     }
 
     protected function view($template, $data = []) {
-        require_once ROOT.'/views/partials/header.php';
-        require_once ROOT.'/views/partials/navigation.php';
-        require_once ROOT.'/views/templates/'.$template.'.php';
-        require_once ROOT.'/views/partials/footer.php';
+        require_once app()->root().'/views/partials/header.php';
+        require_once app()->root().'/views/partials/navigation.php';
+        require_once app()->root().'/views/templates/'.$template.'.php';
+        require_once app()->root().'/views/partials/footer.php';
     }
 }

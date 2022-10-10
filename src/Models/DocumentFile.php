@@ -44,7 +44,7 @@ class DocumentFile extends File {
         if (!$created) {
             return [
                 'success' => false,
-                'error'   => FILE_DB_FAILURE,
+                'error'   => config('app.messages.error.FILE_DB_FAILURE'),
             ];
         } else {
             return [
@@ -78,13 +78,13 @@ class DocumentFile extends File {
         if (!$this->deleteFile($this->path)) {
             return [
                 'success' => false,
-                'error'   => DOCUMENT_DELETE_FILE_FAILURE,
+                'error'   => config('app.messages.error.DOCUMENT_DELETE_FILE_FAILURE'),
             ];
         }
         if (!$this->deleteFileRecord($this->id, 'doc_files')) {
             return [
                 'success' => false,
-                'error'   => FILE_DELETE_RECORD_ERROR,
+                'error'   => config('app.messages.error.FILE_DELETE_RECORD_ERROR'),
             ];
         }
         return ['success' => true];
@@ -95,7 +95,7 @@ class DocumentFile extends File {
         if (!$this->relocateFile($this->path, $newPath)) {
             return [
                 'success' => false,
-                'error'   => FILE_DIR_UPDATE_FAILURE,
+                'error'   => config('app.messages.error.FILE_DIR_UPDATE_FAILURE'),
             ];
         }
         return ['success' => true];
@@ -114,7 +114,7 @@ class DocumentFile extends File {
         if (!$this->updateFileRecord($this->id, 'filename', $newName)) {
             return [
                 'success' => false,
-                'error'   => FILE_NAME_UPDATE_FAILURE,
+                'error'   => config('app.messages.error.FILE_NAME_UPDATE_FAILURE'),
             ];
         }
         return ['success' => true];
@@ -124,7 +124,7 @@ class DocumentFile extends File {
         if (!$this->updateFileRecord($this->id, 'filepath', $newPath)) {
             return [
                 'success' => false,
-                'error'   => FILE_PATH_UPDATE_FAILURE,
+                'error'   => config('app.messages.error.FILE_PATH_UPDATE_FAILURE'),
             ];
         }
         return ['success' => true];

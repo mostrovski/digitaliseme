@@ -26,7 +26,7 @@ class SearchDocument extends Document {
         if (!$validated['success'] && $validated['noinput']) {
             return [
                 'valid' => false,
-                'error' => NO_INPUT_ERROR,
+                'error' => config('app.messages.error.NO_INPUT_ERROR'),
             ];
         }
         if (!$validated['success'] && !$validated['noinput']) {
@@ -40,7 +40,7 @@ class SearchDocument extends Document {
         if (!$results) return [
             'valid'   => true,
             'results' => false,
-            'error'   => NO_SEARCH_RESULTS,
+            'error'   => config('app.messages.info.NO_SEARCH_RESULTS'),
             'input'   => $validated['data'],
         ];
         return [

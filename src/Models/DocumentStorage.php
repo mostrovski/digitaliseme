@@ -46,7 +46,7 @@ class DocumentStorage {
         if (!$created) {
             return [
                 'success' => false,
-                'error'   => STORAGE_DB_FAILURE,
+                'error'   => config('app.messages.error.STORAGE_DB_FAILURE'),
             ];
         } else {
             return [

@@ -25,41 +25,41 @@ class UploadedFile extends File {
         if (!is_object($file)) {
             return [
                 'success' => false,
-                'error'   => NO_FILE_ERROR,
+                'error'   => config('app.messages.error.NO_FILE_ERROR'),
             ];
         }
         if ($this->userId !== $_SESSION["loggedinID"]) {
             return [
                 'success' => false,
-                'error'   => FILE_DELETE_AUTH_ERROR,
+                'error'   => config('app.messages.error.FILE_DELETE_AUTH_ERROR'),
             ];
         }
         if (!$this->deleteFile($this->path)) {
             return [
                 'success' => false,
-                'error'   => FILE_DELETE_ERROR,
+                'error'   => config('app.messages.error.FILE_DELETE_ERROR'),
             ];
         }
         if (!$this->deleteFileRecord($this->id, 'uploads')) {
             return [
                 'success' => false,
-                'error'   => FILE_DELETE_RECORD_ERROR,
+                'error'   => config('app.messages.error.FILE_DELETE_RECORD_ERROR'),
             ];
         }
-        return ['success' => true, 'message' => UPLOAD_DELETE_OK];
+        return ['success' => true, 'message' => config('app.messages.info.UPLOAD_DELETE_OK')];
     }
 
     public function moveToArchive($newPath) {
         if (!$this->relocateFile($this->path, $newPath)) {
             return [
                 'success' => false,
-                'error'   => FILE_TO_ARCHIVE_FAILURE,
+                'error'   => config('app.messages.error.FILE_TO_ARCHIVE_FAILURE'),
             ];
         }
         if (!$this->deleteFileRecord($this->id, 'uploads')) {
             return [
                 'success' => false,
-                'error'   => FILE_DELETE_RECORD_ERROR,
+                'error'   => config('app.messages.error.FILE_DELETE_RECORD_ERROR'),
             ];
         }
         return ['success' => true];

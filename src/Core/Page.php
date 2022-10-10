@@ -16,8 +16,8 @@ class Page {
 
     protected static function defineController() {
         // Replace the default controller if url is set and valid
-        $public = PUBLIC_ROUTES;
-        $private = PRIVATE_ROUTES;
+        $public = config('app.routes.public');
+        $private = config('app.routes.private');
         $loggedIn = Helper::isUserLoggedIn();
 
         if ($_SERVER['REQUEST_URI'] === '/') return;
@@ -30,8 +30,8 @@ class Page {
         }
 
         if (!$loggedIn && in_array($request['resource'], $private)) {
-            $_SESSION['flash'] = AUTHENTICATION_ERROR;
-            return Helper::redirect(HOME);
+            $_SESSION['flash'] = config('app.messages.error.AUTHENTICATION_ERROR');
+            return Helper::redirect(config('app.url'));
         }
 
         self::parse($request);

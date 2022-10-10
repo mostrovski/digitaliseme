@@ -11,7 +11,7 @@ class Validator {
             $sanitized,
             $minlen,
             $maxlen,
-            FILE_NAME_PATTERN_ERROR
+            config('app.messages.error.FILE_NAME_PATTERN_ERROR')
         );
         return [
             'result' => $output['result'],
@@ -29,7 +29,7 @@ class Validator {
             $sanitized,
             $minlen,
             $maxlen,
-            DOC_TITLE_PATTERN_ERROR
+            config('app.messages.error.DOC_TITLE_PATTERN_ERROR')
         );
         return [
             'result' => $output['result'],
@@ -42,7 +42,7 @@ class Validator {
     public static function validateCreatedDate($date) {
         $output = self::validateDate(
             $date,
-            EMPTY_DATE_ERROR
+            config('app.messages.error.EMPTY_DATE_ERROR')
         );
         return [
             'result' => $output['result'],
@@ -60,7 +60,7 @@ class Validator {
             $sanitized,
             $minlen,
             $maxlen,
-            NAME_PATTERN_ERROR
+            config('app.messages.error.NAME_PATTERN_ERROR')
         );
         return [
             'result' => $output['result'],
@@ -73,7 +73,7 @@ class Validator {
     public static function validateUserName($name, $sanitized, $unique) {
         if (!$unique) return [
             'result' => false,
-            'error'  => USER_NAME_UNIQUE_ERROR,
+            'error'  => config('app.messages.error.USER_NAME_UNIQUE_ERROR'),
             'class'  => 'invalid',
             'show'   => $name,
         ];
@@ -84,7 +84,7 @@ class Validator {
             $sanitized,
             $minlen,
             $maxlen,
-            USER_NAME_PATTERN_ERROR
+            config('app.messages.error.USER_NAME_PATTERN_ERROR')
         );
         return [
             'result' => $output['result'],
@@ -117,7 +117,7 @@ class Validator {
             $email,
             $minlen,
             $maxlen,
-            INVALID_ERROR
+            config('app.messages.error.INVALID_ERROR')
         );
         return [
             'result' => $output['result'],
@@ -135,7 +135,7 @@ class Validator {
             $sanitized,
             $minlen,
             $maxlen,
-            AGENT_NAME_PATTERN_ERROR
+            config('app.messages.error.AGENT_NAME_PATTERN_ERROR')
         );
         return [
             'result' => $output['result'],
@@ -153,7 +153,7 @@ class Validator {
             $sanitized,
             $minlen,
             $maxlen,
-            INVALID_ERROR
+            config('app.messages.error.INVALID_ERROR')
         );
         return [
             'result' => $output['result'],
@@ -171,7 +171,7 @@ class Validator {
             $sanitized,
             $minlen,
             $maxlen,
-            STORAGE_NAME_PATTERN_ERROR
+            config('app.messages.error.STORAGE_NAME_PATTERN_ERROR')
         );
         return [
             'result' => $output['result'],
@@ -189,7 +189,7 @@ class Validator {
             $sanitized,
             $minlen,
             $maxlen,
-            KEYWORDS_PATTERN_ERROR
+            config('app.messages.error.KEYWORDS_PATTERN_ERROR')
         );
         if (!$basics['result']) return [
             'result' => false,
@@ -197,7 +197,7 @@ class Validator {
             'class'  => $basics['class'],
             'show'   => $keywords,
         ];
-        return preg_match(KEYWORDS_MATCH_PATTERN, $keywords) ?
+        return preg_match(config('app.regex.keywords_match'), $keywords) ?
         [
             'result' => true,
             'error'  => $basics['error'],
@@ -206,7 +206,7 @@ class Validator {
         ] :
         [
             'result' => false,
-            'error'  => KEYWORDS_MATCH_ERROR,
+            'error'  => config('app.messages.error.KEYWORDS_MATCH_ERROR'),
             'class'  => 'invalid',
             'show'   => $keywords,
         ];
@@ -292,7 +292,7 @@ class Validator {
     }
 
     protected static function validateEmail($email, $minlen, $maxlen, $err) {
-        $pattern = preg_match(EMAIL_MATCH_PATTERN, $email);
+        $pattern = preg_match(config('app.regex.email_match'), $email);
         $length = self::isValidLength($email, $minlen, $maxlen);
         if (!$length['result']) {
             $error = $length['error'];

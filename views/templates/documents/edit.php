@@ -2,7 +2,7 @@
 <span class="<?= $data['status'] ?>"><?= $data['message'] ?></span>
 <?php if ($data['status'] === 'okay') : ?>
 <div class="form">
-    <form action="<?= HOME.'documents/update/'.$data['docId'] ?>" method="POST">
+    <form action="<?= config('app.url').'documents/update/'.$data['docId'] ?>" method="POST">
         <label for="doctitle" class="field_header">Document Title </label>
         <span class="required"><?= $data['errors']['docTitle'] ?></span>
         <input type="text" class="<?= $data['classes']['docTitle'] ?>" name="doctitle" id="doctitle" value="<?= $data['fields']['docTitle'] ?>">
@@ -50,7 +50,7 @@
 
         <input type="hidden" id="token" name="token" value="<?= $data['token'] ?>">
     </form>
-    <form action="<?= HOME.'documents/delete/'.$data['docId'] ?>" method="POST">
+    <form action="<?= config('app.url').'documents/delete/'.$data['docId'] ?>" method="POST">
         <input type="submit" class="delete" value="Delete document" name="deleteme" onclick="return confirm('Delete this document?')">
 
         <input type="hidden" id="token" name="token" value="<?= $data['token'] ?>">
@@ -59,8 +59,8 @@
 <?php endif; ?>
 <?php if ($data['status'] === 'error') : ?>
     <p>
-        <a href="<?= HOME.'documents' ?>">
-            <img src="<?= HOME.'img/error.png' ?>">
+        <a href="<?= config('app.url').'documents' ?>">
+            <img src="<?= config('app.url').'img/error.png' ?>">
         </a>
     </p>
 <?php endif; ?>

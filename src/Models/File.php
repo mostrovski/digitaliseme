@@ -21,7 +21,7 @@ abstract class File {
         if (!file_exists($archive))
         return [
             'success' => false,
-            'error'   => DOWNLOAD_FAILURE,
+            'error'   => config('app.messages.error.DOWNLOAD_FAILURE'),
         ];
         $this->forceDownload($archive, $name);
         unlink($archive);

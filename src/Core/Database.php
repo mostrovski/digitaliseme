@@ -2,22 +2,17 @@
 
 namespace Digitaliseme\Core;
 
-class Database {
-
-    protected $host = DB_HOST;
-    protected $user = DB_USER;
-    protected $password = DB_PASSWORD;
-    protected $name = DB_NAME;
-    protected $charset = DB_CHARSET;
+class Database
+{
     protected $handler;
     protected $statement;
     protected $error;
 
     public function __construct() {
         // Set the data source name and options
-        $dsn = 'mysql:host='.$this->host;
-        $dsn .= ';dbname='.$this->name;
-        $dsn .= ';charset='.$this->charset;
+        $dsn = 'mysql:host='.config('app.db.host');
+        $dsn .= ';dbname='.config('app.db.name');
+        $dsn .= ';charset='.config('app.db.charset');
         $options = [
             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
             \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ
@@ -26,8 +21,8 @@ class Database {
         try {
             $this->handler = new \PDO(
                 $dsn,
-                $this->user,
-                $this->password,
+                config('app.db.user'),
+                config('app.db.password'),
                 $options
             );
         } catch(\PDOException $e){

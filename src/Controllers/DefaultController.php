@@ -13,7 +13,7 @@ class DefaultController extends Controller {
     }
 
     protected function show($route) {
-        $defaults = DEFAULT_ROUTES;
+        $defaults = config('app.routes.default');
         $controller = new $defaults[$route]['controller'];
         $method = $defaults[$route]['method'];
         return $controller->$method();

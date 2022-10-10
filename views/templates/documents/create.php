@@ -2,7 +2,7 @@
 <span class="<?= $data['status'] ?>"><?= $data['message'] ?></span>
 <?php if($data['status'] === 'okay') : ?>
 <div class="form">
-    <form action="<?= HOME.'documents/store' ?>" method="POST">
+    <form action="<?= config('app.url').'documents/store' ?>" method="POST">
         <label for="fname" class="field_header">File Name </label>
         <span class="required"><?= $data['errors']['fileName'] ?></span>
         <input type="text" class="<?= $data['classes']['fileName'] ?>" name="fname" id="fname" value="<?= $data['fields']['fileName'] ?>">
@@ -54,8 +54,8 @@
 <?php endif; ?>
 <?php if ($data['status'] === 'error') : ?>
     <p>
-        <a href="<?= HOME.'uploads' ?>">
-            <img src="<?= HOME.'img/error.png' ?>">
+        <a href="<?= config('app.url').'uploads' ?>">
+            <img src="<?= config('app.url').'img/error.png' ?>">
         </a>
     </p>
 <?php endif; ?>

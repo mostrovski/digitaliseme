@@ -1,0 +1,140 @@
+<?php
+
+use Digitaliseme\Controllers\UploadsController;
+use Digitaliseme\Controllers\LoginController;
+
+return [
+    'db' => [
+        'host' => 'db',
+        'name' => 'db',
+        'user' => 'db',
+        'password' => 'db',
+        'charset' => 'utf8mb4',
+    ],
+
+    'url' => 'https://digitaliseme.ddev.site/',
+
+    'routes' => [
+        'public' => ['signup', 'login', 'logout'],
+        'private' => ['uploads', 'documents', 'search'],
+        'default' => [
+            'public'  => [
+                'controller' => LoginController::class,
+                'method' => 'index',
+            ],
+            'private' => [
+                'controller' => UploadsController::class,
+                'method' => 'create',
+            ],
+        ],
+    ],
+
+    'info' => [
+        'name' => 'digitalise me',
+        'description' => 'cozy document archive',
+        'developer' => 'Andrei Ostrovskii',
+        'greeting' => 'aloha, wanderer',
+    ],
+
+    'page' => [
+        'titles' => [
+            'login' => 'Log in',
+            'signup' => 'Sign up',
+            'uploads' => 'Files to process',
+            'uploads/create' => 'Upload file',
+            'documents' => 'Documents',
+            'documents/create' => 'Work on new document',
+            'documents/show' => 'Document details',
+            'documents/edit' => 'Edit document',
+            'search' => 'Find the document',
+        ],
+    ],
+
+    'files' => [
+        'supported_types' => ['pdf','PDF','png','PNG','jpg','JPG','jpeg','JPEG'],
+        'max_size' => 1048576,
+    ],
+
+    'regex' => [
+        'email_match' => '/^[a-zA-Z0-9.!$%&*+\/\=^_{\|}~-]{3,}@[a-zA-Z0-9-]{3,}(\.[a-zA-Z]{2,})$/',
+        'email_san' => '/[^a-zA-Z0-9.@!$%&*+\/\=^_{\|}~-]/',
+        'keywords_match' => '/^\s*([^,\s-]{2,}\s?[^,\s-]*){1,}\s*,\s*([^\s-]{2,}\s?[^\s-]*)*\s*$/',
+        'keywords_san' => '/[^a-zA-ZäöüßÄÖÜ0-9,\s-]/',
+        'name' => '/[^a-zA-ZäöüßÄÖÜ-]/',
+        'user_name' => '/[^a-zA-Z0-9_-]/',
+        'file_name' => '/[^a-zA-ZäöüßÄÖÜ0-9_-]/',
+        'agent_name' => '/[^a-zA-ZäöüßÄÖÜ0-9.\s-]/',
+        'doc_title' => '/[^a-zA-ZäöüßÄÖÜ0-9()*,.\s-]/',
+        'phone' => '/[^0-9+()-]/',
+        'storage_name' => '/[^a-zA-ZäöüßÄÖÜ0-9,()\s-]/',
+    ],
+
+    'messages' => [
+        'error' => [
+            'AUTHENTICATION_ERROR' => '&#8921; you have to be logged in to visit this page',
+            'USER_NAME_PATTERN_ERROR' => '&#8921; only english alphabetic and numeric symbols, underscores, and hyphens are allowed',
+            'NAME_PATTERN_ERROR' => '&#8921; only alphabetic symbols and hyphens are allowed',
+            'FILE_NAME_PATTERN_ERROR' => '&#8921; only alphabetic and numeric symbols, underscores, and hyphens are allowed',
+            'DOC_TITLE_PATTERN_ERROR' => '&#8921; only alphabetic and numeric symbols, spaces, round brackets, asterisks, points, and hyphens are allowed',
+            'AGENT_NAME_PATTERN_ERROR' => '&#8921; only alphabetic and numeric symbols, points, spaces, and hyphens are allowed',
+            'STORAGE_NAME_PATTERN_ERROR' => '&#8921; only alphabetic and numeric symbols, commas, round brackets, spaces, and hyphens are allowed',
+            'KEYWORDS_PATTERN_ERROR' => '&#8921; only alphabetic and numeric symbols, spaces, commas, and hyphens are allowed',
+            'KEYWORDS_MATCH_ERROR' => '&#8921; every keyword has to be at least two characters long; within a keyphrase, only single spaces are allowed; keywords and keyphrases have to be separated with commas',
+            'FILE_DELETE_RECORD_ERROR' => '&#8921; failed to remove the record of this file',
+            'FILE_DELETE_AUTH_ERROR' => '&#8921; you are not authorized to delete this file',
+            'DOCUMENT_EDIT_AUTH_ERROR' => '&#8921; you are not authorized to edit this document',
+            'DOCUMENT_DELETE_AUTH_ERROR' => '&#8921; you are not authorized to delete this document',
+            'DOCUMENT_UPDATE_AUTH_ERROR' => '&#8921; you are not authorized to update this document',
+            'DOCUMENT_WORKON_AUTH_ERROR' => '&#8921; you are not authorized to work on this document',
+            'AGENT_DB_FAILURE' => '&#8921; failed to save document creator information',
+            'KEYWORDS_FILE_FAILURE' => '&#8921; failed to unlink keywords from the file',
+            'FILE_DIR_UPDATE_FAILURE' => '&#8921; failed to move file to the new directory',
+            'DOCUMENT_DELETE_RECORD_FAILURE' => '&#8921; failed to delete document record',
+            'GENERAL_ERROR' => '&#8921; something went wrong...',
+            'TRY_AGAIN_ERROR' => '&#8921; something went wrong... Try again!',
+            'LOGIN_ERROR' => '&#8921; user name or password is wrong',
+            'USER_NAME_UNIQUE_ERROR' => '&#8921; you can not use this name',
+            'EMPTY_DATE_ERROR' => '&#8921; date has to be chosen',
+            'NO_FILE_CHOSEN_ERROR' => '&#8921; file was not chosen',
+            'FILE_UNIQUE_ERROR' => '&#8921; this file was already uploaded',
+            'NO_FILE_ERROR' => '&#8921; this file does not exist',
+            'NO_DOCUMENT_ERROR' => '&#8921; this document does not exist',
+            'FILE_DELETE_ERROR' => '&#8921; failed to delete this file',
+            'FILE_TYPE_ERROR' => '&#8921; this file type is not supported',
+            'FILE_SIZE_ERROR' => '&#8921; this file is larger than 1MB',
+            'FILE_EMPTY_ERROR' => '&#8921; file can not be empty',
+            'INVALID_ERROR' => '&#8921; this input is invalid',
+            'EMPTY_ERROR' => '&#8921; can not be empty',
+            'STORAGE_DB_FAILURE' => '&#8921; failed to save physical storage',
+            'FILE_DB_FAILURE' => '&#8921; failed to save file information',
+            'KEYWORDS_DB_FAILURE' => '&#8921; failed to save keywords',
+            'DOCUMENT_DB_FAILURE' => '&#8921; failed to save document info',
+            'FILE_TO_ARCHIVE_FAILURE' => '&#8921; failed to move file to archive',
+            'DOWNLOAD_FAILURE' => '&#8921; failed to download file',
+            'TITLE_UPDATE_FAILURE' => '&#8921; failed to update document title',
+            'DATE_UPDATE_FAILURE' => '&#8921; failed to update date of creation',
+            'FILE_NAME_UPDATE_FAILURE' => '&#8921; failed to update file name',
+            'FILE_PATH_UPDATE_FAILURE' => '&#8921; failed to update file path',
+            'DOCUMENT_UPDATE_FAILURE' => '&#8921; failed to update document details',
+            'DOCUMENT_DELETE_FILE_FAILURE' => '&#8921; failed to delete document file',
+            'NO_INPUT_ERROR' => '&#8921; you have not specified search criteria',
+        ],
+        'info' => [
+            'SIGNUP_OK' => '&#8921; kudos, you can now log in with your user name and password',
+            'NO_UPLOADS' => '&#8921; there is nothing to work on, upload new file <a href="https://digitaliseme.ddev.site/uploads/create">here</a>',
+            'NO_DOCUMENTS' => '&#8921; the archive is empty, upload new file <a href="https://digitaliseme.ddev.site/uploads/create">here</a>',
+            'NO_SEARCH_RESULTS' => '&#8921; there are no documents that match your search request',
+            'LOGIN_OK' => '&#8921; you have successfully been logged in',
+            'LOGIN_ALREADY' => '&#8921; you are logged in',
+            'LOGIN_NOT' => '&#8921; you are not logged in',
+            'LOGOUT_OK' => '&#8921; you have successfully been logged out',
+            'SIGNUP_ALREADY' => '&#8921; you have already signed up',
+            'UPLOAD_OK' => '&#8921; file was successfully uploaded',
+            'DOWNLOAD_OK' => '&#8921; file was successfully downloaded',
+            'UPLOAD_DELETE_OK' => '&#8921; file was successfully deleted',
+            'NEW_DOC_OK' => '&#8921; document was successfully saved',
+            'UPDATE_DOC_OK' => '&#8921; document details were successfully updated',
+            'DELETE_DOC_OK' => '&#8921; document was successfully deleted',
+        ],
+    ],
+];

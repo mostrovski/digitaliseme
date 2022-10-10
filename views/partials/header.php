@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title><?= SITE_INFO['name'].' | '.$data['title'] ?></title>
-    <link rel="stylesheet" href="<?= HOME.'css/main.css' ?>">
+    <title><?= config('app.info.name').' | '.$data['title'] ?></title>
+    <link rel="stylesheet" href="<?= config('app.url').'css/main.css' ?>">
 </head>
 <body>
     <header>
         <div id="logo">
-            <img src="<?= HOME.'img/logo.png' ?>">
+            <img src="<?= config('app.url').'img/logo.png' ?>">
         </div>
         <div id="site_title">
-            <h1><?= SITE_INFO['name'] ?></h1>
-            <h2><?= SITE_INFO['description'] ?></h2>
+            <h1><?= config('app.info.name') ?></h1>
+            <h2><?= config('app.info.description') ?></h2>
         </div>
         <div id="user_info">
             <p>

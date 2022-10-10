@@ -16,8 +16,8 @@ class SignupController extends Controller {
     public function index() {
         // Show the signup form
         if (Helper::isUserLoggedIn()) {
-            $_SESSION['flash'] = SIGNUP_ALREADY;
-            return Helper::redirect(HOME);
+            $_SESSION['flash'] = config('app.messages.info.SIGNUP_ALREADY');
+            return Helper::redirect(config('app.url'));
         }
         $this->destroyToken();
         $this->data['token'] = $this->generateToken();
@@ -28,7 +28,7 @@ class SignupController extends Controller {
         // Sign user up if the input is valid
         if (!$this->isPostRequest() ||
             !$this->isValidToken($_POST['token']))
-        return Helper::redirect(HOME.'404');
+        return Helper::redirect(config('app.url').'404');
 
         $this->destroyToken();
 
@@ -44,7 +44,7 @@ class SignupController extends Controller {
 
         if ($signup['valid']) {
             $_SESSION['flash'] = $signup['message'];
-            return Helper::redirect(HOME.'login');
+            return Helper::redirect(config('app.url').'login');
         }
 
         $this->data['fields']['password'] = $_POST["password"];
@@ -63,7 +63,7 @@ class SignupController extends Controller {
 
     protected function setData() {
         $this->data = [
-            'title'   => PAGE_TITLES['signup'],
+            'title'   => config('app.page.titles')['signup'],
             'message' => '',
             'status'  => 'okay',
             'fields'  => [

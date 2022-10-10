@@ -41,7 +41,7 @@ class RawDocument extends Document {
         return [
             'valid'   => true,
             'class'   => 'okay',
-            'message' => NEW_DOC_OK,
+            'message' => config('app.messages.info.NEW_DOC_OK'),
         ];
     }
 

@@ -17,10 +17,10 @@ class DocumentsController extends Controller {
 
     public function index() {
         // Fetch and show existing documents
-        $this->data['title'] = PAGE_TITLES['documents'];
+        $this->data['title'] = config('app.page.titles')['documents'];
         $documents = Helper::fetchDocuments();
         if (!$documents) {
-            $this->data['message'] = $_SESSION['flash'] ?? NO_DOCUMENTS;
+            $this->data['message'] = $_SESSION['flash'] ?? config('app.messages.info.NO_DOCUMENTS');
         } else {
             $this->data['documents'] = $documents;
         }
@@ -31,22 +31,22 @@ class DocumentsController extends Controller {
 
     public function create($id = NULL) {
         // Show a form for creating a new document from the file
-        if (!isset($id)) return Helper::redirect(HOME.'404');
+        if (!isset($id)) return Helper::redirect(config('app.url').'404');
 
-        $this->data['title'] = PAGE_TITLES['documents/create'];
+        $this->data['title'] = config('app.page.titles')['documents/create'];
 
         $file = new UploadedFile($id);
         $fileInfo = $file->read();
 
         if (!is_object($fileInfo)) {
             $this->data['status'] = 'error';
-            $this->data['message'] = NO_FILE_ERROR;
+            $this->data['message'] = config('app.messages.error.NO_FILE_ERROR');
             return $this->view('documents/create', $this->data);
         }
 
         if ($fileInfo->user_id !== $_SESSION["loggedinID"]) {
             $this->data['status'] = 'error';
-            $this->data['message'] = DOCUMENT_WORKON_AUTH_ERROR;
+            $this->data['message'] = config('app.messages.error.DOCUMENT_WORKON_AUTH_ERROR');
             return $this->view('documents/create', $this->data);
         }
 
@@ -63,7 +63,7 @@ class DocumentsController extends Controller {
         // Save the document if user input is valid
         if (!$this->isPostRequest() ||
             !$this->isValidToken($_POST['token']))
-        return Helper::redirect(HOME.'404');
+        return Helper::redirect(config('app.url').'404');
 
         $this->destroyToken();
         $file = unserialize($_SESSION['upfile']);
@@ -88,7 +88,7 @@ class DocumentsController extends Controller {
         if ($document['valid']) {
             $_SESSION['status'] = $document['class'];
             $_SESSION['flash'] = $document['message'];
-            return Helper::redirect(HOME.'documents');
+            return Helper::redirect(config('app.url').'documents');
         }
 
         $this->data['selectedType'] = $_POST["doctype"];
@@ -110,9 +110,9 @@ class DocumentsController extends Controller {
 
     public function show($id = NULL) {
         // Fetch and show the details of the document
-        if (!isset($id)) return Helper::redirect(HOME.'404');
+        if (!isset($id)) return Helper::redirect(config('app.url').'404');
 
-        $this->data['title'] = PAGE_TITLES['documents/show'];
+        $this->data['title'] = config('app.page.titles')['documents/show'];
 
         $document = new ArchiveDocument($id);
         $details = $document->getDetails();
@@ -136,9 +136,9 @@ class DocumentsController extends Controller {
 
     public function edit($id = NULL) {
         // Show forms for updating and deleting the document
-        if (!isset($id)) return Helper::redirect(HOME.'404');
+        if (!isset($id)) return Helper::redirect(config('app.url').'404');
 
-        $this->data['title'] = PAGE_TITLES['documents/edit'];
+        $this->data['title'] = config('app.page.titles')['documents/edit'];
 
         $this->destroyToken();
         $document = new ArchiveDocument($id);
@@ -152,7 +152,7 @@ class DocumentsController extends Controller {
 
         if ($details['data']['userId'] !== $_SESSION['loggedinID']) {
             $this->data['status'] = 'error';
-            $this->data['message'] = DOCUMENT_EDIT_AUTH_ERROR;
+            $this->data['message'] = config('app.messages.error.DOCUMENT_EDIT_AUTH_ERROR');
             return $this->view('documents/edit', $this->data);
         }
 
@@ -173,7 +173,7 @@ class DocumentsController extends Controller {
         if (!isset($id) ||
             !$this->isPostRequest() ||
             !$this->isValidToken($_POST['token']))
-        return Helper::redirect(HOME.'404');
+        return Helper::redirect(config('app.url').'404');
 
         $this->destroyToken();
 
@@ -194,7 +194,7 @@ class DocumentsController extends Controller {
         if ($update['valid']) {
             $_SESSION['status'] = $update['class'];
             $_SESSION['flash'] = $update['message'];
-            return Helper::redirect(HOME.'documents/show/'.$id);
+            return Helper::redirect(config('app.url').'documents/show/'.$id);
         }
 
         $this->data['selectedType'] = $_POST["doctype"];
@@ -216,7 +216,7 @@ class DocumentsController extends Controller {
         if (!isset($id) ||
             !$this->isPostRequest() ||
             !$this->isValidToken($_POST['token']))
-        return Helper::redirect(HOME.'404');
+        return Helper::redirect(config('app.url').'404');
 
         $this->destroyToken();
 
@@ -230,12 +230,12 @@ class DocumentsController extends Controller {
             $_SESSION['flash'] = $delete['error'];
         }
 
-        return Helper::redirect(HOME.'documents');
+        return Helper::redirect(config('app.url').'documents');
     }
 
     public function download($id = NULL) {
         // Force download of the document
-        if (!isset($id)) return Helper::redirect(HOME.'404');
+        if (!isset($id)) return Helper::redirect(config('app.url').'404');
 
         $document = new ArchiveDocument($id);
         $download = $document->download();
@@ -245,7 +245,7 @@ class DocumentsController extends Controller {
             $_SESSION['flash'] = $download['error'];
         }
 
-        return Helper::redirect(HOME.'documents');
+        return Helper::redirect(config('app.url').'documents');
     }
 
     protected function setData() {

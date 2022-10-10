@@ -44,20 +44,20 @@ class User {
             ];
             return [
                 'success' => false,
-                'error'   => LOGIN_ERROR,
+                'error'   => config('app.messages.error.LOGIN_ERROR'),
                 'input'   => $input,
             ];
         }
         $this->addUserToSession();
-        return ['success' => true, 'message' => LOGIN_OK];
+        return ['success' => true, 'message' => config('app.messages.info.LOGIN_OK')];
     }
 
     public static function logOut() {
-        if (!isset($_SESSION["loggedin"])) return LOGIN_NOT;
+        if (!isset($_SESSION["loggedin"])) return config('app.messages.info.LOGIN_NOT');
         unset($_SESSION["loggedin"]);
         unset($_SESSION["loggedinName"]);
         unset($_SESSION["loggedinID"]);
-        return LOGOUT_OK;
+        return config('app.messages.info.LOGOUT_OK');
     }
 
     public function signUp() {
@@ -69,7 +69,7 @@ class User {
         $this->password = $this->convert($this->password);
         $created = $this->create();
         $status = $created ? 'okay' : 'error';
-        $message = $created ? SIGNUP_OK : TRY_AGAIN_ERROR;
+        $message = $created ? config('app.messages.info.SIGNUP_OK') : config('app.messages.error.TRY_AGAIN_ERROR');
         return [
             'valid'   => true,
             'status'  => $status,
@@ -160,25 +160,34 @@ class User {
     }
 
     protected function setFirstName($firstName) {
-        $sanitized = Validator::sanitize($firstName, NAME_PATTERN);
+        if (empty($firstName)) {
+            return;
+        }
+        $sanitized = Validator::sanitize($firstName, config('app.regex.name'));
         $this->firstName = Validator::convertName($sanitized['show']);
         $this->sanitized['firstName'] = $sanitized['result'];
     }
 
     protected function setLastName($lastName) {
-        $sanitized = Validator::sanitize($lastName, NAME_PATTERN);
+        if (empty($lastName)) {
+            return;
+        }
+        $sanitized = Validator::sanitize($lastName, config('app.regex.name'));
         $this->lastName = Validator::convertName($sanitized['show']);
         $this->sanitized['lastName'] = $sanitized['result'];
     }
 
     protected function setEmail($email) {
-        $sanitized = Validator::sanitize($email, EMAIL_SAN_PATTERN);
+        if (empty($email)) {
+            return;
+        }
+        $sanitized = Validator::sanitize($email, config('app.regex.email_san'));
         $this->email = $sanitized['show'];
         $this->sanitized['email'] = $sanitized['result'];
     }
 
     protected function setUserName($userName) {
-        $sanitized = Validator::sanitize($userName, USER_NAME_PATTERN);
+        $sanitized = Validator::sanitize($userName, config('app.regex.user_name'));
         $this->userName = $sanitized['show'];
         $this->sanitized['userName'] = $sanitized['result'];
     }

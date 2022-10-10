@@ -120,7 +120,7 @@ abstract class Document {
         );
         return $created ?
         ['success' => true] :
-        ['success' => false, 'error' => DOCUMENT_DB_FAILURE];
+        ['success' => false, 'error' => config('app.messages.error.DOCUMENT_DB_FAILURE')];
     }
 
     protected function readDocumentRecord($id) {
@@ -149,7 +149,7 @@ abstract class Document {
         );
         return $updated ?
         ['success' => true] :
-        ['success' => false, 'error' => DOCUMENT_UPDATE_FAILURE];
+        ['success' => false, 'error' => config('app.messages.error.DOCUMENT_UPDATE_FAILURE')];
     }
 
     protected function deleteDocumentRecord($id) {
@@ -225,13 +225,13 @@ abstract class Document {
     }
 
     protected function setFileName($name) {
-        $sanitized = Validator::sanitize($name, FILE_NAME_PATTERN);
+        $sanitized = Validator::sanitize($name, config('app.regex.file_name'));
         $this->fileName = $sanitized['show'];
         $this->sanitized['fileName'] = $sanitized['result'];
     }
 
     protected function setTitle($title) {
-        $sanitized = Validator::sanitize($title, DOC_TITLE_PATTERN);
+        $sanitized = Validator::sanitize($title, config('app.regex.doc_title'));
         $this->title = $sanitized['show'];
         $this->sanitized['title'] = $sanitized['result'];
     }
@@ -241,19 +241,19 @@ abstract class Document {
     }
 
     protected function setAgentName($name) {
-        $sanitized = Validator::sanitize($name, AGENT_NAME_PATTERN);
+        $sanitized = Validator::sanitize($name, config('app.regex.agent_name'));
         $this->agentName = $sanitized['show'];
         $this->sanitized['agentName'] = $sanitized['result'];
     }
 
     protected function setAgentEmail($email) {
-        $sanitized = Validator::sanitize($email, EMAIL_SAN_PATTERN);
+        $sanitized = Validator::sanitize($email, config('app.regex.email_san'));
         $this->agentEmail = $sanitized['show'];
         $this->sanitized['agentEmail'] = $sanitized['result'];
     }
 
     protected function setAgentPhone($phone) {
-        $sanitized = Validator::sanitize($phone, PHONE_PATTERN);
+        $sanitized = Validator::sanitize($phone, config('app.regex.phone'));
         $this->agentPhone = $sanitized['show'];
         $this->sanitized['agentPhone'] = $sanitized['result'];
     }
@@ -263,7 +263,7 @@ abstract class Document {
     }
 
     protected function setStorage($place) {
-        $sanitized = Validator::sanitize($place, STORAGE_NAME_PATTERN);
+        $sanitized = Validator::sanitize($place, config('app.regex.storage_name'));
         $this->storage = $sanitized['show'];
         $this->sanitized['storage'] = $sanitized['result'];
     }
@@ -271,7 +271,7 @@ abstract class Document {
     protected function setKeywords($keywords) {
         $keywords = strlen(trim($keywords)) && !strpos($keywords, ',') ?
         $keywords.',' : $keywords;
-        $sanitized = Validator::sanitize($keywords, KEYWORDS_SAN_PATTERN);
+        $sanitized = Validator::sanitize($keywords, config('app.regex.keywords_san'));
         $this->keywords = $sanitized['show'];
         $this->sanitized['keywords'] = $sanitized['result'];
     }

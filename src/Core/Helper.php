@@ -20,7 +20,7 @@ class Helper {
     public static function getGreeting() {
         $greeting = self::isUserLoggedIn() ?
         'you are in, '.$_SESSION["loggedinName"].' &check;' :
-        SITE_INFO['greeting'];
+        config('app.info.greeting');
         return $greeting;
     }
     /*************************************************************************
@@ -99,13 +99,13 @@ class Helper {
 
     protected static function createProcessButton($id) {
         $link = '<a class="green_button" href="';
-        $link .= HOME.'documents/create/'.$id.'">process</a>';
+        $link .= config('app.url').'documents/create/'.$id.'">process</a>';
         return $link;
     }
 
     protected static function createDeleteButton($id) {
         $link = '<a class="red_button" href="';
-        $link .= HOME.'uploads/delete/'.$id.'" ';
+        $link .= config('app.url').'uploads/delete/'.$id.'" ';
         $link .='onclick="return confirm(\'Delete this file?\')">delete</a>';
         return $link;
     }
@@ -157,13 +157,13 @@ class Helper {
 
     protected static function createDetailsButton($id) {
         $link = '<a class="green_button" href="';
-        $link .= HOME.'documents/show/'.$id.'">details</a>';
+        $link .= config('app.url').'documents/show/'.$id.'">details</a>';
         return $link;
     }
 
     protected static function createDownloadButton($id) {
         $link = '<a class="gray_button" href="';
-        $link .= HOME.'documents/download/'.$id.'">download</a>';
+        $link .= config('app.url').'documents/download/'.$id.'">download</a>';
         return $link;
     }
     /*************************************************************************

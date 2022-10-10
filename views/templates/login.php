@@ -1,7 +1,7 @@
 <span class="form_header">&nbsp;&#9784; Log in </span>
 <span class="<?= $data['classes']['message'] ?>"><?= $data['message'] ?></span>
 <div class="form">
-    <form action="<?= HOME.'login/init' ?>" method="POST">
+    <form action="<?= config('app.url').'login/init' ?>" method="POST">
         <label for="username" class="field_header">User Name</label>
         <input type="text" class="<?= $data['classes']['fields'] ?>" name="username" id="username" value="<?= $data['fields']['username'] ?>">
 
@@ -14,5 +14,5 @@
     </form>
 </div>
 <div class="info">
-    * Have no account? Sign up <a href="<?= HOME.'signup' ?>">here</a>.
+    * Have no account? Sign up <a href="<?= config('app.url').'signup' ?>">here</a>.
 </div>

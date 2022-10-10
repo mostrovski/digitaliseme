@@ -54,7 +54,7 @@ class DocumentKeyword {
         if (!$created) {
             return [
                 'success' => false,
-                'error'   => KEYWORDS_DB_FAILURE,
+                'error'   => config('app.messages.error.KEYWORDS_DB_FAILURE'),
             ];
         } else {
             $this->id = $created;

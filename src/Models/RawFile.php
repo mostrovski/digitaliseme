@@ -45,7 +45,7 @@ class RawFile extends File {
         if (!$uploaded) {
             return [
                 'success' => false,
-                'error'   => TRY_AGAIN_ERROR,
+                'error'   => config('app.messages.error.TRY_AGAIN_ERROR'),
             ];
         }
         $saved = $this->addRecordToUploadsTable(
@@ -56,24 +56,24 @@ class RawFile extends File {
         if (!$saved) {
             return [
                 'success' => false,
-                'error'   => GENERAL_ERROR,
+                'error'   => config('app.messages.error.GENERAL_ERROR'),
             ];
         }
         return [
             'success' => true,
-            'message' => UPLOAD_OK,
+            'message' => config('app.messages.info.UPLOAD_OK'),
         ];
     }
 
     protected function verifyUpload($ext, $size, $name, $uploads) {
-        if (!in_array($ext, SUPPORTED_TYPES)) {
-            $error = FILE_TYPE_ERROR;
-        } else if ($size > SUPPORTED_SIZE) {
-            $error = FILE_SIZE_ERROR;
+        if (!in_array($ext, config('app.files.supported_types'))) {
+            $error = config('app.messages.error.FILE_TYPE_ERROR');
+        } else if ($size > config('app.files.max_size')) {
+            $error = config('app.messages.error.FILE_SIZE_ERROR');
         } else if ($size === 0) {
-            $error = FILE_EMPTY_ERROR;
+            $error = config('app.messages.error.FILE_EMPTY_ERROR');
         } else if (!$this->isUniqueFile($name, $ext, $uploads, 'filename')) {
-            $error = FILE_UNIQUE_ERROR;
+            $error = config('app.messages.error.FILE_UNIQUE_ERROR');
         }
         return isset($error) ?
         ['verified' => false, 'error' => $error] :

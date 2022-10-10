@@ -32,7 +32,7 @@ class ArchiveDocument extends Document {
         if (!isset($this->id)) {
             return [
                 'exist' => false,
-                'error' => NO_DOCUMENT_ERROR,
+                'error' => config('app.messages.error.NO_DOCUMENT_ERROR'),
             ];
         }
         return [
@@ -45,7 +45,7 @@ class ArchiveDocument extends Document {
         if (!isset($this->id)) {
             return [
                 'success' => false,
-                'error'   => NO_DOCUMENT_ERROR,
+                'error'   => config('app.messages.error.NO_DOCUMENT_ERROR'),
             ];
         }
         $downloaded = $this->docFile->download();
@@ -57,7 +57,7 @@ class ArchiveDocument extends Document {
         }
         return [
             'success' => true,
-            'message' => DOWNLOAD_OK,
+            'message' => config('app.messages.info.DOWNLOAD_OK'),
         ];
     }
 
@@ -65,13 +65,13 @@ class ArchiveDocument extends Document {
         if (!isset($this->id)) {
             return [
                 'success' => false,
-                'error'   => NO_DOCUMENT_ERROR,
+                'error'   => config('app.messages.error.NO_DOCUMENT_ERROR'),
             ];
         }
         if ($this->userId !== $_SESSION["loggedinID"]) {
             return [
                 'success' => false,
-                'error'   => DOCUMENT_DELETE_AUTH_ERROR,
+                'error'   => config('app.messages.error.DOCUMENT_DELETE_AUTH_ERROR'),
             ];
         }
         $this->unbindKeywords($this->docFile->getId());
@@ -79,18 +79,18 @@ class ArchiveDocument extends Document {
         if (!$deleteFile['success']) {
             return [
                 'success' => false,
-                'error'   => $deleteFile['error'] ?? GENERAL_ERROR,
+                'error'   => $deleteFile['error'] ?? config('app.messages.error.GENERAL_ERROR'),
             ];
         }
         if (!$this->deleteDocumentRecord($this->id)) {
             return [
                 'success' => false,
-                'error'   => DOCUMENT_DELETE_RECORD_FAILURE,
+                'error'   => config('app.messages.error.DOCUMENT_DELETE_RECORD_FAILURE'),
             ];
         }
         return [
             'success' => true,
-            'message' => DELETE_DOC_OK,
+            'message' => config('app.messages.info.DELETE_DOC_OK'),
         ];
     }
 
@@ -100,14 +100,14 @@ class ArchiveDocument extends Document {
             return [
                 'valid'   => true,
                 'class'   => 'error',
-                'message' => NO_DOCUMENT_ERROR,
+                'message' => config('app.messages.error.NO_DOCUMENT_ERROR'),
             ];
         }
         if ($this->userId !== $_SESSION["loggedinID"]) {
             return [
                 'valid'   => true,
                 'class'   => 'error',
-                'message' => DOCUMENT_UPDATE_AUTH_ERROR,
+                'message' => config('app.messages.error.DOCUMENT_UPDATE_AUTH_ERROR'),
             ];
         }
         $this->setRawData($params);
@@ -141,7 +141,7 @@ class ArchiveDocument extends Document {
         return [
             'valid'   => true,
             'class'   => 'okay',
-            'message' => UPDATE_DOC_OK,
+            'message' => config('app.messages.info.UPDATE_DOC_OK'),
         ];
     }
 

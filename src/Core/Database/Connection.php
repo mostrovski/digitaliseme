@@ -8,12 +8,6 @@ use PDOException;
 class Connection
 {
     private static ?self $instance = null;
-
-    private string $host = DB_HOST;
-    private string $user = DB_USER;
-    private string $password = DB_PASSWORD;
-    private string $name = DB_NAME;
-    private string $charset = DB_CHARSET;
     private PDO $connection;
 
     /**
@@ -23,8 +17,8 @@ class Connection
     {
         $this->connection = new PDO(
             $this->dataSourceName(),
-            $this->user,
-            $this->password,
+            config('app.db.user'),
+            config('app.db.password'),
             $this->handlerOptions(),
         );
     }
@@ -45,7 +39,9 @@ class Connection
 
     private function dataSourceName(): string
     {
-        return "mysql:host={$this->host};dbname={$this->name};charset={$this->charset}";
+        $config = config('app.db');
+
+        return "mysql:host={$config['host']};dbname={$config['name']};charset={$config['charset']}";
     }
 
     private function handlerOptions(): array
