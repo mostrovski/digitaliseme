@@ -2,6 +2,8 @@
 
 namespace Digitaliseme\Core\Database;
 
+use Digitaliseme\Core\Database\Contracts\Connection;
+use Digitaliseme\Core\Database\Contracts\SqlBuilder;
 use Digitaliseme\Exceptions\DatabaseException;
 use PDO;
 use PDOException;
@@ -10,51 +12,37 @@ use PDOStatement;
 // TODO: handle Exceptions
 class DB
 {
-    protected ?PDO $handler = null;
-    protected ?PDOStatement $statement = null;
-    protected Query $query;
+    protected PDO $handler;
+    protected SqlBuilder $query;
+    protected mixed $statement = null;
 
-    /**
-     * @throws PDOException
-     */
-    final public function __construct() {
-        $this->handler = Connection::resolve()->handler();
-        $this->query = new Query;
+    final public function __construct(Connection $connection, SqlBuilder $query) {
+        $this->handler = $connection->handler();
+        $this->query = $query;
     }
 
-    final public function __destruct() {
-        $this->statement = null;
-        $this->handler = null;
-    }
-
-    public static function table(string $name): static
+    public static function wire(Connection $connection, SqlBuilder $query): static
     {
-        return (new static)->useTable($name);
+        return new static($connection, $query);
     }
 
-    public function useTable(string $name): static
+    public function table(string $name): static
     {
-        $this->query->setTable($name);
+        $this->query->useTable($name);
 
         return $this;
     }
 
     public function select(string ...$columns): static
     {
-        $this->query->setSelectables($columns);
+        $this->query->useSelected($columns);
 
         return $this;
     }
 
     public function where(string $column, string $operator, mixed $value, WhereGlue $glue = WhereGlue::And): static
     {
-        if ($this->query->hasNoWhereClauses()) {
-            $this->query->addWhereClause(new WhereClause($column, $operator, $value));
-
-            return $this;
-        }
-
-        $this->query->addWhereClause(new WhereClause($column, $operator, $value, $glue));
+        $this->query->useWhereClause($column, $operator, $value, $glue);
 
         return $this;
     }
@@ -87,10 +75,10 @@ class DB
      */
     public function get(): array
     {
-        $this->query->setAction(Action::Select);
+        $this->query->useAction(Action::Select);
         $this->execute();
 
-        return $this->fetch();
+        return $this->fetchAll();
     }
 
     /**
@@ -99,10 +87,10 @@ class DB
      */
     public function first(): ?object
     {
-        $this->query->setAction(Action::Select);
+        $this->query->useAction(Action::Select);
         $this->execute();
 
-        return $this->fetch(true);
+        return $this->fetchOne();
     }
 
     /**
@@ -113,8 +101,8 @@ class DB
      */
     public function create(array $data): int
     {
-        $this->query->setAction(Action::Insert);
-        $this->query->setManipulationData($data);
+        $this->query->useAction(Action::Insert);
+        $this->query->useManipulationData($data);
         $this->execute();
 
         return (int) $this->handler->lastInsertId();
@@ -128,8 +116,8 @@ class DB
      */
     public function update(array $data): int
     {
-        $this->query->setAction(Action::Update);
-        $this->query->setManipulationData($data);
+        $this->query->useAction(Action::Update);
+        $this->query->useManipulationData($data);
         $this->execute();
 
         return $this->statement->rowCount();
@@ -141,7 +129,7 @@ class DB
      */
     public function delete(): int
     {
-        $this->query->setAction(Action::Delete);
+        $this->query->useAction(Action::Delete);
         $this->execute();
 
         return $this->statement->rowCount();
@@ -153,30 +141,38 @@ class DB
      */
     protected function execute(): void
     {
-        if (! $this->handler instanceof PDO) {
-            throw DatabaseException::handlerNotSet();
+        $this->statement = $this->handler->prepare($this->query->toSql());
+
+        if (! $this->statement instanceof PDOStatement) {
+            throw DatabaseException::sqlPreparationFailed();
         }
 
-        $this->statement = $this->handler->prepare($this->query->build());
-        $this->statement->execute($this->query->getBindings());
+        $this->statement->execute($this->query->bindings());
     }
 
     /**
-     * @return null|object|object[]
-     *
      * @throws DatabaseException
      * @throws PDOException
      */
-    protected function fetch(bool $single = false): null|object|array
+    protected function fetchOne(): ?object
     {
         if (! $this->statement instanceof PDOStatement) {
             throw DatabaseException::statementNotSet();
         }
 
-        if ($single) {
-            $result = $this->statement->fetch();
+        $result = $this->statement->fetch();
 
-            return $result === false ? null : $result;
+        return $result === false ? null : $result;
+    }
+
+    /**
+     * @throws DatabaseException
+     * @throws PDOException
+     */
+    protected function fetchAll(): array
+    {
+        if (! $this->statement instanceof PDOStatement) {
+            throw DatabaseException::statementNotSet();
         }
 
         $results = $this->statement->fetchAll();

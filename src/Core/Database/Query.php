@@ -2,9 +2,10 @@
 
 namespace Digitaliseme\Core\Database;
 
+use Digitaliseme\Core\Database\Contracts\SqlBuilder;
 use Digitaliseme\Exceptions\DatabaseException;
 
-class Query
+class Query implements SqlBuilder
 {
     protected ?string $table = null;
     protected ?Action $action = null;
@@ -20,7 +21,7 @@ class Query
     /**
      * @throws DatabaseException
      */
-    public function build(): string
+    public function toSql(): string
     {
         if (empty($this->table)) {
             throw DatabaseException::missingTable();
@@ -46,17 +47,17 @@ class Query
         };
     }
 
-    public function getBindings(): array
+    public function bindings(): array
     {
         return $this->bindings;
     }
 
-    public function setTable(string $name): void
+    public function useTable(string $name): void
     {
         $this->table = $name;
     }
 
-    public function setAction(Action $type): void
+    public function useAction(Action $type): void
     {
         $this->action = $type;
     }
@@ -64,7 +65,7 @@ class Query
     /**
      * @param string[] $columns
      */
-    public function setSelectables(array $columns): void
+    public function useSelected(array $columns): void
     {
         $this->selectables = $columns;
     }
@@ -72,24 +73,30 @@ class Query
     /**
      * @param array<string, mixed> $data
      */
-    public function setManipulationData(array $data): void
+    public function useManipulationData(array $data): void
     {
         $this->manipulationData = $data;
     }
 
-    public function hasNoManipulationData(): bool
+    public function useWhereClause(string $column, string $operator, mixed $value, WhereGlue $glue): void
     {
-        return count($this->manipulationData) === 0;
+        if ($this->hasNoWhereClauses()) {
+            $this->whereClauses[] = new WhereClause($column, $operator, $value);
+
+            return;
+        }
+
+        $this->whereClauses[] = new WhereClause($column, $operator, $value, $glue);
     }
 
-    public function addWhereClause(WhereClause $whereClause): void
-    {
-        $this->whereClauses[] = $whereClause;
-    }
-
-    public function hasNoWhereClauses(): bool
+    protected function hasNoWhereClauses(): bool
     {
         return count($this->whereClauses) === 0;
+    }
+
+    protected function hasNoManipulationData(): bool
+    {
+        return count($this->manipulationData) === 0;
     }
 
     protected function buildSelect(): string

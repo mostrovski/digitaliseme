@@ -6,6 +6,15 @@ use Exception;
 
 final class DatabaseException extends Exception
 {
+    public static function missingConfig(?string $key = null): self
+    {
+        if (empty($key)) {
+            return new self('DB configuration is not set.');
+        }
+
+        return new self('DB configuration for '.$key.' is not specified.');
+    }
+
     public static function missingTable(): self
     {
         return new self('DB table is not specified.');
@@ -26,9 +35,9 @@ final class DatabaseException extends Exception
         return new self('Data for the update is not specified.');
     }
 
-    public static function handlerNotSet(): self
+    public static function sqlPreparationFailed(): self
     {
-        return new self('DB handler is not set.');
+        return new self('SQL preparation failed.');
     }
 
     public static function statementNotSet(): self
