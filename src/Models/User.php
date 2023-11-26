@@ -4,60 +4,52 @@ namespace Digitaliseme\Models;
 
 use Digitaliseme\Core\Database;
 use Digitaliseme\Core\Validator;
+use Digitaliseme\Exceptions\DatabaseException;
 
-class User {
+class User extends Model{
     // Model of the user
-    protected $id;
-    protected $firstName;
-    protected $lastName;
-    protected $email;
-    protected $userName;
-    protected $password;
-    protected $sanitized = [];
+//    protected $id;
+//    protected $firstName;
+//    protected $lastName;
+//    protected $email;
+//    protected $userName;
+//    protected $password;
+//    protected $sanitized = [];
 
-    public function __construct($params) {
-        if (!is_array($params)) return;
-        if (isset($params['id'])) {
-            $user = $this->read($params['id']);
-            if (!is_object($user)) return;
-            $this->id = $user->id;
-            $this->rirstName = $user->fname;
-            $this->lastName = $user->lname;
-            $this->email = $user->email;
-            $this->userName = $user->uname;
-            $this->password = $user->password;
-        } else {
-            $this->setFirstName($params['firstname'] ?? NULL);
-            $this->setLastName($params['lastname'] ?? NULL);
-            $this->setEmail($params['email'] ?? NULL);
-            $this->setId($params['username']);
-            $this->setUserName($params['username']);
-            $this->setPassword($params['password']);
-        }
-    }
+//    public function __construct($params) {
+//        parent::__construct();
+//        if (!is_array($params)) {
+//            return;
+//        }
+//        if (isset($params['id'])) {
+//            $user = $this->read($params['id']);
+//            if (!is_object($user)) return;
+//            $this->id = $user->id;
+//            $this->firstName = $user->fname;
+//            $this->lastName = $user->lname;
+//            $this->email = $user->email;
+//            $this->userName = $user->uname;
+//            $this->password = $user->password;
+//        } else {
+//            $this->setFirstName($params['firstname'] ?? NULL);
+//            $this->setLastName($params['lastname'] ?? NULL);
+//            $this->setEmail($params['email'] ?? NULL);
+//            $this->setId($params['username'] ?? NULL);
+//            $this->setUserName($params['username'] ?? NULL);
+//            $this->setPassword($params['password']?? NULL);
+//        }
+//    }
 
-    public function logIn() {
-        if (!isset($this->id) || !$this->verify($this->password)) {
-            $input = [
-                'username' => $this->userName,
-                'password' => $this->password,
-            ];
-            return [
-                'success' => false,
-                'error'   => config('app.messages.error.LOGIN_ERROR'),
-                'input'   => $input,
-            ];
-        }
-        $this->addUserToSession();
-        return ['success' => true, 'message' => config('app.messages.info.LOGIN_OK')];
-    }
-
-    public static function logOut() {
-        if (!isset($_SESSION["loggedin"])) return config('app.messages.info.LOGIN_NOT');
-        unset($_SESSION["loggedin"]);
-        unset($_SESSION["loggedinName"]);
-        unset($_SESSION["loggedinID"]);
-        return config('app.messages.info.LOGOUT_OK');
+    /**
+     * {@inheritDoc}
+     * @return self
+     *
+     * @throws DatabaseException
+     */
+    public function create(array $params): static
+    {
+        $id = $this->query()->create($params);
+        return $this->query()->where('id', '=', $id)->first();
     }
 
     public function signUp() {
@@ -77,20 +69,8 @@ class User {
         ];
     }
 
-    protected function verify($password) {
-        $validPassword = $this->read($this->id)->password;
-        return password_verify($password, $validPassword);
-    }
-
     protected function convert($password) {
         return password_hash($password, PASSWORD_DEFAULT);
-    }
-
-    protected function addUserToSession() {
-        $user = $this->read($this->id);
-        $_SESSION["loggedin"] = $user->uname;
-        $_SESSION["loggedinName"] = $user->fname;
-        $_SESSION["loggedinID"] = $user->id;
     }
 
     protected function validate() {
@@ -101,7 +81,7 @@ class User {
         $isValidLastName = Validator::validateName(
             $this->lastName,
             $this->sanitized['lastName']
-        );;
+        );
         $isValidEmail = Validator::validateInputEmail($this->email);
         $isValidUserName = Validator::validateUserName(
             $this->userName,
@@ -128,23 +108,23 @@ class User {
         ];
     }
 
-    protected function create() {
-        $db = new Database();
-        $sql = 'INSERT INTO users(fname, lname, email, uname, password) ';
-        $sql .= 'values(:fname, :lname, :email, :uname, :password)';
-        $created = $db->insertIntoTable(
-            $sql,
-            [':fname', ':lname', ':email', ':uname', ':password'],
-            [
-                $this->firstName,
-                $this->lastName,
-                $this->email,
-                $this->userName,
-                $this->password,
-            ]
-        );
-        return $created ? true : false;
-    }
+//    protected function create() {
+//        $db = new Database();
+//        $sql = 'INSERT INTO users(fname, lname, email, uname, password) ';
+//        $sql .= 'values(:fname, :lname, :email, :uname, :password)';
+//        $created = $db->insertIntoTable(
+//            $sql,
+//            [':fname', ':lname', ':email', ':uname', ':password'],
+//            [
+//                $this->firstName,
+//                $this->lastName,
+//                $this->email,
+//                $this->userName,
+//                $this->password,
+//            ]
+//        );
+//        return $created ? true : false;
+//    }
 
     protected function read($id) {
         $db = new Database();

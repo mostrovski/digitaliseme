@@ -5,6 +5,7 @@ namespace Digitaliseme\Core\Database;
 use Digitaliseme\Core\Database\Contracts\Connection;
 use Digitaliseme\Core\Database\Contracts\SqlBuilder;
 use Digitaliseme\Exceptions\DatabaseException;
+use Digitaliseme\Models\Model;
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -14,6 +15,8 @@ class DB
 {
     protected PDO $handler;
     protected SqlBuilder $query;
+
+    protected ?string $fetchClass = null;
     protected mixed $statement = null;
 
     final public function __construct(Connection $connection, SqlBuilder $query) {
@@ -24,6 +27,15 @@ class DB
     public static function wire(Connection $connection, SqlBuilder $query): static
     {
         return new static($connection, $query);
+    }
+
+    public function setFetchClass(string $className): static
+    {
+        if (class_exists($className)) {
+            $this->fetchClass = $className;
+        }
+
+        return $this;
     }
 
     public function table(string $name): static
@@ -145,6 +157,10 @@ class DB
 
         if (! $this->statement instanceof PDOStatement) {
             throw DatabaseException::sqlPreparationFailed();
+        }
+
+        if (! empty($this->fetchClass)) {
+            $this->statement->setFetchMode(PDO::FETCH_CLASS, $this->fetchClass);
         }
 
         $this->statement->execute($this->query->bindings());
