@@ -89,6 +89,15 @@ class Query implements SqlBuilder
         $this->whereClauses[] = new WhereClause($column, $operator, $value, $glue);
     }
 
+    public function reset(): void
+    {
+        $this->action = null;
+        $this->bindings = [];
+        $this->selectables = [];
+        $this->manipulationData = [];
+        $this->whereClauses = [];
+    }
+
     protected function hasNoWhereClauses(): bool
     {
         return count($this->whereClauses) === 0;

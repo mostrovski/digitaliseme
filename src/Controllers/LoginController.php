@@ -73,6 +73,7 @@ class LoginController extends Controller
             return;
         }
 
+        /** @var User $user */
         $_SESSION["loggedin"] = $user->uname;
         $_SESSION["loggedinName"] = $user->fname;
         $_SESSION["loggedinID"] = $user->id;

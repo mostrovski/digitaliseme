@@ -3,54 +3,28 @@
 namespace Digitaliseme\Models;
 
 use Digitaliseme\Core\Database;
+use Digitaliseme\Core\ORM\Meta\ModelAttribute;
+use Digitaliseme\Core\ORM\Meta\Setter;
+use Digitaliseme\Core\ORM\Model;
 use Digitaliseme\Core\Validator;
-use Digitaliseme\Exceptions\DatabaseException;
 
-class User extends Model{
-    // Model of the user
-//    protected $id;
-//    protected $firstName;
-//    protected $lastName;
-//    protected $email;
-//    protected $userName;
-//    protected $password;
-//    protected $sanitized = [];
-
-//    public function __construct($params) {
-//        parent::__construct();
-//        if (!is_array($params)) {
-//            return;
-//        }
-//        if (isset($params['id'])) {
-//            $user = $this->read($params['id']);
-//            if (!is_object($user)) return;
-//            $this->id = $user->id;
-//            $this->firstName = $user->fname;
-//            $this->lastName = $user->lname;
-//            $this->email = $user->email;
-//            $this->userName = $user->uname;
-//            $this->password = $user->password;
-//        } else {
-//            $this->setFirstName($params['firstname'] ?? NULL);
-//            $this->setLastName($params['lastname'] ?? NULL);
-//            $this->setEmail($params['email'] ?? NULL);
-//            $this->setId($params['username'] ?? NULL);
-//            $this->setUserName($params['username'] ?? NULL);
-//            $this->setPassword($params['password']?? NULL);
-//        }
-//    }
-
-    /**
-     * {@inheritDoc}
-     * @return self
-     *
-     * @throws DatabaseException
-     */
-    public function create(array $params): static
-    {
-        $id = $this->query()->create($params);
-        return $this->query()->where('id', '=', $id)->first();
-    }
+class User extends Model
+{
+    #[ModelAttribute(protectedOnCreate: true, protectedOnUpdate: true)]
+    public int $id;
+    #[ModelAttribute]
+    public string $uname;
+    #[ModelAttribute]
+    public string $fname;
+    #[ModelAttribute]
+    public string $lname;
+    #[ModelAttribute]
+    public string $email;
+    #[
+        ModelAttribute(protectedOnUpdate: true),
+        Setter(methodName: 'convert')
+    ]
+    public string $password;
 
     public function signUp() {
         $validated = $this->validate();
@@ -69,7 +43,7 @@ class User extends Model{
         ];
     }
 
-    protected function convert($password) {
+    protected function convert(string $password): string {
         return password_hash($password, PASSWORD_DEFAULT);
     }
 

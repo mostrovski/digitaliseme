@@ -24,4 +24,6 @@ interface SqlBuilder
     public function useManipulationData(array $data);
 
     public function useWhereClause(string $column, string $operator, mixed $value, WhereGlue $glue);
+
+    public function reset();
 }

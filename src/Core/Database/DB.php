@@ -5,7 +5,6 @@ namespace Digitaliseme\Core\Database;
 use Digitaliseme\Core\Database\Contracts\Connection;
 use Digitaliseme\Core\Database\Contracts\SqlBuilder;
 use Digitaliseme\Exceptions\DatabaseException;
-use Digitaliseme\Models\Model;
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -164,6 +163,8 @@ class DB
         }
 
         $this->statement->execute($this->query->bindings());
+
+        $this->query->reset();
     }
 
     /**
