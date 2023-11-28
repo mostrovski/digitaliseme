@@ -3,9 +3,9 @@
 <?php if($data['status'] === 'okay') : ?>
 <div class="form">
     <form action="<?= config('app.url').'documents/store' ?>" method="POST">
-        <label for="fname" class="field_header">File Name </label>
+        <label for="first_name" class="field_header">File Name </label>
         <span class="required"><?= $data['errors']['fileName'] ?></span>
-        <input type="text" class="<?= $data['classes']['fileName'] ?>" name="fname" id="fname" value="<?= $data['fields']['fileName'] ?>">
+        <input type="text" class="<?= $data['classes']['fileName'] ?>" name="first_name" id="first_name" value="<?= $data['fields']['fileName'] ?>">
 
         <label for="doctitle" class="field_header">Document Title </label>
         <span class="required"><?= $data['errors']['docTitle'] ?></span>

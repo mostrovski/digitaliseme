@@ -13,11 +13,11 @@ class User extends Model
     #[ModelAttribute(protectedOnCreate: true, protectedOnUpdate: true)]
     public int $id;
     #[ModelAttribute]
-    public string $uname;
+    public string $username;
     #[ModelAttribute]
-    public string $fname;
+    public string $first_name;
     #[ModelAttribute]
-    public string $lname;
+    public string $last_name;
     #[ModelAttribute]
     public string $email;
     #[
@@ -70,8 +70,8 @@ class User extends Model
             $isValidUserName['result'] &&
             $isValidPassword['result'];
         $data = [
-            'firstname' => $isValidFirstName,
-            'lastname'  => $isValidLastName,
+            'first_name' => $isValidFirstName,
+            'last_name'  => $isValidLastName,
             'email'     => $isValidEmail,
             'username'  => $isValidUserName,
             'password'  => $isValidPassword,
@@ -84,11 +84,11 @@ class User extends Model
 
 //    protected function create() {
 //        $db = new Database();
-//        $sql = 'INSERT INTO users(fname, lname, email, uname, password) ';
-//        $sql .= 'values(:fname, :lname, :email, :uname, :password)';
+//        $sql = 'INSERT INTO users(first_name, last_name, email, username, password) ';
+//        $sql .= 'values(:first_name, :last_name, :email, :username, :password)';
 //        $created = $db->insertIntoTable(
 //            $sql,
-//            [':fname', ':lname', ':email', ':uname', ':password'],
+//            [':first_name', ':last_name', ':email', ':username', ':password'],
 //            [
 //                $this->firstName,
 //                $this->lastName,
@@ -108,8 +108,8 @@ class User extends Model
 
     protected function setId($userName) {
         $db = new Database();
-        $sql = 'SELECT id FROM users WHERE uname = :uname';
-        $user = $db->fetchSingleRow($sql, ':uname', $userName);
+        $sql = 'SELECT id FROM users WHERE username = :username';
+        $user = $db->fetchSingleRow($sql, ':username', $userName);
         $this->id = is_object($user) ? $user->id : NULL;
     }
 

@@ -6,8 +6,8 @@
         <label for="doctitle" class="field_header">Document Title </label>
         <input type="text" name="doctitle" id="doctitle" value="<?= $data['fields']['docTitle'] ?>" readonly>
 
-        <label for="fname" class="field_header">File Name </label>
-        <input type="text" name="fname" id="fname" value="<?= $data['fields']['fileName'] ?>" readonly>
+        <label for="first_name" class="field_header">File Name </label>
+        <input type="text" name="first_name" id="first_name" value="<?= $data['fields']['fileName'] ?>" readonly>
 
         <label for="created" class="field_header">Date of Creation </label>
         <input type="date" name="created" id="created" value="<?= $data['fields']['createdDate'] ?>" readonly>

@@ -4,7 +4,7 @@ namespace Digitaliseme\Core\Database;
 
 use Digitaliseme\Core\Database\Contracts\Connection;
 use Digitaliseme\Core\Database\Contracts\SqlBuilder;
-use Digitaliseme\Exceptions\DatabaseException;
+use Digitaliseme\Core\Exceptions\DatabaseException;
 use PDO;
 use PDOException;
 use PDOStatement;

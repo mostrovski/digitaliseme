@@ -1,6 +1,6 @@
 <?php
 
-namespace Digitaliseme\Exceptions;
+namespace Digitaliseme\Core\Exceptions;
 
 use Exception;
 

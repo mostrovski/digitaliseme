@@ -2,6 +2,8 @@
 
 namespace Digitaliseme\Core;
 
+use JetBrains\PhpStorm\NoReturn;
+
 class Helper {
     /*************************************************************************
      *
@@ -12,7 +14,10 @@ class Helper {
         return isset($_SESSION["loggedin"]);
     }
 
-    public static function redirect($url) {
+    public static function redirect(string $url): void {
+        if (! str_starts_with($url, config('app.url'))) {
+            $url = config('app.url').ltrim($url, '/');
+        }
         header('Location: '.$url);
         exit;
     }

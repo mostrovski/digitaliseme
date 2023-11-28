@@ -1,26 +1,53 @@
 <span class="form_header">&nbsp;&#9784; Sign up </span>
-<span class="<?= $data['status'] ?>"><?= $data['message'] ?></span>
+<span class="<?= flash()->getType() === 'error' ? 'error' : 'okay' ?>">
+    <?= flash()->getMessage() ?>
+</span>
 <div class="form">
     <form action="<?= config('app.url').'signup/init' ?>" method="POST">
-        <label for="fname" class="field_header">First Name </label>
-        <span class="required"><?= $data['errors']['firstname'] ?></span>
-        <input type="text" class="<?= $data['classes']['firstname'] ?>" name="fname" id="fname" value="<?= $data['fields']['firstname'] ?>">
+        <label for="first_name" class="field_header">First Name </label>
+        <span class="required"><?= errors('first_name') ?></span>
+        <input type="text"
+               class="<?= errors('first_name') ? 'invalid' : '' ?>"
+               name="first_name"
+               id="first_name"
+               value="<?= $data['fields']['first_name'] ?>"
+        >
 
-        <label for="lname" class="field_header">Last Name </label>
-        <span class="required"><?= $data['errors']['lastname'] ?></span>
-        <input type="text" class="<?= $data['classes']['lastname'] ?>" name="lname" id="lname" value="<?= $data['fields']['lastname'] ?>">
+        <label for="last_name" class="field_header">Last Name </label>
+        <span class="required"><?= errors('last_name') ?></span>
+        <input type="text"
+               class="<?= errors('last_name') ? 'invalid' : '' ?>"
+               name="last_name"
+               id="last_name"
+               value="<?= $data['fields']['last_name'] ?>"
+        >
 
         <label for="email" class="field_header">Email </label>
-        <span class="required"><?= $data['errors']['email'] ?></span>
-        <input type="text" class="<?= $data['classes']['email'] ?>" name="email" id="email" value="<?= $data['fields']['email'] ?>">
+        <span class="required"><?= errors('email') ?></span>
+        <input type="text"
+               class="<?= errors('email') ? 'invalid' : '' ?>"
+               name="email"
+               id="email"
+               value="<?= $data['fields']['email'] ?>"
+        >
 
         <label for="username" class="field_header">User Name </label>
-        <span class="required"><?= $data['errors']['username'] ?></span>
-        <input type="text" class="<?= $data['classes']['username'] ?>" name="username" id="username" value="<?= $data['fields']['username'] ?>">
+        <span class="required"><?= errors('username') ?></span>
+        <input type="text"
+               class="<?= errors('username') ? 'invalid' : '' ?>"
+               name="username"
+               id="username"
+               value="<?= $data['fields']['username'] ?>"
+        >
 
         <label for="password" class="field_header">Password </label>
-        <span class="required"><?= $data['errors']['password'] ?></span>
-        <input type="password" class="<?= $data['classes']['password'] ?>" name="password" id="password" value="<?= $data['fields']['password'] ?>">
+        <span class="required"><?= errors('password') ?></span>
+        <input type="password"
+               class="<?= errors('password') ? 'invalid' : '' ?>"
+               name="password"
+               id="password"
+               value="<?= $data['fields']['password'] ?>"
+        >
 
         <input type="submit" value="Sign up" name="signme">
 

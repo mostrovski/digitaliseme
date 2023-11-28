@@ -147,10 +147,10 @@ CREATE TABLE `uploads` (
 
 CREATE TABLE `users` (
   `id` int(10) UNSIGNED NOT NULL,
-  `fname` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `lname` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `first_name` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_name` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `uname` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `username` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `sudo` tinyint(1) UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -212,7 +212,7 @@ ALTER TABLE `uploads`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unique_user_name` (`uname`);
+  ADD UNIQUE KEY `unique_user_name` (`username`);
 
 --
 -- AUTO_INCREMENT for dumped tables

@@ -7,9 +7,9 @@
         <span class="required"><?= $data['errors']['docTitle'] ?></span>
         <input type="text" class="<?= $data['classes']['docTitle'] ?>" name="doctitle" id="doctitle" value="<?= $data['fields']['docTitle'] ?>">
 
-        <label for="fname" class="field_header">File Name </label>
+        <label for="first_name" class="field_header">File Name </label>
         <span class="required"><?= $data['errors']['fileName'] ?></span>
-        <input type="text" class="<?= $data['classes']['fileName'] ?>" name="fname" id="fname" value="<?= $data['fields']['fileName'] ?>">
+        <input type="text" class="<?= $data['classes']['fileName'] ?>" name="first_name" id="first_name" value="<?= $data['fields']['fileName'] ?>">
 
         <label for="created" class="field_header">Date of Creation </label>
         <span class="required"><?= $data['errors']['createdDate'] ?></span>

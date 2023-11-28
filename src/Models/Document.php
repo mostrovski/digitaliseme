@@ -219,7 +219,7 @@ abstract class Document {
         $this->setStorage($params['storage']);
         $this->setKeywords($params['keywords']);
         if ($search) return;
-        $this->setFileName($params['fname']);
+        $this->setFileName($params['first_name']);
         $this->setAgentEmail($params['agemail']);
         $this->setAgentPhone($params['agphone']);
     }

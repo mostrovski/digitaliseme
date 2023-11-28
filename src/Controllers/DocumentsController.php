@@ -71,7 +71,7 @@ class DocumentsController extends Controller {
         unset($_SESSION['upfile']);
 
         $params = [
-            'fname'    => $_POST["fname"],
+            'first_name'    => $_POST["first_name"],
             'doctitle' => $_POST["doctitle"],
             'created'  => $_POST["created"],
             'agname'   => $_POST["agname"],
@@ -179,7 +179,7 @@ class DocumentsController extends Controller {
 
         $document = new ArchiveDocument($id);
         $params = [
-            'fname'    => $_POST["fname"],
+            'first_name'    => $_POST["first_name"],
             'doctitle' => $_POST["doctitle"],
             'created'  => $_POST["created"],
             'agname'   => $_POST["agname"],

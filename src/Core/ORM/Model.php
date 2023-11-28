@@ -5,10 +5,11 @@ namespace Digitaliseme\Core\ORM;
 use Digitaliseme\Core\Database\DB;
 use Digitaliseme\Core\Database\MySQL;
 use Digitaliseme\Core\Database\Query;
+use Digitaliseme\Core\Exceptions\DatabaseException;
 use Digitaliseme\Core\ORM\Meta\ModelAttribute;
 use Digitaliseme\Core\ORM\Meta\Setter;
 use Digitaliseme\Core\Traits\Reflectable;
-use Digitaliseme\Exceptions\DatabaseException;
+use PDOException;
 use ReflectionAttribute;
 use ReflectionProperty;
 
@@ -53,11 +54,17 @@ abstract class Model
     public function create(array $params): static
     {
         $params = $this->filteredParams($params, $this->protectedOnCreate);
-        $id = $this->db->create($params);
-        $newInstance = $this->db->where('id', '=', $id)->first();
+        try {
+            $id = $this->db->create($params);
+            $newInstance = $this->db->where('id', '=', $id)->first();
+        } catch (PDOException $e) {
+            throw new DatabaseException($e->getMessage());
+        }
+
         if (! $newInstance instanceof static) {
             throw new DatabaseException('Could not create new instance.');
         }
+
         return $newInstance;
     }
     public function getTableName(): string
@@ -148,12 +155,12 @@ abstract class Model
 
     protected function guessTableName(): string
     {
-        $modelName = basename(str_replace('\\', '/', static::class));
+        $modelast_name = basename(str_replace('\\', '/', static::class));
         $tableName = '';
-        $length = strlen($modelName);
+        $length = strlen($modelast_name);
 
         for ($i = 0; $i < $length; $i++) {
-            $char = $modelName[$i];
+            $char = $modelast_name[$i];
             if ($i !== 0 && ctype_upper($char)) {
                 $tableName .= '_';
             }

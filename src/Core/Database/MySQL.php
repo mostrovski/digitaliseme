@@ -3,7 +3,7 @@
 namespace Digitaliseme\Core\Database;
 
 use Digitaliseme\Core\Database\Contracts\StaticConnection;
-use Digitaliseme\Exceptions\DatabaseException;
+use Digitaliseme\Core\Exceptions\DatabaseException;
 use PDO;
 
 class MySQL extends StaticConnection

@@ -2,6 +2,7 @@
 
 namespace Digitaliseme\Controllers;
 
+use Digitaliseme\Core\Exceptions\ValidatorException;
 use Digitaliseme\Core\Helper;
 use Digitaliseme\Models\User;
 use Throwable;
@@ -21,10 +22,10 @@ class LoginController extends Controller
     public function index(): void
     {
         if (Helper::isUserLoggedIn()) {
-            $_SESSION['flash'] = config('app.messages.info.LOGIN_ALREADY');
-            Helper::redirect(config('app.url'));
+            flash()->info(config('app.messages.info.LOGIN_ALREADY'));
+            $this->redirect('/');
         }
-        unset($_SESSION['flash']);
+
         $this->destroyToken();
         $this->data['token'] = $this->generateToken();
         $this->view('login', $this->data);
@@ -32,13 +33,14 @@ class LoginController extends Controller
 
     /**
      * Log user in if the input is valid
+     * @throws ValidatorException
      */
     public function init(): void
     {
         if (!$this->isPostRequest() ||
             !$this->isValidToken($_POST['token'])
         ) {
-            Helper::redirect(config('app.url') . '404');
+            $this->redirect('404');
         }
 
         $this->destroyToken();
@@ -48,51 +50,53 @@ class LoginController extends Controller
             'password' => $_POST["password"]
         ];
 
-        $validLogin = false;
+        $validator = $this->validate($params, [
+            'username' => ['required'],
+            'password' => ['required'],
+        ], [
+            'username.required' => 'Username is required.',
+            'password.required' => 'Password is required.',
+        ]);
+
+        if ($validator->fails()) {
+            $this->withErrors($validator->getErrors())->redirect('login');
+        }
+
+        $validCredentials = false;
 
         try {
             $user = (new User)->query()
-                ->where('uname', '=', $params['username'])
+                ->where('username', '=', $params['username'])
                 ->first();
             $password = (string) $user?->password;
             if (password_verify($params['password'], $password)) {
-                $validLogin = true;
+                $validCredentials = true;
             }
         } catch (Throwable) {
             // Log error
         }
 
-        if (! $validLogin) {
-            $this->data['classes']['fields'] = 'invalid';
-            $this->data['classes']['message'] = 'error';
-            $this->data['fields']['username'] = $params['username'];
-            $this->data['fields']['password'] = $params['password'];
-            $this->data['message'] = config('app.messages.error.LOGIN_ERROR');
-            $this->index();
-
-            return;
+        if (! $validCredentials) {
+            flash()->error(config('app.messages.error.LOGIN_ERROR'));
+            $this->redirect('login');
         }
 
         /** @var User $user */
-        $_SESSION["loggedin"] = $user->uname;
-        $_SESSION["loggedinName"] = $user->fname;
+        $_SESSION["loggedin"] = $user->username;
+        $_SESSION["loggedinName"] = $user->first_name;
         $_SESSION["loggedinID"] = $user->id;
-        $_SESSION['flash'] = config('app.messages.info.LOGIN_OK');
-        Helper::redirect(config('app.url'));
+
+        flash()->success(config('app.messages.info.LOGIN_OK'));
+        $this->redirect('/');
     }
 
     protected function setData(): void
     {
         $this->data = [
             'title'   => config('app.page.titles')['login'],
-            'message' => $_SESSION['flash'] ?? '',
             'fields'  => [
                 'username' => '',
                 'password' => '',
-            ],
-            'classes' => [
-                'message' => 'okay',
-                'fields'  => '',
             ],
         ];
     }

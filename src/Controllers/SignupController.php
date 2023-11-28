@@ -2,87 +2,92 @@
 
 namespace Digitaliseme\Controllers;
 
+use Digitaliseme\Core\Exceptions\ValidatorException;
 use Digitaliseme\Core\Helper;
 use Digitaliseme\Models\User;
 
-class SignupController extends Controller {
-
-    protected $data;
+class SignupController extends Controller
+{
+    protected array $data;
 
     public function __construct() {
         $this->setData();
     }
 
-    public function index() {
-        // Show the signup form
+    public function index(): void
+    {
         if (Helper::isUserLoggedIn()) {
-            $_SESSION['flash'] = config('app.messages.info.SIGNUP_ALREADY');
-            return Helper::redirect(config('app.url'));
+            flash()->info(config('app.messages.info.SIGNUP_ALREADY'));
+            $this->redirect('/');
         }
+
         $this->destroyToken();
         $this->data['token'] = $this->generateToken();
-        return $this->view('signup', $this->data);
+        $this->view('signup', $this->data);
     }
 
-    public function init() {
-        // Sign user up if the input is valid
-        if (!$this->isPostRequest() ||
-            !$this->isValidToken($_POST['token']))
-        return Helper::redirect(config('app.url').'404');
+    /**
+     * @throws ValidatorException
+     */
+    public function init(): void
+    {
+        if (! $this->isPostRequest() ||
+            ! $this->isValidToken($_POST['token'])
+        ) {
+            $this->redirect('404');
+        }
 
         $this->destroyToken();
 
         $params = [
-            'firstname' => $_POST["fname"],
-            'lastname'  => $_POST["lname"],
-            'email'     => $_POST["email"],
-            'username'  => $_POST["username"],
-            'password'  => $_POST["password"],
+            'first_name' => $_POST["first_name"],
+            'last_name' => $_POST["last_name"],
+            'email' => $_POST["email"],
+            'username' => $_POST["username"],
+            'password' => $_POST["password"],
         ];
+
+        $validator = $this->validate($params, [
+            'first_name' => ['required'],
+            'last_name' => ['required'],
+            'email' => ['required'],
+            'username' => ['required'],
+            'password' => ['required'],
+        ], [
+            'first_name.required' => 'First name is required.',
+            'last_name.required' => 'Last name is required.',
+            'email.required' => 'Email is required.',
+            'username.required' => 'Username is required.',
+            'password.required' => 'Password is required.',
+        ]);
+
+        if ($validator->fails()) {
+            $this->withErrors($validator->getErrors())->redirect('signup');
+        }
+
         $user = new User($params);
         $signup = $user->signUp();
 
         if ($signup['valid']) {
             $_SESSION['flash'] = $signup['message'];
-            return Helper::redirect(config('app.url').'login');
+            Helper::redirect(config('app.url').'login');
         }
 
         $this->data['fields']['password'] = $_POST["password"];
         foreach ($this->data['fields'] as $key => $value) {
             $this->data['fields'][$key] = $signup['input'][$key]['show'];
         }
-        foreach ($this->data['errors'] as $key => $value) {
-            $this->data['errors'][$key] = $signup['input'][$key]['error'];
-        }
-        foreach ($this->data['classes'] as $key => $value) {
-            $this->data['classes'][$key] = $signup['input'][$key]['class'];
-        }
 
-        return $this->index();
+        $this->index();
     }
 
-    protected function setData() {
+    protected function setData(): void
+    {
         $this->data = [
             'title'   => config('app.page.titles')['signup'],
-            'message' => '',
-            'status'  => 'okay',
             'fields'  => [
-                'firstname'   => '',
-                'lastname'    => '',
-                'email'       => '',
-                'username'    => '',
-                'password'    => '',
-            ],
-            'errors'  => [
-                'firstname'   => '',
-                'lastname'    => '',
-                'email'       => '',
-                'username'    => '',
-                'password'    => '',
-            ],
-            'classes' => [
-                'firstname'   => '',
-                'lastname'    => '',
+                'first_name'   => '',
+                'last_name'    => '',
                 'email'       => '',
                 'username'    => '',
                 'password'    => '',
