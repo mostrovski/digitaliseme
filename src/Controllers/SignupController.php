@@ -46,6 +46,7 @@ class SignupController extends Controller
             'username' => $_POST["username"],
             'password' => $_POST["password"],
         ];
+        old()->set($params);
 
         $validator = $this->validate($params, [
             'first_name' => ['required'],
@@ -84,14 +85,7 @@ class SignupController extends Controller
     protected function setData(): void
     {
         $this->data = [
-            'title'   => config('app.page.titles')['signup'],
-            'fields'  => [
-                'first_name'   => '',
-                'last_name'    => '',
-                'email'       => '',
-                'username'    => '',
-                'password'    => '',
-            ],
+            'title' => config('app.page.titles')['signup'],
         ];
     }
 }

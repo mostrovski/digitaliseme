@@ -92,7 +92,7 @@ return [
             'DOCUMENT_DELETE_RECORD_FAILURE' => '&#8921; failed to delete document record',
             'GENERAL_ERROR' => '&#8921; something went wrong...',
             'TRY_AGAIN_ERROR' => '&#8921; something went wrong... Try again!',
-            'LOGIN_ERROR' => '&#8921; user name or password is wrong',
+            'LOGIN_ERROR' => '&#8921; username or password is wrong',
             'USER_NAME_UNIQUE_ERROR' => '&#8921; you can not use this name',
             'EMPTY_DATE_ERROR' => '&#8921; date has to be chosen',
             'NO_FILE_CHOSEN_ERROR' => '&#8921; file was not chosen',

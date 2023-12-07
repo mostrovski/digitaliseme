@@ -45,7 +45,12 @@ img {
 
 .required {
     color: #CD5C5C;
-    font-size: 16px;
+}
+
+.success {
+    color: #3c9c90;
+    font-size: 17px;
+    letter-spacing: 1px;
 }
 
 .okay {
@@ -218,6 +223,14 @@ input.valid {
     color: #2c3e50;
     font-size: 20px;
     letter-spacing: 1px;
+}
+
+.form_section {
+    padding: 5px 0;
+}
+
+label, .error_message {
+    padding: 0 5px;
 }
 
 /*

@@ -4,50 +4,70 @@
 </span>
 <div class="form">
     <form action="<?= config('app.url').'signup/init' ?>" method="POST">
-        <label for="first_name" class="field_header">First Name </label>
-        <span class="required"><?= errors('first_name') ?></span>
-        <input type="text"
-               class="<?= errors('first_name') ? 'invalid' : '' ?>"
-               name="first_name"
-               id="first_name"
-               value="<?= $data['fields']['first_name'] ?>"
-        >
+        <div class="form_section">
+            <label for="first_name" class="field_header">First Name </label>
+            <input type="text"
+                   class="<?= errors('first_name') ? 'invalid' : '' ?>"
+                   name="first_name"
+                   id="first_name"
+                   value="<?= old('first_name') ?>"
+            >
+            <div class="error_message">
+                <small class="required"><?= errors('first_name') ?></small>
+            </div>
+        </div>
 
-        <label for="last_name" class="field_header">Last Name </label>
-        <span class="required"><?= errors('last_name') ?></span>
-        <input type="text"
-               class="<?= errors('last_name') ? 'invalid' : '' ?>"
-               name="last_name"
-               id="last_name"
-               value="<?= $data['fields']['last_name'] ?>"
-        >
+        <div class="form_section">
+            <label for="last_name" class="field_header">Last Name </label>
+            <input type="text"
+                   class="<?= errors('last_name') ? 'invalid' : '' ?>"
+                   name="last_name"
+                   id="last_name"
+                   value="<?= old('last_name') ?>"
+            >
+            <div class="error_message">
+                <small class="required"><?= errors('last_name') ?></small>
+            </div>
+        </div>
 
-        <label for="email" class="field_header">Email </label>
-        <span class="required"><?= errors('email') ?></span>
-        <input type="text"
-               class="<?= errors('email') ? 'invalid' : '' ?>"
-               name="email"
-               id="email"
-               value="<?= $data['fields']['email'] ?>"
-        >
+        <div class="form_section">
+            <label for="email" class="field_header">Email </label>
+            <input type="text"
+                   class="<?= errors('email') ? 'invalid' : '' ?>"
+                   name="email"
+                   id="email"
+                   value="<?= old('email') ?>"
+            >
+            <div class="error_message">
+                <small class="required"><?= errors('email') ?></small>
+            </div>
+        </div>
 
-        <label for="username" class="field_header">User Name </label>
-        <span class="required"><?= errors('username') ?></span>
-        <input type="text"
-               class="<?= errors('username') ? 'invalid' : '' ?>"
-               name="username"
-               id="username"
-               value="<?= $data['fields']['username'] ?>"
-        >
+        <div class="form_section">
+            <label for="username" class="field_header">User Name </label>
+            <input type="text"
+                   class="<?= errors('username') ? 'invalid' : '' ?>"
+                   name="username"
+                   id="username"
+                   value="<?= old('username') ?>"
+            >
+            <div class="error_message">
+                <small class="required"><?= errors('username') ?></small>
+            </div>
+        </div>
 
-        <label for="password" class="field_header">Password </label>
-        <span class="required"><?= errors('password') ?></span>
-        <input type="password"
-               class="<?= errors('password') ? 'invalid' : '' ?>"
-               name="password"
-               id="password"
-               value="<?= $data['fields']['password'] ?>"
-        >
+        <div class="form_section">
+            <label for="password" class="field_header">Password </label>
+            <input type="password"
+                   class="<?= errors('password') ? 'invalid' : '' ?>"
+                   name="password"
+                   id="password"
+                   value="<?= old('password') ?>"
+            >
+            <div class="error_message">
+                <small class="required"><?= errors('password') ?></small>
+            </div>
+        </div>
 
         <input type="submit" value="Sign up" name="signme">
 

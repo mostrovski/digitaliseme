@@ -49,6 +49,7 @@ class LoginController extends Controller
             'username' => $_POST["username"],
             'password' => $_POST["password"]
         ];
+        old()->set($params);
 
         $validator = $this->validate($params, [
             'username' => ['required'],
@@ -93,11 +94,7 @@ class LoginController extends Controller
     protected function setData(): void
     {
         $this->data = [
-            'title'   => config('app.page.titles')['login'],
-            'fields'  => [
-                'username' => '',
-                'password' => '',
-            ],
+            'title' => config('app.page.titles')['login'],
         ];
     }
 }

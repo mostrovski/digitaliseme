@@ -9,3 +9,4 @@ Digitaliseme\Core\Page::render();
 
 clearErrors();
 clearFlash();
+clearOld();

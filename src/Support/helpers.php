@@ -2,6 +2,7 @@
 
 use Digitaliseme\Core\Application;
 use Digitaliseme\Core\Messaging\Flash;
+use Digitaliseme\Core\Messaging\OldInput;
 
 function app(): Application
 {
@@ -67,4 +68,23 @@ function flash(): Flash
 function clearFlash(): void
 {
     flash()->clear();
+}
+
+/**
+ * @return OldInput|mixed
+ */
+function old(?string $key = null): mixed
+{
+    $old = new OldInput;
+
+    if (empty($key)) {
+        return $old;
+    }
+
+    return $old->get($key);
+}
+
+function clearOld(): void
+{
+    (new OldInput)->clear();
 }

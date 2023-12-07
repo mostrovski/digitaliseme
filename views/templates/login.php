@@ -1,26 +1,34 @@
 <span class="form_header">&nbsp;&#9784; Log in </span>
-<span class="<?= flash()->getType() === 'error' ? 'error' : 'okay' ?>">
+<span class="<?= flash()->getType() ?>">
     <?= flash()->getMessage() ?>
 </span>
 <div class="form">
     <form action="<?= config('app.url').'login/init' ?>" method="POST">
-        <label for="username" class="field_header">Username</label>
-        <span class="required"><?= errors('username') ?></span>
-        <input type="text"
-               class="<?= errors('username') ? 'invalid' : '' ?>"
-               name="username"
-               id="username"
-               value="<?= $data['fields']['username'] ?>"
-        >
+        <div class="form_section">
+            <label for="username" class="field_header">Username</label>
+            <input type="text"
+                   class="<?= errors('username') ? 'invalid' : '' ?>"
+                   name="username"
+                   id="username"
+                   value="<?= old('username') ?>"
+            >
+            <div class="error_message">
+                <small class="required"><?= errors('username') ?></small>
+            </div>
+        </div>
 
-        <label for="password" class="field_header">Password</label>
-        <span class="required"><?= errors('password') ?></span>
-        <input type="password"
-               class="<?= errors('username') ? 'invalid' : '' ?>"
-               name="password"
-               id="password"
-               value="<?= $data['fields']['password'] ?>"
-        >
+        <div class="form_section">
+            <label for="password" class="field_header">Password</label>
+            <input type="password"
+                   class="<?= errors('password') ? 'invalid' : '' ?>"
+                   name="password"
+                   id="password"
+                   value="<?= old('password') ?>"
+            >
+            <div class="error_message">
+                <small class="required"><?= errors('password') ?></small>
+            </div>
+        </div>
 
         <input type="submit" value="Log in" name="logme">
 
