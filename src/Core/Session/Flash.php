@@ -1,9 +1,21 @@
 <?php
 
-namespace Digitaliseme\Core\Messaging;
+namespace Digitaliseme\Core\Session;
 
 class Flash
 {
+    private static ?self $instance = null;
+    final private function __construct() {}
+
+    public static function handler(): self
+    {
+        if (self::$instance === null) {
+            self::$instance = new self;
+        }
+
+        return self::$instance;
+    }
+
     public function success(string $message): void
     {
         $this->set($message, 'success');

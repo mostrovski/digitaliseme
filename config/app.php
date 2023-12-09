@@ -120,7 +120,7 @@ return [
             'NO_INPUT_ERROR' => '&#8921; you have not specified search criteria',
         ],
         'info' => [
-            'SIGNUP_OK' => '&#8921; kudos, you can now log in with your user name and password',
+            'SIGNUP_OK' => '&#8921; kudos, you can now log in with your username and password',
             'NO_UPLOADS' => '&#8921; there is nothing to work on, upload new file <a href="https://digitaliseme.ddev.site/uploads/create">here</a>',
             'NO_DOCUMENTS' => '&#8921; the archive is empty, upload new file <a href="https://digitaliseme.ddev.site/uploads/create">here</a>',
             'NO_SEARCH_RESULTS' => '&#8921; there are no documents that match your search request',

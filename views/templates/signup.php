@@ -10,7 +10,7 @@
                    class="<?= errors('first_name') ? 'invalid' : '' ?>"
                    name="first_name"
                    id="first_name"
-                   value="<?= old('first_name') ?>"
+                   value="<?= show(old('first_name')) ?>"
             >
             <div class="error_message">
                 <small class="required"><?= errors('first_name') ?></small>
@@ -23,7 +23,7 @@
                    class="<?= errors('last_name') ? 'invalid' : '' ?>"
                    name="last_name"
                    id="last_name"
-                   value="<?= old('last_name') ?>"
+                   value="<?= show(old('last_name')) ?>"
             >
             <div class="error_message">
                 <small class="required"><?= errors('last_name') ?></small>
@@ -36,7 +36,7 @@
                    class="<?= errors('email') ? 'invalid' : '' ?>"
                    name="email"
                    id="email"
-                   value="<?= old('email') ?>"
+                   value="<?= show(old('email')) ?>"
             >
             <div class="error_message">
                 <small class="required"><?= errors('email') ?></small>
@@ -44,12 +44,12 @@
         </div>
 
         <div class="form_section">
-            <label for="username" class="field_header">User Name </label>
+            <label for="username" class="field_header">Username </label>
             <input type="text"
                    class="<?= errors('username') ? 'invalid' : '' ?>"
                    name="username"
                    id="username"
-                   value="<?= old('username') ?>"
+                   value="<?= show(old('username')) ?>"
             >
             <div class="error_message">
                 <small class="required"><?= errors('username') ?></small>
@@ -62,7 +62,7 @@
                    class="<?= errors('password') ? 'invalid' : '' ?>"
                    name="password"
                    id="password"
-                   value="<?= old('password') ?>"
+                   value=""
             >
             <div class="error_message">
                 <small class="required"><?= errors('password') ?></small>

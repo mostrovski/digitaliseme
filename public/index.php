@@ -4,9 +4,7 @@ require __DIR__.'/../vendor/autoload.php';
 
 session_start();
 
-Digitaliseme\Core\Application::resolve();
+$app = Digitaliseme\Core\Application::resolve();
+$app->start();
 Digitaliseme\Core\Page::render();
-
-clearErrors();
-clearFlash();
-clearOld();
+$app->terminate();

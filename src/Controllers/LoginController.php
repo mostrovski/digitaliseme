@@ -49,7 +49,6 @@ class LoginController extends Controller
             'username' => $_POST["username"],
             'password' => $_POST["password"]
         ];
-        old()->set($params);
 
         $validator = $this->validate($params, [
             'username' => ['required'],

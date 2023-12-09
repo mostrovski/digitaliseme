@@ -22,6 +22,10 @@ abstract class Model
     /**
      * @var array<int,string>
      */
+    protected array $attributes = [];
+    /**
+     * @var array<int,string>
+     */
     protected array $protectedOnCreate = [];
     /**
      * @var array<int,string>
@@ -38,7 +42,7 @@ abstract class Model
             ->setFetchClass(static::class)
             ->table($this->getTableName());
 
-        $this->registerProtectedAttributes();
+        $this->registerAttributes();
         $this->registerSetters();
     }
 
@@ -73,7 +77,7 @@ abstract class Model
     }
     protected function registerSetters(): void
     {
-        $attributes = $this->getAttributes();
+        $attributes = $this->getAttributeProperties();
 
         if (empty($attributes)) {
             return;
@@ -92,15 +96,15 @@ abstract class Model
         }
     }
 
-    protected function registerProtectedAttributes(): void
+    protected function registerAttributes(): void
     {
-        $attributes = $this->getAttributes();
+        $properties = $this->getAttributeProperties();
 
-        if (empty($attributes)) {
+        if (empty($properties)) {
             return;
         }
 
-        foreach ($attributes as $property) {
+        foreach ($properties as $property) {
             /** @var ReflectionAttribute $attribute */
             $attribute = current($property->getAttributes(ModelAttribute::class));
             /** @var ModelAttribute $modelAttribute */
@@ -113,13 +117,15 @@ abstract class Model
             if ($modelAttribute->protectedOnUpdate) {
                 $this->protectedOnUpdate[] = $property->getName();
             }
+
+            $this->attributes[] = $property->getName();
         }
     }
 
     /**
      * @return ReflectionProperty[]
      */
-    protected function getAttributes(): array
+    protected function getAttributeProperties(): array
     {
         $properties = $this->reflection()->getProperties();
 
@@ -138,6 +144,10 @@ abstract class Model
         $filtered = [];
         foreach ($params as $key => $value) {
             if (in_array($key, $protected, true)) {
+                continue;
+            }
+
+            if (! in_array($key, $this->attributes, true)) {
                 continue;
             }
 

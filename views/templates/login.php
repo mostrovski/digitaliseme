@@ -10,7 +10,7 @@
                    class="<?= errors('username') ? 'invalid' : '' ?>"
                    name="username"
                    id="username"
-                   value="<?= old('username') ?>"
+                   value="<?= show(old('username')) ?>"
             >
             <div class="error_message">
                 <small class="required"><?= errors('username') ?></small>
@@ -23,7 +23,7 @@
                    class="<?= errors('password') ? 'invalid' : '' ?>"
                    name="password"
                    id="password"
-                   value="<?= old('password') ?>"
+                   value=""
             >
             <div class="error_message">
                 <small class="required"><?= errors('password') ?></small>

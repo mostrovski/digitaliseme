@@ -5,6 +5,7 @@ namespace Digitaliseme\Core\Database;
 use Digitaliseme\Core\Database\Contracts\Connection;
 use Digitaliseme\Core\Database\Contracts\SqlBuilder;
 use Digitaliseme\Core\Exceptions\DatabaseException;
+use Digitaliseme\Core\Exceptions\RecordNotFoundException;
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -102,6 +103,21 @@ class DB
         $this->execute();
 
         return $this->fetchOne();
+    }
+
+    /**
+     * @throws DatabaseException
+     * @throws PDOException
+     * @throws RecordNotFoundException
+     */
+    public function firstOrFail(): ?object
+    {
+        $result = $this->first();
+        if ($result === null) {
+            throw new RecordNotFoundException;
+        }
+
+        return $result;
     }
 
     /**

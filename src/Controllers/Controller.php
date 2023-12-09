@@ -4,6 +4,7 @@ namespace Digitaliseme\Controllers;
 
 use Digitaliseme\Core\Exceptions\ValidatorException;
 use Digitaliseme\Core\Helper;
+use Digitaliseme\Core\Session\Errors;
 use Digitaliseme\Core\Validation\Validator;
 
 abstract class Controller
@@ -58,7 +59,7 @@ abstract class Controller
 
     protected function withErrors(array $errors): static
     {
-        $_SESSION['errors'] = $errors;
+        Errors::handler()->set($errors);
 
         return $this;
     }

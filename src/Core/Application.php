@@ -2,6 +2,10 @@
 
 namespace Digitaliseme\Core;
 
+use Digitaliseme\Core\Session\Errors;
+use Digitaliseme\Core\Session\Flash;
+use Digitaliseme\Core\Session\OldInput;
+
 class Application
 {
     private static ?self $instance = null;
@@ -24,6 +28,18 @@ class Application
         }
 
         return self::$instance;
+    }
+
+    public function start(): void
+    {
+        OldInput::handler()->set();
+    }
+
+    public function terminate(): void
+    {
+        Errors::handler()->clear();
+        Flash::handler()->clear();
+        OldInput::handler()->clear();
     }
 
     public function root(): string

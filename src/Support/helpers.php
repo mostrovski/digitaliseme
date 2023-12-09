@@ -1,8 +1,9 @@
 <?php
 
 use Digitaliseme\Core\Application;
-use Digitaliseme\Core\Messaging\Flash;
-use Digitaliseme\Core\Messaging\OldInput;
+use Digitaliseme\Core\Session\Errors;
+use Digitaliseme\Core\Session\Flash;
+use Digitaliseme\Core\Session\OldInput;
 
 function app(): Application
 {
@@ -36,38 +37,20 @@ function config(string $key, $default = null): mixed
     return $default;
 }
 
-function errors(?string $key = null, bool $allPerKey = false): array|string|null
+function errors(?string $key = null, bool $allPerKey = false): Errors|array|string|null
 {
-    $errors = $_SESSION['errors'] ?? null;
-
-    if (empty($errors) || ! is_array($errors)) {
-        return null;
-    }
+    $errors = Errors::handler();
 
     if (empty($key)) {
         return $errors;
     }
 
-    if (array_key_exists($key, $errors)) {
-        return $allPerKey ? $errors[$key] : current($errors[$key]);
-    }
-
-    return null;
-}
-
-function clearErrors(): void
-{
-    unset($_SESSION['errors']);
+    return $errors->get($key, $allPerKey);
 }
 
 function flash(): Flash
 {
-    return new Flash;
-}
-
-function clearFlash(): void
-{
-    flash()->clear();
+    return Flash::handler();
 }
 
 /**
@@ -75,7 +58,7 @@ function clearFlash(): void
  */
 function old(?string $key = null): mixed
 {
-    $old = new OldInput;
+    $old = OldInput::handler();
 
     if (empty($key)) {
         return $old;
@@ -84,7 +67,7 @@ function old(?string $key = null): mixed
     return $old->get($key);
 }
 
-function clearOld(): void
+function show(mixed $input): string
 {
-    (new OldInput)->clear();
+    return htmlspecialchars((string) $input);
 }
