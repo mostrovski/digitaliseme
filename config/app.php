@@ -51,7 +51,7 @@ return [
     ],
 
     'files' => [
-        'supported_types' => ['pdf','PDF','png','PNG','jpg','JPG','jpeg','JPEG'],
+        'supported_types' => ['application/pdf', 'image/jpeg', 'image/png'],
         'max_size' => 1048576,
     ],
 

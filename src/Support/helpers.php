@@ -4,6 +4,7 @@ use Digitaliseme\Core\Application;
 use Digitaliseme\Core\Session\Errors;
 use Digitaliseme\Core\Session\Flash;
 use Digitaliseme\Core\Session\OldInput;
+use JetBrains\PhpStorm\NoReturn;
 
 function app(): Application
 {
@@ -35,6 +36,26 @@ function config(string $key, $default = null): mixed
     }
 
     return $default;
+}
+
+function storage_path(?string $relativePath = null, bool $public = false): string
+{
+    $path = app()->root().'/storage';
+
+    if ($public) {
+        $path .= '/public';
+    }
+
+    if (empty($relativePath)) {
+        return $path;
+    }
+
+    return $path.'/'.ltrim($relativePath, '/');
+}
+
+function document_root(): string
+{
+    return storage_path('documents/', public: true);
 }
 
 function errors(?string $key = null, bool $allPerKey = false): Errors|array|string|null
@@ -70,4 +91,19 @@ function old(?string $key = null): mixed
 function show(mixed $input): string
 {
     return htmlspecialchars((string) $input);
+}
+
+function randomString(string $prefix = ''): string
+{
+    return str_replace('.', '', uniqid($prefix, true));
+}
+
+#[NoReturn] function dump(...$values): void
+{
+    echo '<pre>';
+    foreach ($values as $value) {
+        var_dump($value);
+    }
+    echo '</pre>';
+    exit;
 }

@@ -19,6 +19,7 @@ abstract class Model
 
     protected DB $db;
     protected ?string $table = null;
+    protected string $primaryKey = 'id';
     /**
      * @var array<int,string>
      */
@@ -60,7 +61,7 @@ abstract class Model
         $params = $this->filteredParams($params, $this->protectedOnCreate);
         try {
             $id = $this->db->create($params);
-            $newInstance = $this->db->where('id', '=', $id)->first();
+            $newInstance = $this->db->where($this->primaryKey, '=', $id)->first();
         } catch (PDOException $e) {
             throw new DatabaseException($e->getMessage());
         }
@@ -71,10 +72,26 @@ abstract class Model
 
         return $newInstance;
     }
+
+    /**
+     * @throws DatabaseException
+     */
+    public function delete(): bool
+    {
+        if (! isset($this->{$this->primaryKey})) {
+            return false;
+        }
+
+        return (bool) $this->db
+            ->where($this->primaryKey, '=', $this->{$this->primaryKey})
+            ->delete();
+    }
+
     public function getTableName(): string
     {
         return empty($this->table) ? $this->guessTableName() : $this->table;
     }
+
     protected function registerSetters(): void
     {
         $attributes = $this->getAttributeProperties();

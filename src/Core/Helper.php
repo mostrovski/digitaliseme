@@ -72,13 +72,13 @@ class Helper {
         $num = 1;
         foreach ($files as $file) {
             $buttons = self::createButtonsForUploads(
-                $file->filepath,
+                $file->publicPath(),
                 $file->id
             );
             $table .= '<tr>';
             $table .= '<td>'.$num.'</td>';
             $table .= '<td>'.$file->filename.'</td>';
-            $table .= '<td>'.$file->uploaded.'</td>';
+            $table .= '<td>'.$file->created_at.'</td>';
             $table .= '<td>'.$buttons['preview'].'</td>';
             $table .= '<td>'.$buttons['proceed'].'</td>';
             $table .= '<td>'.$buttons['delete'].'</td>';

@@ -9,7 +9,8 @@
   "require": {
     "php": "^8.0",
     "ext-pdo": "*",
-    "ext-ctype": "*"
+    "ext-ctype": "*",
+    "ext-fileinfo": "*"
   },
   "autoload": {
     "psr-4": {

@@ -11,7 +11,8 @@ class SignupController extends Controller
 {
     protected array $data;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setData();
     }
 

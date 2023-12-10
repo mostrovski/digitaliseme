@@ -6,7 +6,7 @@ use Digitaliseme\Core\Helper;
 use Digitaliseme\Core\Validator;
 use Digitaliseme\Core\Database;
 
-class RawFile extends File {
+class RawFile extends OldFile {
     // Model of the file that is being uploaded
     protected $fileName;
     protected $extension;

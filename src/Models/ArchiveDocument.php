@@ -284,7 +284,7 @@ class ArchiveDocument extends Document {
     }
 
     protected function setDocFile($id) {
-        $this->docFile = new DocumentFile(['id' => $id]);
+        $this->docFile = new DocumentOldFile(['id' => $id]);
     }
 
     protected function setUserId($id) {

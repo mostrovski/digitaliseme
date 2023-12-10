@@ -2,7 +2,7 @@
 
 namespace Digitaliseme\Models;
 
-class UploadedFile extends File {
+class UploadedFile extends OldFile {
     // Model of the uploaded file
     protected $id;
     protected $path;

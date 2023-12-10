@@ -2,7 +2,7 @@
 
 namespace Digitaliseme\Models;
 
-class DocumentFile extends File {
+class DocumentFile extends OldFile {
     // Model of the file attached to the document
     protected $id;
     protected $name;

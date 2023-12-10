@@ -2,94 +2,163 @@
 
 namespace Digitaliseme\Controllers;
 
-use Digitaliseme\Core\Helper;
-use Digitaliseme\Models\RawFile;
-use Digitaliseme\Models\UploadedFile;
+use Digitaliseme\Core\Exceptions\FileNotFoundException;
+use Digitaliseme\Core\Exceptions\RecordNotFoundException;
+use Digitaliseme\Core\Storage\File;
+use Digitaliseme\Exceptions\FileException;
+use Digitaliseme\Exceptions\UploadedFileException;
+use Digitaliseme\Models\File as FileModel;
+use Throwable;
 
-class UploadsController extends Controller {
+class UploadsController extends Controller
+{
+    protected array $data;
 
-    protected $data;
-
-    public function __construct() {
+    public function __construct()
+    {
         $this->setData();
     }
 
-    public function index() {
-        // Show existing uploads
-        $this->data['title'] = config('app.page.titles')['uploads'];
-        $uploads = Helper::fetchUploads();
-        if (!$uploads) {
-            $this->data['message'] = $_SESSION['flash'] ?? config('app.messages.info.NO_UPLOADS');
-        } else {
-            $this->data['uploads'] = $uploads;
+    public function index(): void
+    {
+        try {
+            $files = (new FileModel)->query()
+                ->whereNull('document_id')
+                ->where('user_id', '=', $_SESSION["loggedinID"])
+                ->get();
+        } catch (Throwable) {
+            // Log error
+            flash()->error(config('app.messages.error.GENERAL_ERROR'));
+            $this->view('uploads/index', $this->data);
         }
-        unset($_SESSION['flash']);
-        unset($_SESSION['status']);
-        return $this->view('uploads/index', $this->data);
+
+        $uploads = $files ?? [];
+
+        if (count($uploads) === 0) {
+            flash()->info(config('app.messages.info.NO_UPLOADS'));
+        }
+
+        $this->data['uploads'] = $uploads;
+
+        $this->view('uploads/index', $this->data);
     }
 
-    public function create() {
-        // Show the form for uploading a new file
+    public function create(): void
+    {
         $this->data['title'] = config('app.page.titles')['uploads/create'];
-        unset($_SESSION['flash']);
-        unset($_SESSION['status']);
         $this->destroyToken();
         $this->data['token'] = $this->generateToken();
-        return $this->view('uploads/create', $this->data);
+        $this->view('uploads/create', $this->data);
     }
 
-    public function store() {
-        // Save the uploaded file if it's valid
-        if (!$this->isPostRequest() ||
-            !$this->isValidToken($_POST['token']))
-        return Helper::redirect(config('app.url').'404');
+    public function store(): void
+    {
+        if (! $this->isPostRequest() ||
+            ! $this->isValidToken($_POST['token'])
+        ) {
+            $this->redirect('404');
+        }
 
         $this->destroyToken();
 
-        if (empty($_FILES['docfile']['name'])) {
-            $_SESSION['flash'] = config('app.messages.error.NO_FILE_CHOSEN_ERROR');
-            $_SESSION['status'] = 'error';
-            return Helper::redirect(config('app.url').'uploads/create');
+        try {
+            $file = File::fromUpload($_FILES['docfile']);
+            $this->verify($file);
+        } catch (FileNotFoundException) {
+            flash()->error(config('app.messages.error.NO_FILE_CHOSEN_ERROR'));
+            $this->redirect('uploads/create');
+        } catch (UploadedFileException $e) {
+            flash()->error($e->getMessage());
+            $this->redirect('uploads/create');
         }
 
-        $upload = new RawFile(
-            $_FILES['docfile']['name'],
-            $_FILES['docfile']['size'],
-            $_FILES['docfile']['tmp_name']
-        );
-        $store = $upload->saveFile();
+        if (isset($file)) {
+            $extension = empty($file->extension()) ? '' : '.'.$file->extension();
+            $relativePath = randomString().$extension;
 
-        if (!$store['success']) {
-            $_SESSION['flash'] = $store['error'];
-            $_SESSION['status'] = 'error';
-            return Helper::redirect(config('app.url').'uploads/create');
+            if ($file->moveTo(document_root().$relativePath)) {
+                try {
+                    (new FileModel)->create([
+                        'filename' => $file->name(),
+                        'path' => $relativePath,
+                        'user_id' => $_SESSION["loggedinID"],
+                    ]);
+                    flash()->success(config('app.messages.info.UPLOAD_OK'));
+                    $this->redirect('uploads');
+                } catch (Throwable) {
+                    flash()->error(config('app.messages.error.GENERAL_ERROR'));
+                    $this->redirect('uploads/create');
+                }
+            } else {
+                flash()->error('Failed to save uploaded file.');
+                $this->redirect('uploads/create');
+            }
         }
-
-        $_SESSION['flash'] = $store['message'];
-        return Helper::redirect(config('app.url').'uploads');
     }
 
-    public function delete($id = NULL) {
-        // Delete uploaded file
-        if (!isset($id)) return Helper::redirect(config('app.url').'404');
-
-        $file = new UploadedFile($id);
-        $delete = $file->delete();
-
-        if ($delete['success']) {
-            $_SESSION['flash'] = $delete['message'];
-        } else {
-            $_SESSION['flash'] = $delete['error'];
-            $_SESSION['status'] = 'error';
+    public function delete($id = null): void
+    {
+        if (! isset($id)) {
+            $this->redirect('404');
         }
 
-        return Helper::redirect(config('app.url').'uploads');
+        try {
+            /** @var FileModel $file */
+            $file = (new FileModel)->query()
+                ->where('id', '=', $id)
+                ->where('user_id', '=', $_SESSION["loggedinID"])
+                ->firstOrFail();
+
+            if (! File::fromExisting($file->fullPath())->delete()) {
+                throw FileException::delete();
+            }
+
+            if (! $file->delete()) {
+                throw FileException::deleteRecord();
+            }
+
+            flash()->success(config('app.messages.info.UPLOAD_DELETE_OK'));
+            $this->redirect('uploads');
+        } catch (RecordNotFoundException) {
+            $this->redirect('404');
+        } catch (FileException $e) {
+            flash()->error($e->getMessage());
+            $this->redirect('uploads');
+        } catch (Throwable) {
+            // Log error
+            flash()->error(config('app.messages.error.GENERAL_ERROR'));
+            $this->redirect('uploads');
+        }
     }
 
-    protected function setData() {
+    /**
+     * @throws UploadedFileException
+     */
+    protected function verify(File $file): void
+    {
+        $info = $file->getInfo();
+
+        if (! $info->isFile()) {
+            throw UploadedFileException::invalid();
+        }
+
+        if ((int) $info->getSize() === 0) {
+            throw UploadedFileException::empty();
+        }
+
+        if ((int) $info->getSize() > config('app.files.max_size')) {
+            throw UploadedFileException::size();
+        }
+
+        if (! in_array($file->mimeType(), config('app.files.supported_types'), true)) {
+            throw UploadedFileException::type();
+        }
+    }
+
+    protected function setData(): void
+    {
         $this->data = [
-            'message' => $_SESSION['flash'] ?? '',
-            'status'  => $_SESSION['status'] ?? 'okay',
+            'title' => config('app.page.titles')['uploads'],
         ];
     }
 }

@@ -1,6 +1,8 @@
 <span class="form_header">&nbsp;&#10045; Files to process </span>
-<span class="<?= $data['status'] ?>"><?= $data['message'] ?></span>
-<?php if (isset($data['uploads']) && $data['status'] === 'okay') : ?>
+<span class="<?= flash()->getType() ?>">
+    <?= flash()->getMessage() ?>
+</span>
+<?php if (isset($data['uploads']) && count($data['uploads']) > 0) : ?>
     <div class="tables">
         <table>
             <thead>
@@ -19,14 +21,14 @@
         </table>
     </div>
 <?php endif; ?>
-<?php if (!isset($data['uploads']) && $data['status'] === 'okay') : ?>
+<?php if (isset($data['uploads']) && count($data['uploads']) === 0) : ?>
     <p>
         <a href="<?= config('app.url').'uploads/create' ?>">
             <img src="<?= config('app.url').'img/empty.png' ?>">
         </a>
     </p>
 <?php endif; ?>
-<?php if ($data['status'] === 'error') : ?>
+<?php if (flash()->getType() === 'error') : ?>
     <p>
         <a href="<?= config('app.url').'uploads' ?>">
             <img src="<?= config('app.url').'img/error.png' ?>">
