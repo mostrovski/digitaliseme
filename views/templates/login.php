@@ -1,7 +1,5 @@
 <span class="form_header">&nbsp;&#9784; Log in </span>
-<span class="<?= flash()->getType() ?>">
-    <?= flash()->getMessage() ?>
-</span>
+<?php include_once app()->root().'/views/partials/flash-message.php'; ?>
 <div class="form">
     <form action="<?= config('app.url').'login/init' ?>" method="POST">
         <div class="form_section">
@@ -10,6 +8,7 @@
                    class="<?= errors('username') ? 'invalid' : '' ?>"
                    name="username"
                    id="username"
+                     value="<?= show(old('username')) ?>"
             >
             <div class="error_message">
                 <small class="required"><?= errors('username') ?></small>

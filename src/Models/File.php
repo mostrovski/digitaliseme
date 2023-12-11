@@ -25,6 +25,6 @@ class File extends Model
 
     public function fullPath(): string
     {
-        return document_root().$this->path;
+        return documents_path($this->path);
     }
 }

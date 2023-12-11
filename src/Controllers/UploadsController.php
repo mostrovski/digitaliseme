@@ -76,7 +76,7 @@ class UploadsController extends Controller
             $extension = empty($file->extension()) ? '' : '.'.$file->extension();
             $relativePath = randomString().$extension;
 
-            if ($file->moveTo(document_root().$relativePath)) {
+            if ($file->moveTo(documents_path($relativePath))) {
                 try {
                     (new FileModel)->create([
                         'filename' => $file->name(),
@@ -159,6 +159,7 @@ class UploadsController extends Controller
     {
         $this->data = [
             'title' => config('app.page.titles')['uploads'],
+            'uploads' => [],
         ];
     }
 }

@@ -53,9 +53,9 @@ function storage_path(?string $relativePath = null, bool $public = false): strin
     return $path.'/'.ltrim($relativePath, '/');
 }
 
-function document_root(): string
+function documents_path(?string $relativePath = null): string
 {
-    return storage_path('documents/', public: true);
+    return storage_path(rtrim('documents/'.$relativePath, '/'), public: true);
 }
 
 function errors(?string $key = null, bool $allPerKey = false): Errors|array|string|null

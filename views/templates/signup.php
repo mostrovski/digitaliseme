@@ -1,7 +1,5 @@
 <span class="form_header">&nbsp;&#9784; Sign up </span>
-<span class="<?= flash()->getType() === 'error' ? 'error' : 'okay' ?>">
-    <?= flash()->getMessage() ?>
-</span>
+<?php include_once app()->root().'/views/partials/flash-message.php'; ?>
 <div class="form">
     <form action="<?= config('app.url').'signup/init' ?>" method="POST">
         <div class="form_section">
