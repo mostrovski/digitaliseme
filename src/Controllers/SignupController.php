@@ -78,8 +78,8 @@ class SignupController extends Controller
             (new User)->create($validator->getValidated());
             flash()->success(config('app.messages.info.SIGNUP_OK'));
             $this->redirect('login');
-        } catch (Throwable) {
-            // Log error
+        } catch (Throwable $e) {
+            logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.TRY_AGAIN_ERROR'));
             $this->redirect('signup');
         }

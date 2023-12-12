@@ -26,8 +26,8 @@ class UploadsController extends Controller
                 ->whereNull('document_id')
                 ->where('user_id', '=', $_SESSION["loggedinID"])
                 ->get();
-        } catch (Throwable) {
-            // Log error
+        } catch (Throwable $e) {
+            logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
             $this->view('uploads/index', $this->data);
         }
@@ -85,7 +85,8 @@ class UploadsController extends Controller
                     ]);
                     flash()->success(config('app.messages.info.UPLOAD_OK'));
                     $this->redirect('uploads');
-                } catch (Throwable) {
+                } catch (Throwable $e) {
+                    logger()->error($e->getMessage());
                     flash()->error(config('app.messages.error.GENERAL_ERROR'));
                     $this->redirect('uploads/create');
                 }
@@ -124,8 +125,8 @@ class UploadsController extends Controller
         } catch (FileException $e) {
             flash()->error($e->getMessage());
             $this->redirect('uploads');
-        } catch (Throwable) {
-            // Log error
+        } catch (Throwable $e) {
+            logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
             $this->redirect('uploads');
         }

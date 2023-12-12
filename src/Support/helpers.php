@@ -1,10 +1,10 @@
 <?php
 
 use Digitaliseme\Core\Application;
+use Digitaliseme\Core\Logging\Logger;
 use Digitaliseme\Core\Session\Errors;
 use Digitaliseme\Core\Session\Flash;
 use Digitaliseme\Core\Session\OldInput;
-use JetBrains\PhpStorm\NoReturn;
 
 function app(): Application
 {
@@ -58,6 +58,16 @@ function documents_path(?string $relativePath = null): string
     return storage_path(rtrim('documents/'.$relativePath, '/'), public: true);
 }
 
+function logs_path(?string $relativePath = null): string
+{
+    return storage_path(rtrim('logs/'.$relativePath, '/'));
+}
+
+function logger(): Logger
+{
+    return new Logger;
+}
+
 function errors(?string $key = null, bool $allPerKey = false): Errors|array|string|null
 {
     $errors = Errors::handler();
@@ -98,7 +108,7 @@ function randomString(string $prefix = ''): string
     return str_replace('.', '', uniqid($prefix, true));
 }
 
-#[NoReturn] function dump(...$values): void
+function dump(...$values): void
 {
     echo '<pre>';
     foreach ($values as $value) {

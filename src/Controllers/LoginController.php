@@ -72,8 +72,8 @@ class LoginController extends Controller
             if (password_verify($params['password'], $password)) {
                 $validCredentials = true;
             }
-        } catch (Throwable) {
-            // Log error
+        } catch (Throwable $e) {
+            logger()->error($e->getMessage());
         }
 
         if (! $validCredentials) {
