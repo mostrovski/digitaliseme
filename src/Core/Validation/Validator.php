@@ -174,4 +174,11 @@ class Validator
             return false;
         }
     }
+
+    protected function in(mixed $value, string $options): bool
+    {
+        $values = explode(',', $options);
+
+        return in_array($value, $values, true);
+    }
 }

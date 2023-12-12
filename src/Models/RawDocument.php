@@ -4,7 +4,7 @@ namespace Digitaliseme\Models;
 
 use Digitaliseme\Core\Helper;
 
-class RawDocument extends Document {
+class RawDocument extends OldDocument {
     // Model of the document that is being created
     protected $uploadedFile;
 

@@ -16,7 +16,7 @@ class File extends Model
     #[ModelAttribute]
     public ?int $document_id;
     #[ModelAttribute(protectedOnUpdate: true)]
-    public int $user_id;
+    public ?int $user_id;
 
     public function publicPath(): string
     {

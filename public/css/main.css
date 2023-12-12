@@ -173,6 +173,11 @@ input {
     outline: none;
 }
 
+input[type=file] {
+    display: block;
+    padding: 10px 5px;
+}
+
 input[type=text], input[type=date], input[type=password], select {
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -227,6 +232,14 @@ input.valid {
 
 .form_section {
     padding: 5px 0;
+}
+
+.form_subsection {
+    padding: 10px;
+    margin: 5px;
+    border: solid 1px lightgray;
+    border-radius: 5px;
+
 }
 
 label, .error_message {

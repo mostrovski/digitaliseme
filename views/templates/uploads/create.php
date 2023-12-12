@@ -4,11 +4,13 @@
     <form action="<?= config('app.url').'uploads/store' ?>" method="POST" enctype="multipart/form-data">
         <label for="docfile" class="field_header">
             Choose the file to upload
-        </label><br><br>
-        <input type="file" name="docfile" id="docfile" accept=".pdf, .jpg, .jpeg, .png"><br><br>
+        </label>
+        <input type="file" name="docfile" id="docfile" accept=".pdf, .jpg, .jpeg, .png">
 
-        <span class="info">&rarr; supported types: pdf, jpg, jpeg, png</span><br>
-        <span class="info">&rarr; max size: 1 MB</span>
+        <p>
+            <span class="info">&rarr; supported types: pdf, jpg, jpeg, png</span><br>
+            <span class="info">&rarr; max size: 1 MB</span>
+        </p>
 
         <input type="submit" value="Upload" name="upload">
 

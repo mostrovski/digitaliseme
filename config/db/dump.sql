@@ -25,10 +25,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `agents`
+-- Table structure for table `issuers`
 --
 
-CREATE TABLE `agents` (
+CREATE TABLE `issuers` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE `documents` (
   `title` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
   `type` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
   `issue_date` date NOT NULL,
-  `agent_id` int(10) UNSIGNED DEFAULT NULL,
+  `issuer_id` int(10) UNSIGNED DEFAULT NULL,
   `storage_id` int(10) UNSIGNED DEFAULT NULL,
   `user_id` int(10) UNSIGNED DEFAULT NULL,
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -132,18 +132,18 @@ CREATE TABLE `users` (
 --
 
 --
--- Indexes for table `agents`
+-- Indexes for table `issuers`
 --
-ALTER TABLE `agents`
+ALTER TABLE `issuers`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unique_agent_name` (`name`);
+  ADD UNIQUE KEY `unique_issuer_name` (`name`);
 
 --
 -- Indexes for table `documents`
 --
 ALTER TABLE `documents`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `foreign_document_agent` (`agent_id`),
+  ADD KEY `foreign_document_issuer` (`issuer_id`),
   ADD KEY `foreign_document_storage` (`storage_id`),
   ADD KEY `foreign_document_user` (`user_id`);
 
@@ -190,9 +190,9 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `agents`
+-- AUTO_INCREMENT for table `issuers`
 --
-ALTER TABLE `agents`
+ALTER TABLE `issuers`
     MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -233,7 +233,7 @@ ALTER TABLE `users`
 -- Constraints for table `documents`
 --
 ALTER TABLE `documents`
-    ADD CONSTRAINT `foreign_document_agent` FOREIGN KEY (`agent_id`) REFERENCES `agents` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+    ADD CONSTRAINT `foreign_document_issuer` FOREIGN KEY (`issuer_id`) REFERENCES `issuers` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
     ADD CONSTRAINT `foreign_document_storage` FOREIGN KEY (`storage_id`) REFERENCES `storage_places` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
     ADD CONSTRAINT `foreign_document_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 

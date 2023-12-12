@@ -10,13 +10,13 @@ class LogoutController extends Controller
     public function index(): void
     {
         if (! isset($_SESSION["loggedin"])) {
-            $_SESSION['flash'] = config('app.messages.info.LOGIN_NOT');
-            Helper::redirect(config('app.url'));
+            flash()->info(config('app.messages.info.LOGIN_NOT'));
+            $this->redirect('/');
         }
 
         unset($_SESSION["loggedin"], $_SESSION["loggedinName"], $_SESSION["loggedinID"]);
 
-        $_SESSION['flash'] = config('app.messages.info.LOGOUT_OK');
-        Helper::redirect(config('app.url'));
+        flash()->success(config('app.messages.info.LOGOUT_OK'));
+        $this->redirect('/');
     }
 }

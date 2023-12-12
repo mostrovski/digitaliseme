@@ -3,7 +3,7 @@
 namespace Digitaliseme\Controllers;
 
 use Digitaliseme\Core\Helper;
-use Digitaliseme\Models\SearchDocument;
+use Digitaliseme\Models\SearchOldDocument;
 
 class SearchController extends Controller {
 
@@ -36,7 +36,7 @@ class SearchController extends Controller {
             'storage'  => $_POST["storage"],
             'keywords' => $_POST["keywords"],
         ];
-        $search = new SearchDocument($params);
+        $search = new SearchOldDocument($params);
         $request = $search->getResults();
 
         if ($request['valid'] && $request['results']) {

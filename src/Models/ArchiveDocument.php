@@ -4,7 +4,7 @@ namespace Digitaliseme\Models;
 
 use Digitaliseme\Core\Helper;
 
-class ArchiveDocument extends Document {
+class ArchiveDocument extends OldDocument {
     // Model of the existing document
     protected $id;
     protected $docTitle;

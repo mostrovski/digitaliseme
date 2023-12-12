@@ -6,7 +6,7 @@ use Digitaliseme\Core\Helper;
 use Digitaliseme\Core\Validator;
 use Digitaliseme\Core\Database;
 
-class SearchDocument extends Document {
+class SearchDocument extends OldDocument {
     // Model of the document search
     protected $byTitle;
     protected $byDate;
