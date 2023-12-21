@@ -2,17 +2,14 @@
 
 namespace Digitaliseme\Controllers;
 
-use Digitaliseme\Core\Exceptions\DatabaseException;
 use Digitaliseme\Core\Exceptions\RecordNotFoundException;
 use Digitaliseme\Core\Exceptions\ValidatorException;
-use Digitaliseme\Core\Helper;
 use Digitaliseme\Core\Storage\File as FileObject;
 use Digitaliseme\DataEntities\Keywords;
 use Digitaliseme\Enumerations\DocumentType;
 use Digitaliseme\Exceptions\KeywordException;
 use Digitaliseme\Models\Document;
 use Digitaliseme\Models\File;
-use Digitaliseme\Models\ArchiveDocument;
 use Digitaliseme\Models\Issuer;
 use Digitaliseme\Models\Keyword;
 use Digitaliseme\Models\StoragePlace;
@@ -147,9 +144,7 @@ class DocumentsController extends Controller
                 $pivot = $document->pivot('document_keywords');
 
                 foreach ($keywords as $word) {
-                    $keyword = (new Keyword)->firstOrCreate([
-                        'word' => $word,
-                    ]);
+                    $keyword = Keyword::go()->firstOrCreate(['word' => $word]);
                     $pivot->create([
                         'document_id' => $document->id,
                         'keyword_id' => $keyword->id,
