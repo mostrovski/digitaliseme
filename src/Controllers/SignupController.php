@@ -48,7 +48,7 @@ class SignupController extends Controller
         }
 
         try {
-            (new User)->create($validator->getValidated());
+            User::go()->create($validator->getValidated());
             flash()->success(config('app.messages.info.SIGNUP_OK'));
             $this->redirect('login');
         } catch (Throwable $e) {

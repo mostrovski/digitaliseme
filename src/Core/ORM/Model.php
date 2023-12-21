@@ -48,6 +48,11 @@ abstract class Model
         $this->registerSetters();
     }
 
+    public static function go(): static
+    {
+        return new static;
+    }
+
     public function query(): DB
     {
         return $this->db;

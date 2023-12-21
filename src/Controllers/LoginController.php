@@ -60,7 +60,7 @@ class LoginController extends Controller
         $validCredentials = false;
 
         try {
-            $user = (new User)->query()
+            $user = User::go()->query()
                 ->where('username', '=', $params['username'])
                 ->first();
             $password = (string) $user?->password;

@@ -22,7 +22,7 @@ class UploadsController extends Controller
     public function index(): void
     {
         try {
-            $files = (new FileModel)->query()
+            $files = FileModel::go()->query()
                 ->whereNull('document_id')
                 ->where('user_id', '=', $_SESSION["loggedinID"])
                 ->get();
@@ -78,7 +78,7 @@ class UploadsController extends Controller
 
             if ($file->moveTo(documents_path($relativePath))) {
                 try {
-                    (new FileModel)->create([
+                    FileModel::go()->create([
                         'filename' => $file->name(),
                         'path' => $relativePath,
                         'user_id' => $_SESSION["loggedinID"],
@@ -105,7 +105,7 @@ class UploadsController extends Controller
 
         try {
             /** @var FileModel $file */
-            $file = (new FileModel)->query()
+            $file = FileModel::go()->query()
                 ->where('id', '=', $id)
                 ->where('user_id', '=', $_SESSION["loggedinID"])
                 ->firstOrFail();

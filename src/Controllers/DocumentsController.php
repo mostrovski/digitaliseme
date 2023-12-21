@@ -2,6 +2,7 @@
 
 namespace Digitaliseme\Controllers;
 
+use Digitaliseme\Core\Exceptions\DatabaseException;
 use Digitaliseme\Core\Exceptions\RecordNotFoundException;
 use Digitaliseme\Core\Exceptions\ValidatorException;
 use Digitaliseme\Core\Helper;
@@ -28,7 +29,7 @@ class DocumentsController extends Controller
     public function index(): void
     {
         try {
-            $records = (new Document)->query()->get();
+            $records = Document::go()->query()->get();
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
@@ -56,7 +57,7 @@ class DocumentsController extends Controller
 
         try {
             /** @var File $file */
-            $file = (new File)->query()
+            $file = File::go()->query()
                 ->where('id', '=', $id)
                 ->where('user_id', '=', $_SESSION["loggedinID"])
                 ->whereNull('document_id')
@@ -116,17 +117,17 @@ class DocumentsController extends Controller
 
         // Logic for creating the document
         try {
-            $issuer = (new Issuer)->firstOrCreate([
+            $issuer = Issuer::go()->firstOrCreate([
                 'name' => $values['issuer_name'],
                 'email' => $values['issuer_email'],
                 'phone' => $values['issuer_phone'],
             ], uniqueKey: 'name');
 
-            $storage = (new StoragePlace)->firstOrCreate([
+            $storage = StoragePlace::go()->firstOrCreate([
                 'place' => $values['storage'],
             ]);
 
-            $document = (new Document)->create([
+            $document = Document::go()->create([
                 'title' => $values['title'],
                 'type' => $values['type'],
                 'issue_date' => $values['issue_date'],
@@ -135,7 +136,7 @@ class DocumentsController extends Controller
                 'user_id' => $_SESSION['loggedinID'],
             ]);
 
-            (new File)->query()
+            File::go()->query()
                 ->where('id', '=', $fileId)
                 ->update([
                     'filename' => $values['filename'],
@@ -174,7 +175,7 @@ class DocumentsController extends Controller
         $this->data['title'] = config('app.page.titles')['documents/show'];
 
         try {
-            $document = (new Document)->findOrFail($id);
+            $document = Document::go()->findOrFail($id);
             $this->data['document'] = $document;
             $this->data['filename'] = $document->file()?->filename;
             $this->data['issuer'] = $document->issuer();
@@ -201,7 +202,7 @@ class DocumentsController extends Controller
 
         try {
             /** @var Document $document */
-            $document = (new Document)->query()
+            $document = Document::go()->query()
                 ->where('id', '=', $id)
                 ->where('user_id', '=', $_SESSION["loggedinID"])
                 ->firstOrFail();
@@ -250,7 +251,7 @@ class DocumentsController extends Controller
 
         try {
             /** @var Document $document */
-            $document = (new Document)->query()
+            $document = Document::go()->query()
                 ->where('id', '=', $id)
                 ->where('user_id', '=', $_SESSION["loggedinID"])
                 ->firstOrFail();
@@ -270,19 +271,25 @@ class DocumentsController extends Controller
         $this->redirect('documents');
     }
 
-    public function download($id = NULL) {
-        // Force download of the document
-        if (!isset($id)) return Helper::redirect(config('app.url').'404');
-
-        $document = new ArchiveDocument($id);
-        $download = $document->download();
-
-        if (!$download['success']) {
-            $_SESSION['status'] = 'error';
-            $_SESSION['flash'] = $download['error'];
+    public function download($id = null)
+    {
+        if (! isset($id)) {
+            $this->redirect('404');
         }
 
-        return Helper::redirect(config('app.url').'documents');
+        try {
+            $file = Document::go()->findOrFail($id)->file();
+            if (! $file instanceof File) {
+                throw new RecordNotFoundException;
+            }
+            FileObject::fromExisting($file->fullPath())->download($file->filename);
+        } catch (RecordNotFoundException) {
+            $this->redirect('404');
+        } catch (Throwable $e) {
+            logger()->error($e->getMessage());
+            flash()->error(config('app.messages.error.GENERAL_ERROR'));
+            $this->redirect('documents');
+        }
     }
 
     protected function setData(): void
