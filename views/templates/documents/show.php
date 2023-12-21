@@ -1,48 +1,64 @@
-<span class="form_header">&nbsp;&#128441; Details</span>
-<span class="<?= $data['status'] ?>"><?= $data['message'] ?></span>
-<?php if ($data['status'] === 'okay') : ?>
-<div class="form">
-    <form>
-        <label for="doctitle" class="field_header">Document Title </label>
-        <input type="text" name="doctitle" id="doctitle" value="<?= $data['fields']['docTitle'] ?>" readonly>
+<span class="form_header">&nbsp;&#9776; Details</span>
+<?php include_once app()->root().'/views/partials/flash-message.php'; ?>
 
-        <label for="first_name" class="field_header">File Name </label>
-        <input type="text" name="first_name" id="first_name" value="<?= $data['fields']['fileName'] ?>" readonly>
-
-        <label for="created" class="field_header">Date of Creation </label>
-        <input type="date" name="created" id="created" value="<?= $data['fields']['createdDate'] ?>" readonly>
-
-        <label class="field_header">Document Creator</label><br>
-
-        <label for="agname">name </label>
-        <input type="text" name="agname" id="agname" value="<?= $data['fields']['agentName'] ?>" readonly>
-
-        <label for="agemail">email </label>
-        <input type="text" name="agemail" id="agemail" value="<?= $data['fields']['agentEmail'] ?>" readonly>
-
-        <label for="agphone">phone </label>
-        <input type="text" name="agphone" id="agphone" value="<?= $data['fields']['agentPhone'] ?>" readonly>
-
-        <label for="doctype" class="field_header">Document Type</label>
-        <input type="text" name="doctype" id="doctype" value="<?= $data['selectedType'] ?>" readonly>
-
-        <label for="storage" class="field_header">Physical Storage </label>
-        <input type="text" name="storage" id="storage" value="<?= $data['fields']['storagePlace'] ?>" readonly>
-
-        <label for="keywords" class="field_header">Keywords </label>
-        <input type="text" name="keywords" id="keywords" value="<?= $data['fields']['keywords'] ?>" readonly>
-    </form>
-    <?php if ($data['userId'] === $_SESSION['loggedinID']) : ?>
-        <a href="<?= config('app.url').'documents/edit/'.$data['docId'] ?>">
-            <button>Edit</button>
-        </a>
-    <?php endif; ?>
-</div>
-<?php endif; ?>
-<?php if ($data['status'] === 'error') : ?>
+<?php if (flash()->getType() === 'error') : ?>
     <p>
         <a href="<?= config('app.url').'documents' ?>">
             <img src="<?= config('app.url').'img/error.png' ?>">
         </a>
     </p>
+<?php else: ?>
+    <div class="form">
+        <form>
+            <div class="form_section">
+                <label for="filename" class="field_header">File Name</label>
+                <input type="text" name="filename" id="filename" value="<?= $data['filename'] ?>" readonly>
+            </div>
+
+            <div class="form_section">
+                <label for="title" class="field_header">Document Title</label>
+                <input type="text" name="title" id="title" value="<?= $data['document']->title ?>" readonly>
+            </div>
+
+            <div class="form_section">
+                <label for="type" class="field_header">Document Type</label>
+                <input type="text" name="type" id="type" value="<?= $data['document']->type ?>" readonly>
+            </div>
+
+            <div class="form_section">
+                <label for="issue_date" class="field_header">Issue date</label>
+                <input type="date" name="issue_date" id="issue_date" value="<?= $data['document']->issue_date ?>" readonly>
+            </div>
+
+            <div class="form_section">
+                <label class="field_header">Issued by</label><br>
+
+                <div class="form_subsection">
+                    <label for="issuer_name">name </label>
+                    <input type="text" name="issuer_name" id="issuer_name" value="<?= $data['issuer']?->name ?>" readonly>
+
+                    <label for="issuer_email">email </label>
+                    <input type="text" name="issuer_email" id="issuer_email" value="<?= $data['issuer']?->email ?>" readonly>
+
+                    <label for="issuer_phone">phone </label>
+                    <input type="text" name="issuer_phone" id="issuer_phone" value="<?= $data['issuer']?->phone ?>" readonly>
+                </div>
+            </div>
+
+            <div class="form_section">
+                <label for="storage" class="field_header">Physical Storage </label>
+                <input type="text" name="storage" id="storage" value="<?= $data['storage'] ?>" readonly>
+            </div>
+
+            <div class="form_section">
+                <label for="keywords" class="field_header">Keywords </label>
+                <input type="text" name="keywords" id="keywords" value="<?= $data['keywords'] ?>" readonly>
+            </div>
+        </form>
+        <?php if ($data['document']->user_id === $_SESSION['loggedinID']) : ?>
+            <a href="<?= config('app.url').'documents/edit/'.$data['document']->id ?>">
+                <button>Edit</button>
+            </a>
+        <?php endif; ?>
+    </div>
 <?php endif; ?>

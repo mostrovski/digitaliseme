@@ -15,10 +15,6 @@ class LoginController extends Controller
     {
         $this->setData();
     }
-
-    /**
-     * Show the login form
-     */
     public function index(): void
     {
         if (Helper::isUserLoggedIn()) {
@@ -32,7 +28,6 @@ class LoginController extends Controller
     }
 
     /**
-     * Log user in if the input is valid
      * @throws ValidatorException
      */
     public function init(): void

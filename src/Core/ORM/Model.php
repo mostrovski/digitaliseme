@@ -6,6 +6,7 @@ use Digitaliseme\Core\Database\DB;
 use Digitaliseme\Core\Database\MySQL;
 use Digitaliseme\Core\Database\Query;
 use Digitaliseme\Core\Exceptions\DatabaseException;
+use Digitaliseme\Core\Exceptions\RecordNotFoundException;
 use Digitaliseme\Core\ORM\Meta\ModelAttribute;
 use Digitaliseme\Core\ORM\Meta\Setter;
 use Digitaliseme\Core\Traits\Reflectable;
@@ -52,6 +53,11 @@ abstract class Model
         return $this->db;
     }
 
+    public function pivot(string $table): DB
+    {
+        return DB::wire(MySQL::connect(), new Query)->table($table);
+    }
+
     /**
      * @param array<string,mixed> $params
      * @throws DatabaseException
@@ -71,6 +77,62 @@ abstract class Model
         }
 
         return $newInstance;
+    }
+
+    /**
+     * @param array<string,mixed> $params
+     * @throws DatabaseException
+     */
+    public function firstOrCreate(array $params, ?string $uniqueKey = null): static
+    {
+        if (empty($uniqueKey)) {
+            /** @var array<int,string> $keys */
+            $keys = array_keys($params);
+            if (count($keys) > 1) {
+                throw new DatabaseException('A unique key is missing.');
+            }
+            $uniqueKey = $keys[0];
+        }
+
+        try {
+            return $this->db->where($uniqueKey, '=', $params[$uniqueKey])
+                ->firstOrFail();
+        } catch (RecordNotFoundException) {
+            return $this->create($params);
+        }
+    }
+
+    /**
+     * @throws DatabaseException
+     */
+    public function find(mixed $primaryKey): ?static
+    {
+        try {
+            $model = $this->db->where($this->primaryKey, '=', $primaryKey)->first();
+        } catch (PDOException $e) {
+            throw new DatabaseException($e->getMessage());
+        }
+
+        if (! $model instanceof static) {
+            return null;
+        }
+
+        return $model;
+    }
+
+    /**
+     * @throws DatabaseException
+     * @throws RecordNotFoundException
+     */
+    public function findOrFail(mixed $primaryKey): static
+    {
+        try {
+            $model = $this->db->where($this->primaryKey, '=', $primaryKey)->firstOrFail();
+        } catch (PDOException $e) {
+            throw new DatabaseException($e->getMessage());
+        }
+
+        return $model;
     }
 
     /**

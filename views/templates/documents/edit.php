@@ -1,66 +1,138 @@
 <span class="form_header">&nbsp;&#10000; Edit document</span>
-<span class="<?= $data['status'] ?>"><?= $data['message'] ?></span>
-<?php if ($data['status'] === 'okay') : ?>
-<div class="form">
-    <form action="<?= config('app.url').'documents/update/'.$data['docId'] ?>" method="POST">
-        <label for="doctitle" class="field_header">Document Title </label>
-        <span class="required"><?= $data['errors']['docTitle'] ?></span>
-        <input type="text" class="<?= $data['classes']['docTitle'] ?>" name="doctitle" id="doctitle" value="<?= $data['fields']['docTitle'] ?>">
+<?php include_once app()->root().'/views/partials/flash-message.php'; ?>
 
-        <label for="first_name" class="field_header">File Name </label>
-        <span class="required"><?= $data['errors']['fileName'] ?></span>
-        <input type="text" class="<?= $data['classes']['fileName'] ?>" name="first_name" id="first_name" value="<?= $data['fields']['fileName'] ?>">
-
-        <label for="created" class="field_header">Date of Creation </label>
-        <span class="required"><?= $data['errors']['createdDate'] ?></span>
-        <input type="date" class="<?= $data['classes']['createdDate'] ?>" name="created" id="created" value="<?= $data['fields']['createdDate'] ?>">
-
-        <label class="field_header">Document Creator</label><br>
-
-        <label for="agname">name </label>
-        <span class="required"><?= $data['errors']['agentName'] ?></span>
-        <input type="text" class="<?= $data['classes']['agentName'] ?>" name="agname" id="agname" value="<?= $data['fields']['agentName'] ?>">
-
-        <label for="agemail">email </label>
-        <span class="required"><?= $data['errors']['agentEmail'] ?></span>
-        <input type="text" class="<?= $data['classes']['agentEmail'] ?>" name="agemail" id="agemail" value="<?= $data['fields']['agentEmail'] ?>">
-
-        <label for="agphone">phone </label>
-        <span class="required"><?= $data['errors']['agentPhone'] ?></span>
-        <input type="text" class="<?= $data['classes']['agentPhone'] ?>" name="agphone" id="agphone" value="<?= $data['fields']['agentPhone'] ?>">
-
-        <label for="doctype" class="field_header">Document Type</label>
-        <select name="doctype" id="doctype">
-            <?php foreach ($data['docTypes'] as $type) : ?>
-                <option value="<?= $type->type ?>" <?= ($data['selectedType'] === $type->type) ? 'selected' : '' ?>>
-                    <?= $type->type ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-
-        <label for="storage" class="field_header">Physical Storage </label>
-        <span class="required"><?= $data['errors']['storagePlace'] ?></span>
-        <input type="text" class="<?= $data['classes']['storagePlace'] ?>" name="storage" id="storage" value="<?= $data['fields']['storagePlace'] ?>">
-
-        <label for="keywords" class="field_header">Keywords </label>
-        <span class="required"><?= $data['errors']['keywords'] ?></span>
-        <input type="text" class="<?= $data['classes']['keywords'] ?>" name="keywords" id="keywords" value="<?= $data['fields']['keywords'] ?>">
-
-        <input type="submit" value="Update document" name="updateme" onclick="return confirm('Update this document?')">
-
-        <input type="hidden" id="token" name="token" value="<?= $data['token'] ?>">
-    </form>
-    <form action="<?= config('app.url').'documents/delete/'.$data['docId'] ?>" method="POST">
-        <input type="submit" class="delete" value="Delete document" name="deleteme" onclick="return confirm('Delete this document?')">
-
-        <input type="hidden" id="token" name="token" value="<?= $data['token'] ?>">
-    </form>
-</div>
-<?php endif; ?>
-<?php if ($data['status'] === 'error') : ?>
+<?php if (flash()->getType() === 'error') : ?>
     <p>
         <a href="<?= config('app.url').'documents' ?>">
             <img src="<?= config('app.url').'img/error.png' ?>">
         </a>
     </p>
+<?php else: ?>
+    <div class="form">
+        <form action="<?= config('app.url').'documents/update/'.$data['document']->id ?>" method="POST">
+            <div class="form_section">
+                <label for="filename" class="field_header">Filename</label>
+                <input type="text"
+                       class="<?= errors('filename') ? 'invalid' : '' ?>"
+                       name="filename"
+                       id="filename"
+                       value="<?= show(old('filename') ?? $data['filename']) ?>">
+                <div class="error_message">
+                    <small class="required"><?= errors('filename') ?></small>
+                </div>
+            </div>
+
+            <div class="form_section">
+                <label for="title" class="field_header">Document title</label>
+                <input type="text"
+                       class="<?= errors('title') ? 'invalid' : '' ?>"
+                       name="title"
+                       id="title"
+                       value="<?= show(old('title') ?? $data['document']->title) ?>">
+                <div class="error_message">
+                    <small class="required"><?= errors('title') ?></small>
+                </div>
+            </div>
+
+            <div class="form_section">
+                <label for="type" class="field_header">Document type</label>
+                <select name="type" id="type">
+                    <option value="">Select type</option>
+                    <?php foreach (\Digitaliseme\Enumerations\DocumentType::values() as $type) : ?>
+                        <option value="<?= $type ?>"
+                            <?= (old('type') ?? $data['document']->type) === $type ? 'selected' : '' ?>
+                        >
+                            <?= $type ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <div class="error_message">
+                    <small class="required"><?= errors('type') ?></small>
+                </div>
+            </div>
+
+            <div class="form_section">
+                <label for="issue_date" class="field_header">Issue date</label>
+                <input type="date"
+                       class="<?= errors('issue_date') ? 'invalid' : '' ?>"
+                       name="issue_date"
+                       id="issue_date"
+                       value="<?= show(old('issue_date') ?? $data['document']->issue_date) ?>">
+                <div class="error_message">
+                    <small class="required"><?= errors('issue_date') ?></small>
+                </div>
+            </div>
+
+            <div class="form_section">
+                <label class="field_header">Issued by</label>
+
+                <div class="form_subsection">
+                    <label for="issuer_name" class="field_header">Name</label>
+                    <input type="text"
+                           class="<?= errors('issuer_name') ? 'invalid' : '' ?>"
+                           name="issuer_name"
+                           id="issuer_name"
+                           value="<?= show(old('issuer_name') ?? $data['issuer']?->name) ?>">
+                    <div class="error_message">
+                        <small class="required"><?= errors('issuer_name') ?></small>
+                    </div>
+
+                    <label for="issuer_email" class="field_header">Email</label>
+                    <input type="text"
+                           class="<?= errors('issuer_email') ? 'invalid' : '' ?>"
+                           name="issuer_email"
+                           id="issuer_email"
+                           value="<?= show(old('issuer_email') ?? $data['issuer']?->email) ?>">
+                    <div class="error_message">
+                        <small class="required"><?= errors('issuer_email') ?></small>
+                    </div>
+
+                    <label for="issuer_phone" class="field_header">Phone</label>
+                    <input type="text"
+                           class="<?= errors('issuer_phone') ? 'invalid' : '' ?>"
+                           name="issuer_phone"
+                           id="issuer_phone"
+                           value="<?= show(old('issuer_phone') ?? $data['issuer']?->phone) ?>">
+                    <div class="error_message">
+                        <small class="required"><?= errors('issuer_phone') ?></small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form_section">
+                <label for="storage" class="field_header">Physical storage</label>
+                <input type="text"
+                       placeholder="where is the physical document stored?"
+                       class="<?= errors('storage') ? 'invalid' : '' ?>"
+                       name="storage"
+                       id="storage"
+                       value="<?= show(old('storage') ?? $data['storage']) ?>">
+                <div class="error_message">
+                    <small class="required"><?= errors('storage') ?></small>
+                </div>
+            </div>
+
+            <div class="form_section">
+                <label for="keywords" class="field_header">Keywords</label>
+                <input type="text"
+                       placeholder="separate, with, commas"
+                       class="<?= errors('keywords') ? 'invalid' : '' ?>"
+                       name="keywords"
+                       id="keywords"
+                       value="<?= show(old('keywords') ?? $data['keywords']) ?>">
+                <div class="error_message">
+                    <small class="required"><?= errors('keywords') ?></small>
+                </div>
+            </div>
+
+            <input type="submit" value="Update document" name="updateme" onclick="return confirm('Update this document?')">
+
+            <input type="hidden" id="token" name="token" value="<?= $data['token'] ?>">
+        </form>
+        <form action="<?= config('app.url').'documents/delete/'.$data['document']->id ?>" method="POST">
+            <input type="submit" class="delete" value="Delete document" name="deleteme" onclick="return confirm('Delete this document?')">
+
+            <input type="hidden" id="token" name="token" value="<?= $data['token'] ?>">
+        </form>
+    </div>
 <?php endif; ?>

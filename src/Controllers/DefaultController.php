@@ -6,13 +6,13 @@ use Digitaliseme\Core\Helper;
 
 class DefaultController extends Controller
 {
-    public function index()
+    public function index(): void
     {
         if ($_SERVER['REQUEST_URI'] !== '/') {
             $this->view('404', ['title' => '404']);
+        } else {
+            Helper::isUserLoggedIn() ? $this->show('private') : $this->show('public');
         }
-        $loggedIn = Helper::isUserLoggedIn();
-        return $loggedIn ? $this->show('private') : $this->show('public');
     }
 
     protected function show($route)

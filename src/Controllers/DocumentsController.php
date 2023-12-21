@@ -5,12 +5,16 @@ namespace Digitaliseme\Controllers;
 use Digitaliseme\Core\Exceptions\RecordNotFoundException;
 use Digitaliseme\Core\Exceptions\ValidatorException;
 use Digitaliseme\Core\Helper;
+use Digitaliseme\Core\Storage\File as FileObject;
+use Digitaliseme\DataEntities\Keywords;
 use Digitaliseme\Enumerations\DocumentType;
+use Digitaliseme\Exceptions\KeywordException;
 use Digitaliseme\Models\Document;
 use Digitaliseme\Models\File;
-use Digitaliseme\Models\UploadedFile;
-use Digitaliseme\Models\RawDocument;
 use Digitaliseme\Models\ArchiveDocument;
+use Digitaliseme\Models\Issuer;
+use Digitaliseme\Models\Keyword;
+use Digitaliseme\Models\StoragePlace;
 use Throwable;
 
 class DocumentsController extends Controller
@@ -62,7 +66,7 @@ class DocumentsController extends Controller
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            $this->view('documents/_create', $this->data);
+            $this->view('documents/create', $this->data);
         }
 
         $this->destroyToken();
@@ -70,13 +74,13 @@ class DocumentsController extends Controller
         $this->data['filename'] = $file->filename;
         $_SESSION['upfile'] = $file->id;
 
-        $this->view('documents/_create', $this->data);
+        $this->view('documents/create', $this->data);
     }
 
     /**
      * @throws ValidatorException
      */
-    public function store()
+    public function store(): void
     {
         if (! $this->isPostRequest() ||
             ! $this->isValidToken($_POST['token'])
@@ -94,165 +98,176 @@ class DocumentsController extends Controller
 
         unset($_SESSION['upfile']);
 
-        $validator = $this->validate($_POST, [
-            'filename' => ['required', 'min:4', 'max:100', 'regex:/^[a-zA-ZäöüßÄÖÜ0-9_-]+$/'],
-            'title' => ['required', 'min:4', 'max:100', 'regex:/^[a-zA-ZäöüßÄÖÜ0-9()*,.\s-]+$/'],
-            'type' => ['required', 'in:'.implode(',', DocumentType::values())],
-            'issue_date' => ['required'],
-            'issuer_name' => ['required', 'min:2', 'max:32', 'regex:/^[a-zA-ZäöüßÄÖÜ-]+$/'],
-            'issuer_email' => ['required', 'email'],
-            'issuer_phone' => ['required', 'min:10', 'max:32', 'regex:/^[0-9+()-]+$/'],
-            'storage' => ['required', 'max:50', 'regex:/^[a-zA-ZäöüßÄÖÜ0-9,()\s-]+$/'],
-            'keywords' => ['regex:/^\s*([^,\s-]{2,}\s?[^,\s-]*){1,}\s*,\s*([^\s-]{2,}\s?[^\s-]*)*\s*$/'],
-        ], [
-            'filename.required' => 'Filename is required',
-            'title.required' => 'Document title is required',
-            'type.required' => 'Document type is required',
-            'issue_date.required' => 'Issue date is required',
-            'issuer_name.required' => 'Issuer name is required',
-            'issuer_email.required' => 'Issuer email is required',
-            'issuer_phone.required' => 'Issuer phone is required',
-            'storage.required' => 'Physical storage is required',
-        ]);
+        $validator = $this->validate($_POST, $this->validationRules(), $this->validationMessages());
 
         if ($validator->fails()) {
             $this->withErrors($validator->getErrors())->redirect('documents/create/'.$fileId);
         }
 
-        // Logic for creating the document
+        $values = $validator->getValidated();
 
-        if (true) {
-            flash()->success(config('app.messages.info.NEW_DOC_OK'));
-            $this->redirect('documents');
+        if (! empty($values['keywords'])) {
+            try {
+                $keywords = Keywords::fromString(($values['keywords']))->all();
+            } catch (KeywordException $e) {
+                $this->withErrors(['keywords' => [$e->getMessage()]])->redirect('documents/create/'.$fileId);
+            }
         }
 
-        flash()->error(config('app.messages.error.GENERAL_ERROR'));
-        $this->redirect('documents/create/'.$fileId);
+        // Logic for creating the document
+        try {
+            $issuer = (new Issuer)->firstOrCreate([
+                'name' => $values['issuer_name'],
+                'email' => $values['issuer_email'],
+                'phone' => $values['issuer_phone'],
+            ], uniqueKey: 'name');
+
+            $storage = (new StoragePlace)->firstOrCreate([
+                'place' => $values['storage'],
+            ]);
+
+            $document = (new Document)->create([
+                'title' => $values['title'],
+                'type' => $values['type'],
+                'issue_date' => $values['issue_date'],
+                'issuer_id' => $issuer->id,
+                'storage_id' => $storage->id,
+                'user_id' => $_SESSION['loggedinID'],
+            ]);
+
+            (new File)->query()
+                ->where('id', '=', $fileId)
+                ->update([
+                    'filename' => $values['filename'],
+                    'document_id' => $document->id,
+                ]);
+
+            if (isset($keywords)) {
+                $pivot = $document->pivot('document_keywords');
+
+                foreach ($keywords as $word) {
+                    $keyword = (new Keyword)->firstOrCreate([
+                        'word' => $word,
+                    ]);
+                    $pivot->create([
+                        'document_id' => $document->id,
+                        'keyword_id' => $keyword->id,
+                    ]);
+                }
+            }
+        } catch (Throwable $e) {
+            logger()->error($e->getMessage());
+            flash()->error(config('app.messages.error.GENERAL_ERROR'));
+            $this->redirect('documents/create/'.$fileId);
+        }
+
+        flash()->success(config('app.messages.info.NEW_DOC_OK'));
+        $this->redirect('documents');
     }
 
-    public function show($id = NULL) {
-        // Fetch and show the details of the document
-        if (!isset($id)) return Helper::redirect(config('app.url').'404');
+    public function show($id = null): void
+    {
+        if (! isset($id)) {
+            $this->redirect('404');
+        }
 
         $this->data['title'] = config('app.page.titles')['documents/show'];
 
-        $document = new ArchiveDocument($id);
-        $details = $document->getDetails();
-
-        if (!$details['exist']) {
-            $this->data['status'] = 'error';
-            $this->data['message'] = $details['error'];
-        } else {
-            foreach ($this->data['fields'] as $key => $value) {
-                $this->data['fields'][$key] = $details['data'][$key];
-            }
-            $this->data['selectedType'] = $details['data']['docType'];
-            $this->data['userId'] = $details['data']['userId'];
-            $this->data['docId'] = $id;
+        try {
+            $document = (new Document)->findOrFail($id);
+            $this->data['document'] = $document;
+            $this->data['filename'] = $document->file()?->filename;
+            $this->data['issuer'] = $document->issuer();
+            $this->data['storage'] = $document->storage()?->place;
+            $this->data['keywords'] = Keywords::fromModelArray($document->keywords())->toString();
+        } catch (RecordNotFoundException) {
+            $this->redirect('404');
+        } catch (Throwable $e) {
+            logger()->error($e->getMessage());
+            flash()->error(config('app.messages.error.GENERAL_ERROR'));
+            $this->view('documents/show', $this->data);
         }
 
-        unset($_SESSION['flash']);
-        unset($_SESSION['status']);
-        return $this->view('documents/show', $this->data);
+        $this->view('documents/show', $this->data);
     }
 
-    public function edit($id = NULL) {
-        // Show forms for updating and deleting the document
-        if (!isset($id)) return Helper::redirect(config('app.url').'404');
+    public function edit($id = null): void
+    {
+        if (! isset($id)) {
+            $this->redirect('404');
+        }
 
         $this->data['title'] = config('app.page.titles')['documents/edit'];
 
+        try {
+            /** @var Document $document */
+            $document = (new Document)->query()
+                ->where('id', '=', $id)
+                ->where('user_id', '=', $_SESSION["loggedinID"])
+                ->firstOrFail();
+            $this->data['document'] = $document;
+            $this->data['filename'] = $document->file()?->filename;
+            $this->data['issuer'] = $document->issuer();
+            $this->data['storage'] = $document->storage()?->place;
+            $this->data['keywords'] = Keywords::fromModelArray($document->keywords())->toString();
+        } catch (RecordNotFoundException) {
+            $this->redirect('404');
+        } catch (Throwable $e) {
+            logger()->error($e->getMessage());
+            flash()->error(config('app.messages.error.GENERAL_ERROR'));
+            $this->view('documents/edit', $this->data);
+        }
+
         $this->destroyToken();
-        $document = new ArchiveDocument($id);
-        $details = $document->getDetails();
-
-        if (!$details['exist']) {
-            $this->data['status'] = 'error';
-            $this->data['message'] = $details['error'];
-            return $this->view('documents/edit', $this->data);
-        }
-
-        if ($details['data']['userId'] !== $_SESSION['loggedinID']) {
-            $this->data['status'] = 'error';
-            $this->data['message'] = config('app.messages.error.DOCUMENT_EDIT_AUTH_ERROR');
-            return $this->view('documents/edit', $this->data);
-        }
-
-        foreach ($this->data['fields'] as $key => $value) {
-            !empty($this->data['fields'][$key]) ?:
-            $this->data['fields'][$key] = $details['data'][$key];
-        }
-        !empty($this->data['selectedType']) ?:
-        $this->data['selectedType'] = $details['data']['docType'];
-        $this->data['docId'] = $id;
         $this->data['token'] = $this->generateToken();
 
-        return $this->view('documents/edit', $this->data);
+        $this->view('documents/edit', $this->data);
     }
 
-    public function update($id = NULL) {
-        // Update the document if user input is valid
-        if (!isset($id) ||
-            !$this->isPostRequest() ||
-            !$this->isValidToken($_POST['token']))
-        return Helper::redirect(config('app.url').'404');
+    public function update($id = null): void
+    {
+        if (! isset($id) ||
+            ! $this->isPostRequest() ||
+            ! $this->isValidToken($_POST['token'])
+        ) {
+            $this->redirect('404');
+        }
+
+        $this->destroyToken();
+        // TODO: Implement update logic.
+    }
+
+    public function delete($id = null): void
+    {
+        if (! isset($id) ||
+            ! $this->isPostRequest() ||
+            ! $this->isValidToken($_POST['token'])
+        ) {
+            $this->redirect('404');
+        }
 
         $this->destroyToken();
 
-        $document = new ArchiveDocument($id);
-        $params = [
-            'first_name'    => $_POST["first_name"],
-            'doctitle' => $_POST["doctitle"],
-            'created'  => $_POST["created"],
-            'agname'   => $_POST["agname"],
-            'agemail'  => $_POST["agemail"],
-            'agphone'  => $_POST["agphone"],
-            'doctype'  => $_POST["doctype"],
-            'storage'  => $_POST["storage"],
-            'keywords' => $_POST["keywords"],
-        ];
-        $update = $document->update($params);
+        try {
+            /** @var Document $document */
+            $document = (new Document)->query()
+                ->where('id', '=', $id)
+                ->where('user_id', '=', $_SESSION["loggedinID"])
+                ->firstOrFail();
 
-        if ($update['valid']) {
-            $_SESSION['status'] = $update['class'];
-            $_SESSION['flash'] = $update['message'];
-            return Helper::redirect(config('app.url').'documents/show/'.$id);
+            FileObject::fromExisting((string) $document->file()?->fullPath())->delete();
+
+            $document->delete();
+        } catch (RecordNotFoundException) {
+            $this->redirect('404');
+        } catch (Throwable $e) {
+            logger()->error($e->getMessage());
+            flash()->error(config('app.messages.error.GENERAL_ERROR'));
+            $this->redirect('documents');
         }
 
-        $this->data['selectedType'] = $_POST["doctype"];
-        foreach ($this->data['fields'] as $key => $value) {
-            $this->data['fields'][$key] = $update['input'][$key]['show'];
-        }
-        foreach ($this->data['errors'] as $key => $value) {
-            $this->data['errors'][$key] = $update['input'][$key]['error'];
-        }
-        foreach ($this->data['classes'] as $key => $value) {
-            $this->data['classes'][$key] = $update['input'][$key]['class'];
-        }
-
-        return $this->edit($id);
-    }
-
-    public function delete($id = NULL) {
-        // Delete the document
-        if (!isset($id) ||
-            !$this->isPostRequest() ||
-            !$this->isValidToken($_POST['token']))
-        return Helper::redirect(config('app.url').'404');
-
-        $this->destroyToken();
-
-        $document = new ArchiveDocument($id);
-        $delete = $document->delete();
-
-        if ($delete['success']) {
-            $_SESSION['flash'] = $delete['message'];
-        } else {
-            $_SESSION['status'] = 'error';
-            $_SESSION['flash'] = $delete['error'];
-        }
-
-        return Helper::redirect(config('app.url').'documents');
+        flash()->success('Document deleted successfully');
+        $this->redirect('documents');
     }
 
     public function download($id = NULL) {
@@ -276,6 +291,57 @@ class DocumentsController extends Controller
             'title' => config('app.page.titles')['documents'],
             'filename' => null,
             'documents' => [],
+        ];
+    }
+
+    protected function validationRules(): array
+    {
+        return [
+            'filename' => ['required', 'min:4', 'max:100', 'regex:/^[a-zA-ZäöüßÄÖÜ0-9_-]+$/'],
+            'title' => ['required', 'min:4', 'max:100', 'regex:/^[a-zA-ZäöüßÄÖÜ0-9()*,.\s-]+$/'],
+            'type' => ['required', 'in:'.implode(',', DocumentType::values())],
+            'issue_date' => ['required', 'date:Y-m-d'],
+            'issuer_name' => ['required', 'min:2', 'max:32', 'regex:/^[a-zA-ZäöüßÄÖÜ0-9.\s-]+$/'],
+            'issuer_email' => ['required', 'email'],
+            'issuer_phone' => ['required', 'min:10', 'max:32', 'regex:/^\+?[0-9()-]+$/'],
+            'storage' => ['required', 'max:50', 'regex:/^[a-zA-ZäöüßÄÖÜ0-9,()\s-]+$/'],
+            'keywords' => ['nullable', 'regex:/^[a-zA-ZäöüßÄÖÜ0-9,\s-]+$/'],
+        ];
+    }
+
+    protected function validationMessages(): array
+    {
+        return [
+            'filename.required' => 'Filename is required',
+            'title.required' => 'Document title is required',
+            'type.required' => 'Document type is required',
+            'issue_date.required' => 'Issue date is required',
+            'issuer_name.required' => 'Issuer name is required',
+            'issuer_email.required' => 'Issuer email is required',
+            'issuer_phone.required' => 'Issuer phone is required',
+            'storage.required' => 'Physical storage is required',
+
+            'filename.min' => 'Filename must be at least 4 characters long',
+            'title.min' => 'Document title must be at least 4 characters long',
+            'issuer_name.min' => 'Issuer name must be at least 2 characters long',
+            'issuer_phone.min' => 'Issuer phone must be at least 10 characters long',
+
+            'filename.max' => 'Filename must be at most 100 characters long',
+            'title.max' => 'Document title must be at most 100 characters long',
+            'issuer_name.max' => 'Issuer name must be at most 32 characters long',
+            'issuer_phone.max' => 'Issuer phone must be at most 32 characters long',
+            'storage.max' => 'Physical storage must be at most 50 characters long',
+
+            'issuer_email.email' => 'Issuer email is invalid',
+            'type.in' => 'Document type is invalid',
+            'issue_date.date' => 'Issue date is invalid',
+
+            'filename.regex' => 'Only alphabetic and numeric symbols, underscores, and hyphens are allowed',
+            'title.regex' => 'Only alphabetic and numeric symbols, spaces, round brackets, asterisks, points, and hyphens are allowed',
+            'issuer_name.regex' => 'Only alphabetic and numeric symbols, points, spaces, and hyphens are allowed',
+            'issuer_phone.regex' => 'Only one leading plus symbol, numeric symbols, parentheses, and hyphens are allowed',
+            'storage.regex' => 'Only alphabetic and numeric symbols, commas, round brackets, spaces, and hyphens are allowed',
+            'keywords.regex' => 'Only alphabetic and numeric symbols, commas, spaces, and hyphens are allowed',
         ];
     }
 }

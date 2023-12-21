@@ -77,8 +77,8 @@ CREATE TABLE `files` (
 -- Table structure for table `file_keywords`
 --
 
-CREATE TABLE `file_keywords` (
-  `file_id` int(10) UNSIGNED NOT NULL,
+CREATE TABLE `document_keywords` (
+  `document_id` int(10) UNSIGNED NOT NULL,
   `keyword_id` int(10) UNSIGNED NOT NULL,
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -166,9 +166,9 @@ ALTER TABLE `keywords`
 --
 -- Indexes for table `file_keywords`
 --
-ALTER TABLE `file_keywords`
-    ADD PRIMARY KEY (`file_id`, `keyword_id`),
-    ADD KEY `foreign_file_pivot` (`file_id`),
+ALTER TABLE `document_keywords`
+    ADD PRIMARY KEY (`document_id`, `keyword_id`),
+    ADD KEY `foreign_document_pivot` (`document_id`),
     ADD KEY `foreign_keyword_pivot` (`keyword_id`);
 
 --
@@ -247,8 +247,8 @@ ALTER TABLE `files`
 --
 -- Constraints for table `file_keywords`
 --
-ALTER TABLE `file_keywords`
-    ADD CONSTRAINT `foreign_file_pivot` FOREIGN KEY (`file_id`) REFERENCES `files` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ALTER TABLE `document_keywords`
+    ADD CONSTRAINT `foreign_document_pivot` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `foreign_keyword_pivot` FOREIGN KEY (`keyword_id`) REFERENCES `keywords` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 COMMIT;

@@ -2,6 +2,7 @@
 
 namespace Digitaliseme\Core\Validation;
 
+use DateTime;
 use Digitaliseme\Core\Database\DB;
 use Digitaliseme\Core\Database\MySQL;
 use Digitaliseme\Core\Database\Query;
@@ -38,6 +39,15 @@ class Validator
             }
 
             foreach ($this->rules[$key] as $rule) {
+                if ($rule === 'nullable') {
+                    if (empty($value)) {
+                        $this->validated[$key] = null;
+                        break;
+                    }
+
+                    continue;
+                }
+
                 try {
                     $this->applyRule($value, $rule, $key);
                     $this->validated[$key] = $value;
@@ -111,7 +121,7 @@ class Validator
     {
         $required = (int) $argument;
 
-        if (is_numeric($value)) {
+        if (is_int($value) || is_float($value)) {
             return $value >= $required;
         }
 
@@ -130,7 +140,7 @@ class Validator
     {
         $required = (int) $argument;
 
-        if (is_numeric($value)) {
+        if (is_int($value) || is_float($value)) {
             return $value <= $required;
         }
 
@@ -180,5 +190,26 @@ class Validator
         $values = explode(',', $options);
 
         return in_array($value, $values, true);
+    }
+
+    protected function date(mixed $value, ?string $format): bool
+    {
+        try {
+            $dateTimeString = (string) $value;
+        } catch (Throwable) {
+            return false;
+        }
+
+        if (empty($format)) {
+            return strtotime($dateTimeString) !== false;
+        }
+
+        $date = DateTime::createFromFormat($format, $dateTimeString);
+
+        if (!$date instanceof DateTime) {
+            return false;
+        }
+
+        return $date->format($format) === (string) $value;
     }
 }

@@ -8,7 +8,7 @@
                    class="<?= errors('username') ? 'invalid' : '' ?>"
                    name="username"
                    id="username"
-                     value="<?= show(old('username')) ?>"
+                   value="<?= show(old('username')) ?>"
             >
             <div class="error_message">
                 <small class="required"><?= errors('username') ?></small>
