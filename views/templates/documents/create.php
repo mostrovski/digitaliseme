@@ -11,7 +11,7 @@
     <div class="form">
         <form action="<?= config('app.url').'documents/store' ?>" method="POST">
             <div class="form_section">
-                <label for="filename" class="field_header">Filename </label>
+                <label for="filename" class="field_header">Filename</label>
                 <input type="text"
                        class="<?= errors('filename') ? 'invalid' : '' ?>"
                        name="filename"
@@ -24,7 +24,7 @@
             </div>
 
             <div class="form_section">
-                <label for="title" class="field_header">Document title </label>
+                <label for="title" class="field_header">Document title</label>
                 <input type="text"
                        class="<?= errors('title') ? 'invalid' : '' ?>"
                        name="title"
@@ -36,7 +36,7 @@
             </div>
 
             <div class="form_section">
-                <label for="type" class="field_header">Document type </label>
+                <label for="type" class="field_header">Document type</label>
                 <select name="type" id="type">
                     <option value="">Select type</option>
                     <?php foreach (\Digitaliseme\Enumerations\DocumentType::values() as $type) : ?>
@@ -53,7 +53,7 @@
             </div>
 
             <div class="form_section">
-                <label for="issue_date" class="field_header">Issue date </label>
+                <label for="issue_date" class="field_header">Issue date</label>
                 <input type="date"
                        class="<?= errors('issue_date') ? 'invalid' : '' ?>"
                        name="issue_date"
@@ -68,7 +68,7 @@
                 <label class="field_header">Issued by</label>
 
                 <div class="form_subsection">
-                    <label for="issuer_name" class="field_header">Name </label>
+                    <label for="issuer_name" class="field_header">Name</label>
                     <input type="text"
                            class="<?= errors('issuer_name') ? 'invalid' : '' ?>"
                            name="issuer_name"
@@ -78,7 +78,7 @@
                         <small class="required"><?= errors('issuer_name') ?></small>
                     </div>
 
-                    <label for="issuer_email" class="field_header">Email </label>
+                    <label for="issuer_email" class="field_header">Email</label>
                     <input type="text"
                            class="<?= errors('issuer_email') ? 'invalid' : '' ?>"
                            name="issuer_email"
@@ -88,7 +88,7 @@
                         <small class="required"><?= errors('issuer_email') ?></small>
                     </div>
 
-                    <label for="issuer_phone" class="field_header">Phone </label>
+                    <label for="issuer_phone" class="field_header">Phone</label>
                     <input type="text"
                            class="<?= errors('issuer_phone') ? 'invalid' : '' ?>"
                            name="issuer_phone"
@@ -101,7 +101,7 @@
             </div>
 
             <div class="form_section">
-                <label for="storage" class="field_header">Physical storage </label>
+                <label for="storage" class="field_header">Physical storage</label>
                 <input type="text"
                        placeholder="where is the physical document stored?"
                        class="<?= errors('storage') ? 'invalid' : '' ?>"
@@ -114,7 +114,7 @@
             </div>
 
             <div class="form_section">
-                <label for="keywords" class="field_header">Keywords </label>
+                <label for="keywords" class="field_header">Keywords</label>
                 <input type="text"
                        placeholder="separate, with, commas"
                        class="<?= errors('keywords') ? 'invalid' : '' ?>"

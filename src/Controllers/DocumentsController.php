@@ -2,6 +2,7 @@
 
 namespace Digitaliseme\Controllers;
 
+use Digitaliseme\Core\Exceptions\FileNotFoundException;
 use Digitaliseme\Core\Exceptions\RecordNotFoundException;
 use Digitaliseme\Core\Exceptions\ValidatorException;
 use Digitaliseme\Core\Storage\File as FileObject;
@@ -106,7 +107,7 @@ class DocumentsController extends Controller
 
         if (! empty($values['keywords'])) {
             try {
-                $keywords = Keywords::fromString(($values['keywords']))->all();
+                $keywords = Keywords::fromString($values['keywords'])->all();
             } catch (KeywordException $e) {
                 $this->withErrors(['keywords' => [$e->getMessage()]])->redirect('documents/create/'.$fileId);
             }
@@ -220,6 +221,9 @@ class DocumentsController extends Controller
         $this->view('documents/edit', $this->data);
     }
 
+    /**
+     * @throws ValidatorException
+     */
     public function update($id = null): void
     {
         if (! isset($id) ||
@@ -230,7 +234,72 @@ class DocumentsController extends Controller
         }
 
         $this->destroyToken();
-        // TODO: Implement update logic.
+
+        $validator = $this->validate($_POST, $this->validationRules(), $this->validationMessages());
+
+        if ($validator->fails()) {
+            $this->withErrors($validator->getErrors())->redirect('documents/edit/'.$id);
+        }
+
+        $values = $validator->getValidated();
+
+        try {
+            $keywords = Keywords::fromString((string) $values['keywords'])->all();
+        } catch (KeywordException $e) {
+            $this->withErrors(['keywords' => [$e->getMessage()]])->redirect('documents/edit/'.$id);
+        }
+
+        try {
+            /** @var Document $document */
+            $document = Document::go()->query()
+                ->where('id', '=', $id)
+                ->where('user_id', '=', $_SESSION["loggedinID"])
+                ->firstOrFail();
+
+            $document->file()?->update([
+                'filename' => $values['filename'],
+            ]);
+
+            $issuer = Issuer::go()->updateOrCreate([
+                'name' => $values['issuer_name'],
+                'email' => $values['issuer_email'],
+                'phone' => $values['issuer_phone'],
+            ], uniqueKey: 'name');
+
+            $storage = StoragePlace::go()->firstOrCreate([
+                'place' => $values['storage'],
+            ]);
+
+            $document->update([
+                'title' => $values['title'],
+                'type' => $values['type'],
+                'issue_date' => $values['issue_date'],
+                'issuer_id' => $issuer->id,
+                'storage_id' => $storage->id,
+            ]);
+
+            if (isset($keywords)) {
+                $pivot = $document->pivot('document_keywords');
+                $pivot->where('document_id', '=', $document->id)->delete();
+
+                foreach ($keywords as $word) {
+                    $keyword = Keyword::go()->firstOrCreate(['word' => $word]);
+                    $pivot->create([
+                        'document_id' => $document->id,
+                        'keyword_id' => $keyword->id,
+                    ]);
+                }
+            }
+        } catch (RecordNotFoundException) {
+            $this->redirect('404');
+        } catch (Throwable $e) {
+            logger()->error($e->getMessage());
+            flash()->error(config('app.messages.error.GENERAL_ERROR'));
+            $this->redirect('documents/edit/'.$id);
+        }
+
+        flash()->success('Document updated successfully');
+        $this->redirect('documents');
     }
 
     public function delete($id = null): void
@@ -251,7 +320,12 @@ class DocumentsController extends Controller
                 ->where('user_id', '=', $_SESSION["loggedinID"])
                 ->firstOrFail();
 
-            FileObject::fromExisting((string) $document->file()?->fullPath())->delete();
+            try {
+                FileObject::fromExisting((string)$document->file()?->fullPath())
+                    ->delete();
+            } catch (FileNotFoundException $e) {
+                logger()->error($e->getMessage());
+            }
 
             $document->delete();
         } catch (RecordNotFoundException) {
@@ -266,7 +340,7 @@ class DocumentsController extends Controller
         $this->redirect('documents');
     }
 
-    public function download($id = null)
+    public function download($id = null): void
     {
         if (! isset($id)) {
             $this->redirect('404');
@@ -280,6 +354,9 @@ class DocumentsController extends Controller
             FileObject::fromExisting($file->fullPath())->download($file->filename);
         } catch (RecordNotFoundException) {
             $this->redirect('404');
+        } catch (FileNotFoundException $e) {
+            flash()->error($e->getMessage());
+            $this->redirect('documents');
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));

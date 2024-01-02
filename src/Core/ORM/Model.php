@@ -88,6 +88,22 @@ abstract class Model
      * @param array<string,mixed> $params
      * @throws DatabaseException
      */
+    public function update(array $params): void
+    {
+        $params = $this->filteredParams($params, $this->protectedOnUpdate);
+        try {
+            $this->db
+                ->where($this->primaryKey, '=', $this->{$this->primaryKey})
+                ->update($params);
+        } catch (PDOException $e) {
+            throw new DatabaseException($e->getMessage());
+        }
+    }
+
+    /**
+     * @param array<string,mixed> $params
+     * @throws DatabaseException
+     */
     public function firstOrCreate(array $params, ?string $uniqueKey = null): static
     {
         if (empty($uniqueKey)) {
@@ -99,9 +115,35 @@ abstract class Model
             $uniqueKey = $keys[0];
         }
 
+        if (! isset($params[$uniqueKey])) {
+            throw new DatabaseException('A unique key is missing.');
+        }
+
         try {
             return $this->db->where($uniqueKey, '=', $params[$uniqueKey])
                 ->firstOrFail();
+        } catch (RecordNotFoundException) {
+            return $this->create($params);
+        }
+    }
+
+    /**
+     * @param array<string,mixed> $params
+     * @throws DatabaseException
+     */
+    public function updateOrCreate(array $params, string $uniqueKey): static
+    {
+        if (empty($uniqueKey) || ! isset($params[$uniqueKey])) {
+            throw new DatabaseException('A unique key is missing.');
+        }
+
+        try {
+            $instance = $this->db->where($uniqueKey, '=', $params[$uniqueKey])
+                ->firstOrFail();
+
+            $instance->update($params);
+
+            return $instance;
         } catch (RecordNotFoundException) {
             return $this->create($params);
         }

@@ -34,24 +34,24 @@
                 <label class="field_header">Issued by</label><br>
 
                 <div class="form_subsection">
-                    <label for="issuer_name">name </label>
+                    <label for="issuer_name">Name</label>
                     <input type="text" name="issuer_name" id="issuer_name" value="<?= $data['issuer']?->name ?>" readonly>
 
-                    <label for="issuer_email">email </label>
+                    <label for="issuer_email">Email</label>
                     <input type="text" name="issuer_email" id="issuer_email" value="<?= $data['issuer']?->email ?>" readonly>
 
-                    <label for="issuer_phone">phone </label>
+                    <label for="issuer_phone">Phone</label>
                     <input type="text" name="issuer_phone" id="issuer_phone" value="<?= $data['issuer']?->phone ?>" readonly>
                 </div>
             </div>
 
             <div class="form_section">
-                <label for="storage" class="field_header">Physical Storage </label>
+                <label for="storage" class="field_header">Physical Storage</label>
                 <input type="text" name="storage" id="storage" value="<?= $data['storage'] ?>" readonly>
             </div>
 
             <div class="form_section">
-                <label for="keywords" class="field_header">Keywords </label>
+                <label for="keywords" class="field_header">Keywords</label>
                 <input type="text" name="keywords" id="keywords" value="<?= $data['keywords'] ?>" readonly>
             </div>
         </form>

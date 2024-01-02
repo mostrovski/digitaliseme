@@ -16,7 +16,7 @@
                         <th>#</th>
                         <th>Title</th>
                         <th>Type</th>
-                        <th>Updated_at</th>
+                        <th>Updated at</th>
                         <th>Document</th>
                         <th></th>
                     </tr>
