@@ -2,8 +2,6 @@
 
 namespace Digitaliseme\Controllers;
 
-use Digitaliseme\Core\Helper;
-
 class DefaultController extends Controller
 {
     public function index(): void
@@ -11,7 +9,7 @@ class DefaultController extends Controller
         if ($_SERVER['REQUEST_URI'] !== '/') {
             $this->view('404', ['title' => '404']);
         } else {
-            Helper::isUserLoggedIn() ? $this->show('private') : $this->show('public');
+            auth()->isIntact() ? $this->show('private') : $this->show('public');
         }
     }
 

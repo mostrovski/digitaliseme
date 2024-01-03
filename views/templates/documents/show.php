@@ -55,7 +55,7 @@
                 <input type="text" name="keywords" id="keywords" value="<?= $data['keywords'] ?>" readonly>
             </div>
         </form>
-        <?php if ($data['document']->user_id === $_SESSION['loggedinID']) : ?>
+        <?php if ($data['document']->user_id === auth()->id()) : ?>
             <a href="<?= config('app.url').'documents/edit/'.$data['document']->id ?>">
                 <button>Edit</button>
             </a>

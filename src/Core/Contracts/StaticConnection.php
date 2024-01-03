@@ -1,6 +1,6 @@
 <?php
 
-namespace Digitaliseme\Core\Database\Contracts;
+namespace Digitaliseme\Core\Contracts;
 
 use PDO;
 use PDOException;

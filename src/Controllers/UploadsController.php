@@ -24,7 +24,7 @@ class UploadsController extends Controller
         try {
             $files = FileModel::go()->query()
                 ->whereNull('document_id')
-                ->where('user_id', '=', $_SESSION["loggedinID"])
+                ->where('user_id', '=', auth()->id())
                 ->get();
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
@@ -35,7 +35,7 @@ class UploadsController extends Controller
         $uploads = $files ?? [];
 
         if (count($uploads) === 0) {
-            flash()->info(config('app.messages.info.NO_UPLOADS'));
+            flash()->info('There is nothing to work on, upload new file <a href="https://digitaliseme.ddev.site/uploads/create">here</a>');
         }
 
         $this->data['uploads'] = $uploads;
@@ -65,7 +65,7 @@ class UploadsController extends Controller
             $file = File::fromUpload($_FILES['docfile']);
             $this->verify($file);
         } catch (FileNotFoundException) {
-            flash()->error(config('app.messages.error.NO_FILE_CHOSEN_ERROR'));
+            flash()->error('File was not chosen');
             $this->redirect('uploads/create');
         } catch (UploadedFileException $e) {
             flash()->error($e->getMessage());
@@ -81,9 +81,9 @@ class UploadsController extends Controller
                     FileModel::go()->create([
                         'filename' => $file->name(),
                         'path' => $relativePath,
-                        'user_id' => $_SESSION["loggedinID"],
+                        'user_id' => auth()->id(),
                     ]);
-                    flash()->success(config('app.messages.info.UPLOAD_OK'));
+                    flash()->success('File was successfully uploaded');
                     $this->redirect('uploads');
                 } catch (Throwable $e) {
                     logger()->error($e->getMessage());
@@ -107,7 +107,7 @@ class UploadsController extends Controller
             /** @var FileModel $file */
             $file = FileModel::go()->query()
                 ->where('id', '=', $id)
-                ->where('user_id', '=', $_SESSION["loggedinID"])
+                ->where('user_id', '=', auth()->id())
                 ->firstOrFail();
 
             if (! File::fromExisting($file->fullPath())->delete()) {
@@ -118,7 +118,7 @@ class UploadsController extends Controller
                 throw FileException::deleteRecord();
             }
 
-            flash()->success(config('app.messages.info.UPLOAD_DELETE_OK'));
+            flash()->success('File was successfully deleted');
             $this->redirect('uploads');
         } catch (RecordNotFoundException) {
             $this->redirect('404');

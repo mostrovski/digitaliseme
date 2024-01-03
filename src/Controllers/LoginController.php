@@ -3,7 +3,6 @@
 namespace Digitaliseme\Controllers;
 
 use Digitaliseme\Core\Exceptions\ValidatorException;
-use Digitaliseme\Core\Helper;
 use Digitaliseme\Models\User;
 use Throwable;
 
@@ -17,8 +16,8 @@ class LoginController extends Controller
     }
     public function index(): void
     {
-        if (Helper::isUserLoggedIn()) {
-            flash()->info(config('app.messages.info.LOGIN_ALREADY'));
+        if (auth()->isIntact()) {
+            flash()->info('You are logged in');
             $this->redirect('/');
         }
 
@@ -72,16 +71,13 @@ class LoginController extends Controller
         }
 
         if (! $validCredentials) {
-            flash()->error(config('app.messages.error.LOGIN_ERROR'));
+            flash()->error('Username or password is wrong');
             $this->redirect('login');
         }
 
         /** @var User $user */
-        $_SESSION["loggedin"] = $user->username;
-        $_SESSION["loggedinName"] = $user->first_name;
-        $_SESSION["loggedinID"] = $user->id;
-
-        flash()->success(config('app.messages.info.LOGIN_OK'));
+        auth()->persist($user);
+        flash()->success('You have successfully been logged in');
         $this->redirect('/');
     }
 

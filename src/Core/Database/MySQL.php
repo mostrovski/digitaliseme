@@ -2,7 +2,7 @@
 
 namespace Digitaliseme\Core\Database;
 
-use Digitaliseme\Core\Database\Contracts\StaticConnection;
+use Digitaliseme\Core\Contracts\StaticConnection;
 use Digitaliseme\Core\Exceptions\DatabaseException;
 use PDO;
 

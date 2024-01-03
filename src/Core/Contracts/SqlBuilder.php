@@ -1,6 +1,6 @@
 <?php
 
-namespace Digitaliseme\Core\Database\Contracts;
+namespace Digitaliseme\Core\Contracts;
 
 use Digitaliseme\Core\Database\Action;
 use Digitaliseme\Core\Database\WhereGlue;

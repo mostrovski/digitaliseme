@@ -2,11 +2,12 @@
 
 namespace Digitaliseme\Models;
 
+use Digitaliseme\Core\Contracts\Authenticatable;
 use Digitaliseme\Core\ORM\Meta\ModelAttribute;
 use Digitaliseme\Core\ORM\Meta\Setter;
 use Digitaliseme\Core\ORM\Model;
 
-class User extends Model
+class User extends Model implements Authenticatable
 {
     #[ModelAttribute(protectedOnCreate: true, protectedOnUpdate: true)]
     public int $id;
@@ -23,6 +24,19 @@ class User extends Model
         Setter(methodName: 'convert')
     ]
     public string $password;
+
+    public function authIdentifier(): int|string
+    {
+        return $this->id;
+    }
+
+    public function __serialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'first_name' => $this->first_name,
+        ];
+    }
 
     protected function convert(string $password): string {
         return password_hash($password, PASSWORD_DEFAULT);

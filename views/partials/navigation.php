@@ -1,4 +1,4 @@
-<?php if (Digitaliseme\Core\Helper::isUserLoggedIn()) : ?>
+<?php if (auth()->isIntact()) : ?>
 <div class="nav">
   <ul>
     <li><a href="<?= config('app.url').'uploads/create' ?>">upload new file</a></li>

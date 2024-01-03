@@ -16,7 +16,11 @@
         </div>
         <div id="user_info">
             <p>
-                <?= Digitaliseme\Core\Helper::getGreeting() ?>
+            <?php if (auth()->isIntact()) : ?>
+                you are in, <?= auth()->user()?->first_name ?> &check;
+            <?php else : ?>
+                aloha, wanderer
+            <?php endif; ?>
             </p>
         </div>
     </header>

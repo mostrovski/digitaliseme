@@ -1,1 +1,0 @@
-A storage for temporary zipped files created during download.

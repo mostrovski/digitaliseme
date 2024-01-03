@@ -2,8 +2,8 @@
 
 namespace Digitaliseme\Core\Database;
 
-use Digitaliseme\Core\Database\Contracts\Connection;
-use Digitaliseme\Core\Database\Contracts\SqlBuilder;
+use Digitaliseme\Core\Contracts\Connection;
+use Digitaliseme\Core\Contracts\SqlBuilder;
 use Digitaliseme\Core\Exceptions\DatabaseException;
 use Digitaliseme\Core\Exceptions\RecordNotFoundException;
 use PDO;

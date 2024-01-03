@@ -2,6 +2,7 @@
 
 use Digitaliseme\Core\Application;
 use Digitaliseme\Core\Logging\Logger;
+use Digitaliseme\Core\Session\Auth;
 use Digitaliseme\Core\Session\Errors;
 use Digitaliseme\Core\Session\Flash;
 use Digitaliseme\Core\Session\OldInput;
@@ -98,6 +99,11 @@ function old(?string $key = null): mixed
     return $old->get($key);
 }
 
+function auth(): Auth
+{
+    return Auth::handler();
+}
+
 function show(mixed $input): string
 {
     return htmlspecialchars((string) $input);
@@ -115,5 +121,13 @@ function dump(...$values): void
         var_dump($value);
     }
     echo '</pre>';
+    exit;
+}
+function redirect(string $url): void
+{
+    if (! str_starts_with($url, config('app.url'))) {
+        $url = config('app.url').ltrim($url, '/');
+    }
+    header('Location: '.$url);
     exit;
 }

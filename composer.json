@@ -10,7 +10,8 @@
     "php": "^8.1",
     "ext-pdo": "*",
     "ext-ctype": "*",
-    "ext-fileinfo": "*"
+    "ext-fileinfo": "*",
+    "ext-mbstring": "*"
   },
   "autoload": {
     "psr-4": {

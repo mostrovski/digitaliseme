@@ -3,7 +3,6 @@
 namespace Digitaliseme\Controllers;
 
 use Digitaliseme\Core\Exceptions\ValidatorException;
-use Digitaliseme\Core\Helper;
 use Digitaliseme\Core\Session\Errors;
 use Digitaliseme\Core\Validation\Validator;
 
@@ -46,7 +45,7 @@ abstract class Controller
 
     protected function redirect($url): void
     {
-        Helper::redirect($url);
+        redirect($url);
     }
 
     protected function view($template, $data = []): void

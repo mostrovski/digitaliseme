@@ -38,7 +38,7 @@ class DocumentsController extends Controller
         $documents = $records ?? [];
 
         if (count($documents) === 0) {
-            flash()->info(config('app.messages.info.NO_DOCUMENTS'));
+            flash()->info('The archive is empty, upload new file <a href="https://digitaliseme.ddev.site/uploads/create">here</a>');
         }
 
         $this->data['documents'] = $documents;
@@ -58,7 +58,7 @@ class DocumentsController extends Controller
             /** @var File $file */
             $file = File::go()->query()
                 ->where('id', '=', $id)
-                ->where('user_id', '=', $_SESSION["loggedinID"])
+                ->where('user_id', '=', auth()->id())
                 ->whereNull('document_id')
                 ->firstOrFail();
         } catch (RecordNotFoundException) {
@@ -131,7 +131,7 @@ class DocumentsController extends Controller
                 'issue_date' => $values['issue_date'],
                 'issuer_id' => $issuer->id,
                 'storage_id' => $storage->id,
-                'user_id' => $_SESSION['loggedinID'],
+                'user_id' => auth()->id(),
             ]);
 
             File::go()->query()
@@ -158,7 +158,7 @@ class DocumentsController extends Controller
             $this->redirect('documents/create/'.$fileId);
         }
 
-        flash()->success(config('app.messages.info.NEW_DOC_OK'));
+        flash()->success('Document was successfully saved');
         $this->redirect('documents');
     }
 
@@ -200,7 +200,7 @@ class DocumentsController extends Controller
             /** @var Document $document */
             $document = Document::go()->query()
                 ->where('id', '=', $id)
-                ->where('user_id', '=', $_SESSION["loggedinID"])
+                ->where('user_id', '=', auth()->id())
                 ->firstOrFail();
             $this->data['document'] = $document;
             $this->data['filename'] = $document->file()?->filename;
@@ -253,7 +253,7 @@ class DocumentsController extends Controller
             /** @var Document $document */
             $document = Document::go()->query()
                 ->where('id', '=', $id)
-                ->where('user_id', '=', $_SESSION["loggedinID"])
+                ->where('user_id', '=', auth()->id())
                 ->firstOrFail();
 
             $document->file()?->update([
@@ -317,7 +317,7 @@ class DocumentsController extends Controller
             /** @var Document $document */
             $document = Document::go()->query()
                 ->where('id', '=', $id)
-                ->where('user_id', '=', $_SESSION["loggedinID"])
+                ->where('user_id', '=', auth()->id())
                 ->firstOrFail();
 
             try {

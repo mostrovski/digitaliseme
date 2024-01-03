@@ -2,7 +2,7 @@
 
 namespace Digitaliseme\Core\Database;
 
-use Digitaliseme\Core\Database\Contracts\SqlBuilder;
+use Digitaliseme\Core\Contracts\SqlBuilder;
 use Digitaliseme\Core\Exceptions\DatabaseException;
 
 class Query implements SqlBuilder

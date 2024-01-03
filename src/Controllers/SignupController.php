@@ -3,7 +3,6 @@
 namespace Digitaliseme\Controllers;
 
 use Digitaliseme\Core\Exceptions\ValidatorException;
-use Digitaliseme\Core\Helper;
 use Digitaliseme\Models\User;
 use Throwable;
 
@@ -18,8 +17,8 @@ class SignupController extends Controller
 
     public function index(): void
     {
-        if (Helper::isUserLoggedIn()) {
-            flash()->info(config('app.messages.info.SIGNUP_ALREADY'));
+        if (auth()->isIntact()) {
+            flash()->info('You have already signed up');
             $this->redirect('/');
         }
 
@@ -49,11 +48,11 @@ class SignupController extends Controller
 
         try {
             User::go()->create($validator->getValidated());
-            flash()->success(config('app.messages.info.SIGNUP_OK'));
+            flash()->success('Kudos, you can now log in with your username and password');
             $this->redirect('login');
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
-            flash()->error(config('app.messages.error.TRY_AGAIN_ERROR'));
+            flash()->error('Something went wrong... Try again!');
             $this->redirect('signup');
         }
     }
