@@ -53,6 +53,12 @@ img {
     letter-spacing: 1px;
 }
 
+.warning {
+    color: #d5a81c;
+    font-size: 17px;
+    letter-spacing: 1px;
+}
+
 .okay {
     color: #3c9c90;
     font-size: 17px;

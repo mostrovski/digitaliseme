@@ -20,7 +20,8 @@ class DocumentsController extends Controller
 {
     protected array $data;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setData();
     }
 
@@ -113,7 +114,6 @@ class DocumentsController extends Controller
             }
         }
 
-        // Logic for creating the document
         try {
             $issuer = Issuer::go()->firstOrCreate([
                 'name' => $values['issuer_name'],

@@ -38,6 +38,13 @@ class DB
         return $this;
     }
 
+    public function unsetFetchClass(): static
+    {
+        $this->fetchClass = null;
+
+        return $this;
+    }
+
     public function table(string $name): static
     {
         $this->query->useTable($name);

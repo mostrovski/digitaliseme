@@ -26,6 +26,11 @@ class Flash
         $this->set($message, 'error');
     }
 
+    public function warning(string $message): void
+    {
+        $this->set($message, 'warning');
+    }
+
     public function info(string $message): void
     {
         $this->set($message, 'info');
