@@ -1,14 +1,15 @@
+<?php $metaTitle = 'Files to process'; ?>
 <span class="form_header">&nbsp;&#10045; Files to process </span>
 <?php include_once app()->root().'/views/partials/flash-message.php'; ?>
 
 <?php if (flash()->getType() === 'error') : ?>
     <p>
         <a href="<?= config('app.url').'uploads' ?>">
-            <img src="<?= config('app.url').'img/error.png' ?>">
+            <img src="<?= config('app.url').'img/error.png' ?>" alt="Error">
         </a>
     </p>
 <?php else: ?>
-    <?php if (count($data['uploads']) > 0) : ?>
+    <?php if (count($uploads) > 0) : ?>
         <div class="tables">
             <table>
                 <thead>
@@ -22,7 +23,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($data['uploads'] as $i => $upload) : ?>
+                <?php foreach ($uploads as $i => $upload) : ?>
                     <tr>
                         <td><?= $i + 1 ?></td>
                         <td><?= $upload->filename ?></td>
@@ -58,7 +59,7 @@
     <?php else: ?>
         <p>
             <a href="<?= config('app.url').'uploads/create' ?>">
-                <img src="<?= config('app.url').'img/empty.png' ?>">
+                <img src="<?= config('app.url').'img/empty.png' ?>" alt="Empty">
             </a>
         </p>
     <?php endif; ?>

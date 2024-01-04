@@ -1,26 +1,26 @@
-<span class="form_header">&nbsp;&#9998; Work on new document </span>
+<?php $metaTitle = 'Edit document'; ?>
+<span class="form_header">&nbsp;&#10000; Edit document</span>
 <?php include_once app()->root().'/views/partials/flash-message.php'; ?>
 
 <?php if (flash()->getType() === 'error') : ?>
     <p>
-        <a href="<?= config('app.url').'uploads' ?>">
-            <img src="<?= config('app.url').'img/error.png' ?>">
+        <a href="<?= config('app.url').'documents' ?>">
+            <img src="<?= config('app.url').'img/error.png' ?>" alt="Error">
         </a>
     </p>
 <?php else: ?>
     <div class="form">
-        <form action="<?= config('app.url').'documents/store' ?>" method="POST">
+        <form action="<?= config('app.url').'documents/update/'.$document->id ?>" method="POST">
             <div class="form_section">
                 <label for="filename" class="field_header">Filename</label>
                 <input type="text"
                        class="<?= errors('filename') ? 'invalid' : '' ?>"
                        name="filename"
                        id="filename"
-                       value="<?= show(old('filename') ?? $data['filename']) ?>">
+                       value="<?= show(old('filename') ?? $filename) ?>">
                 <div class="error_message">
                     <small class="required"><?= errors('filename') ?></small>
                 </div>
-                <input type="hidden" name="fileId" value="<?= $_SESSION['upfile'] ?>">
             </div>
 
             <div class="form_section">
@@ -29,7 +29,7 @@
                        class="<?= errors('title') ? 'invalid' : '' ?>"
                        name="title"
                        id="title"
-                       value="<?= show(old('title')) ?>">
+                       value="<?= show(old('title') ?? $document->title) ?>">
                 <div class="error_message">
                     <small class="required"><?= errors('title') ?></small>
                 </div>
@@ -41,7 +41,7 @@
                     <option value="">Select type</option>
                     <?php foreach (\Digitaliseme\Enumerations\DocumentType::values() as $type) : ?>
                         <option value="<?= $type ?>"
-                            <?= old('type') === $type ? 'selected' : '' ?>
+                            <?= (old('type') ?? $document->type) === $type ? 'selected' : '' ?>
                         >
                             <?= $type ?>
                         </option>
@@ -58,7 +58,7 @@
                        class="<?= errors('issue_date') ? 'invalid' : '' ?>"
                        name="issue_date"
                        id="issue_date"
-                       value="<?= show(old('issue_date')) ?>">
+                       value="<?= show(old('issue_date') ?? $document->issue_date) ?>">
                 <div class="error_message">
                     <small class="required"><?= errors('issue_date') ?></small>
                 </div>
@@ -73,7 +73,7 @@
                            class="<?= errors('issuer_name') ? 'invalid' : '' ?>"
                            name="issuer_name"
                            id="issuer_name"
-                           value="<?= show(old('issuer_name')) ?>">
+                           value="<?= show(old('issuer_name') ?? $issuer?->name) ?>">
                     <div class="error_message">
                         <small class="required"><?= errors('issuer_name') ?></small>
                     </div>
@@ -83,7 +83,7 @@
                            class="<?= errors('issuer_email') ? 'invalid' : '' ?>"
                            name="issuer_email"
                            id="issuer_email"
-                           value="<?= show(old('issuer_email')) ?>">
+                           value="<?= show(old('issuer_email') ?? $issuer?->email) ?>">
                     <div class="error_message">
                         <small class="required"><?= errors('issuer_email') ?></small>
                     </div>
@@ -93,7 +93,7 @@
                            class="<?= errors('issuer_phone') ? 'invalid' : '' ?>"
                            name="issuer_phone"
                            id="issuer_phone"
-                           value="<?= show(old('issuer_phone')) ?>">
+                           value="<?= show(old('issuer_phone') ?? $issuer?->phone) ?>">
                     <div class="error_message">
                         <small class="required"><?= errors('issuer_phone') ?></small>
                     </div>
@@ -107,7 +107,7 @@
                        class="<?= errors('storage') ? 'invalid' : '' ?>"
                        name="storage"
                        id="storage"
-                       value="<?= show(old('storage')) ?>">
+                       value="<?= show(old('storage') ?? $storage) ?>">
                 <div class="error_message">
                     <small class="required"><?= errors('storage') ?></small>
                 </div>
@@ -120,15 +120,20 @@
                        class="<?= errors('keywords') ? 'invalid' : '' ?>"
                        name="keywords"
                        id="keywords"
-                       value="<?= show(old('keywords')) ?>">
+                       value="<?= show(old('keywords') ?? $keywords) ?>">
                 <div class="error_message">
                     <small class="required"><?= errors('keywords') ?></small>
                 </div>
             </div>
 
-            <input type="submit" value="Save new document" name="saveme">
+            <input type="submit" value="Update document" name="updateme" onclick="return confirm('Update this document?')">
 
-            <input type="hidden" id="token" name="token" value="<?= $data['token'] ?>">
+            <input type="hidden" id="token" name="token" value="<?= $token ?>">
         </form>
-</div>
+        <form action="<?= config('app.url').'documents/delete/'.$document->id ?>" method="POST">
+            <input type="submit" class="delete" value="Delete document" name="deleteme" onclick="return confirm('Delete this document?')">
+
+            <input type="hidden" id="token" name="token" value="<?= $token ?>">
+        </form>
+    </div>
 <?php endif; ?>

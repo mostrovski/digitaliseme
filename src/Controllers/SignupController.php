@@ -8,13 +8,6 @@ use Throwable;
 
 class SignupController extends Controller
 {
-    protected array $data;
-
-    public function __construct()
-    {
-        $this->setData();
-    }
-
     public function index(): void
     {
         if (auth()->isIntact()) {
@@ -23,8 +16,8 @@ class SignupController extends Controller
         }
 
         $this->destroyToken();
-        $this->data['token'] = $this->generateToken();
-        $this->view('signup', $this->data);
+
+        $this->view('signup', ['token' => $this->generateToken()]);
     }
 
     /**
@@ -55,13 +48,6 @@ class SignupController extends Controller
             flash()->error('Something went wrong... Try again!');
             $this->redirect('signup');
         }
-    }
-
-    protected function setData(): void
-    {
-        $this->data = [
-            'title' => config('app.page.titles')['signup'],
-        ];
     }
 
     protected function validationRules(): array

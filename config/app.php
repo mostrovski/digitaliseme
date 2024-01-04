@@ -35,20 +35,6 @@ return [
         'developer' => 'Andrei Ostrovskii',
     ],
 
-    'page' => [
-        'titles' => [
-            'login' => 'Log in',
-            'signup' => 'Sign up',
-            'uploads' => 'Files to process',
-            'uploads/create' => 'Upload file',
-            'documents' => 'Documents',
-            'documents/create' => 'Work on new document',
-            'documents/show' => 'Document details',
-            'documents/edit' => 'Edit document',
-            'search' => 'Find the document',
-        ],
-    ],
-
     'files' => [
         'supported_types' => ['application/pdf', 'image/jpeg', 'image/png'],
         'max_size' => 1048576,

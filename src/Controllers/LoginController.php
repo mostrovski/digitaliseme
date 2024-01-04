@@ -8,12 +8,6 @@ use Throwable;
 
 class LoginController extends Controller
 {
-    protected array $data;
-
-    public function __construct()
-    {
-        $this->setData();
-    }
     public function index(): void
     {
         if (auth()->isIntact()) {
@@ -22,8 +16,8 @@ class LoginController extends Controller
         }
 
         $this->destroyToken();
-        $this->data['token'] = $this->generateToken();
-        $this->view('login', $this->data);
+
+        $this->view('login', ['token' => $this->generateToken()]);
     }
 
     /**
@@ -79,12 +73,5 @@ class LoginController extends Controller
         auth()->persist($user);
         flash()->success('You have successfully been logged in');
         $this->redirect('/');
-    }
-
-    protected function setData(): void
-    {
-        $this->data = [
-            'title' => config('app.page.titles')['login'],
-        ];
     }
 }

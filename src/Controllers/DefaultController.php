@@ -7,7 +7,7 @@ class DefaultController extends Controller
     public function index(): void
     {
         if ($_SERVER['REQUEST_URI'] !== '/') {
-            $this->view('404', ['title' => '404']);
+            $this->view('404');
         } else {
             auth()->isIntact() ? $this->show('private') : $this->show('public');
         }

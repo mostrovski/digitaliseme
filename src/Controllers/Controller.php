@@ -48,12 +48,19 @@ abstract class Controller
         redirect($url);
     }
 
-    protected function view($template, $data = []): void
+    protected function view(string $view, array $data = []): void
     {
-        require_once app()->root().'/views/partials/header.php';
-        require_once app()->root().'/views/partials/navigation.php';
-        require_once app()->root().'/views/templates/'.$template.'.php';
-        require_once app()->root().'/views/partials/footer.php';
+        extract($data);
+
+        ob_start();
+        include app()->root()."/views/$view.php";
+        $content = ob_get_clean();
+
+        ob_start();
+        include app()->root().'/views/templates/master.php';
+        $template = ob_get_clean();
+
+        echo str_replace('___\content/___', $content, subject: $template);
     }
 
     protected function withErrors(array $errors): static

@@ -17,21 +17,13 @@ use Digitaliseme\Models\StoragePlace;
 
 class SearchController extends Controller
 {
-    protected array $data;
-
-    public function __construct()
-    {
-        $this->setData();
-    }
-
     public function index(): void
     {
         $this->destroyToken();
-        $this->data['token'] = $this->generateToken();
-        $this->data['results'] = $_SESSION['searchResults'] ?? [];
+        $results = $_SESSION['searchResults'] ?? [];
         unset($_SESSION['searchResults']);
 
-        $this->view('search/index', $this->data);
+        $this->view('search/index', ['results' => $results, 'token' => $this->generateToken()]);
     }
 
     /**
@@ -60,7 +52,7 @@ class SearchController extends Controller
             flash()->warning('There are no documents matching your search criteria');
         }
 
-        $_SESSION['searchResults'] = $results; // TODO: fix this approach
+        $_SESSION['searchResults'] = $results; // TODO: fix this approach?
 
         $this->redirect('search');
     }
@@ -139,14 +131,6 @@ class SearchController extends Controller
         }
 
         return $query->get();
-    }
-
-    protected function setData(): void
-    {
-        $this->data = [
-            'title' => config('app.page.titles')['search'],
-            'results' => [],
-        ];
     }
 
     protected function validationRules(): array

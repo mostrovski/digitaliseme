@@ -1,3 +1,4 @@
+<?php $metaTitle = 'Sign up'; ?>
 <span class="form_header">&nbsp;&#9784; Sign up </span>
 <?php include_once app()->root().'/views/partials/flash-message.php'; ?>
 <div class="form">
@@ -69,7 +70,7 @@
 
         <input type="submit" value="Sign up" name="signme">
 
-        <input type="hidden" id="token" name="token" value="<?= $data['token'] ?>">
+        <input type="hidden" id="token" name="token" value="<?= $token ?>">
     </form>
 </div>
 <div class="info">

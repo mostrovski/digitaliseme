@@ -12,13 +12,6 @@ use Throwable;
 
 class UploadsController extends Controller
 {
-    protected array $data;
-
-    public function __construct()
-    {
-        $this->setData();
-    }
-
     public function index(): void
     {
         try {
@@ -29,7 +22,7 @@ class UploadsController extends Controller
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            $this->view('uploads/index', $this->data);
+            $this->view('uploads/index');
         }
 
         $uploads = $files ?? [];
@@ -38,17 +31,14 @@ class UploadsController extends Controller
             flash()->info('There is nothing to work on, upload new file <a href="https://digitaliseme.ddev.site/uploads/create">here</a>');
         }
 
-        $this->data['uploads'] = $uploads;
-
-        $this->view('uploads/index', $this->data);
+        $this->view('uploads/index', ['uploads' => $uploads]);
     }
 
     public function create(): void
     {
-        $this->data['title'] = config('app.page.titles')['uploads/create'];
         $this->destroyToken();
-        $this->data['token'] = $this->generateToken();
-        $this->view('uploads/create', $this->data);
+
+        $this->view('uploads/create', ['token' => $this->generateToken()]);
     }
 
     public function store(): void
@@ -154,13 +144,5 @@ class UploadsController extends Controller
         if (! in_array($file->mimeType(), config('app.files.supported_types'), true)) {
             throw UploadedFileException::type();
         }
-    }
-
-    protected function setData(): void
-    {
-        $this->data = [
-            'title' => config('app.page.titles')['uploads'],
-            'uploads' => [],
-        ];
     }
 }

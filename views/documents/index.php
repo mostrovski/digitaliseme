@@ -1,14 +1,15 @@
+<?php $metaTitle = 'Documents'; ?>
 <span class="form_header">&nbsp;&#10065; Documents </span>
 <?php include_once app()->root().'/views/partials/flash-message.php'; ?>
 
 <?php if (flash()->getType() === 'error') : ?>
     <p>
         <a href="<?= config('app.url').'documents' ?>">
-            <img src="<?= config('app.url').'img/error.png' ?>">
+            <img src="<?= config('app.url').'img/error.png' ?>" alt="Error">
         </a>
     </p>
 <?php else: ?>
-    <?php if (count($data['documents']) > 0) : ?>
+    <?php if (count($documents) > 0) : ?>
         <div class="tables">
             <table>
                 <thead>
@@ -22,7 +23,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($data['documents'] as $i => $document) : ?>
+                <?php foreach ($documents as $i => $document) : ?>
                     <tr>
                         <td><?= $i + 1 ?></td>
                         <td><?= $document->title ?></td>
@@ -50,7 +51,7 @@
     <?php else: ?>
         <p>
             <a href="<?= config('app.url').'uploads/create' ?>">
-                <img src="<?= config('app.url').'img/empty.png' ?>">
+                <img src="<?= config('app.url').'img/empty.png' ?>" alt="Empty">
             </a>
         </p>
     <?php endif; ?>

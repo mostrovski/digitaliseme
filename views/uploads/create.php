@@ -1,3 +1,4 @@
+<?php $metaTitle = 'Upload new file'; ?>
 <span class="form_header">&nbsp;&#10064; Upload new file </span>
 <?php include_once app()->root().'/views/partials/flash-message.php'; ?>
 <div class="form">
@@ -14,6 +15,6 @@
 
         <input type="submit" value="Upload" name="upload">
 
-        <input type="hidden" id="token" name="token" value="<?= $data['token'] ?>">
+        <input type="hidden" id="token" name="token" value="<?= $token ?>">
     </form>
 </div>

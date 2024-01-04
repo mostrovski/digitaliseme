@@ -1,14 +1,15 @@
+<?php $metaTitle = 'Find the document'; ?>
 <span class="form_header">&nbsp;&#8801; Find the document </span>
 <?php include_once app()->root().'/views/partials/flash-message.php'; ?>
 
 <?php if (flash()->getType() === 'error') : ?>
     <p>
         <a href="<?= config('app.url').'search' ?>">
-            <img src="<?= config('app.url').'img/error.png' ?>">
+            <img src="<?= config('app.url').'img/error.png' ?>" alt="Error">
         </a>
     </p>
 <?php else: ?>
-    <?php if (count($data['results']) > 0) : ?>
+    <?php if (count($results) > 0) : ?>
         <div class="tables">
             <table>
                 <thead>
@@ -22,7 +23,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($data['results'] as $i => $document) : ?>
+                <?php foreach ($results as $i => $document) : ?>
                     <tr>
                         <td><?= $i + 1 ?></td>
                         <td><?= $document->title ?></td>
@@ -135,7 +136,7 @@
 
                 <input type="submit" value="Find the document" name="findme">
 
-                <input type="hidden" id="token" name="token" value="<?= $data['token'] ?>">
+                <input type="hidden" id="token" name="token" value="<?= $token ?>">
             </form>
         </div>
     <?php endif; ?>

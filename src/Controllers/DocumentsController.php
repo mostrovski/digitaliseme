@@ -18,13 +18,6 @@ use Throwable;
 
 class DocumentsController extends Controller
 {
-    protected array $data;
-
-    public function __construct()
-    {
-        $this->setData();
-    }
-
     public function index(): void
     {
         try {
@@ -32,7 +25,7 @@ class DocumentsController extends Controller
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            $this->view('documents/index', $this->data);
+            $this->view('documents/index');
         }
 
         $documents = $records ?? [];
@@ -41,9 +34,7 @@ class DocumentsController extends Controller
             flash()->info('The archive is empty, upload new file <a href="https://digitaliseme.ddev.site/uploads/create">here</a>');
         }
 
-        $this->data['documents'] = $documents;
-
-        $this->view('documents/index', $this->data);
+        $this->view('documents/index', ['documents' => $documents]);
     }
 
     public function create($id = null): void
@@ -51,8 +42,6 @@ class DocumentsController extends Controller
         if (! isset($id)) {
             $this->redirect('404');
         }
-
-        $this->data['title'] = config('app.page.titles')['documents/create'];
 
         try {
             /** @var File $file */
@@ -66,15 +55,13 @@ class DocumentsController extends Controller
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            $this->view('documents/create', $this->data);
+            $this->view('documents/create');
         }
 
         $this->destroyToken();
-        $this->data['token'] = $this->generateToken();
-        $this->data['filename'] = $file->filename;
         $_SESSION['upfile'] = $file->id;
 
-        $this->view('documents/create', $this->data);
+        $this->view('documents/create', ['filename' => $file->filename, 'token' => $this->generateToken()]);
     }
 
     /**
@@ -168,24 +155,24 @@ class DocumentsController extends Controller
             $this->redirect('404');
         }
 
-        $this->data['title'] = config('app.page.titles')['documents/show'];
-
         try {
             $document = Document::go()->findOrFail($id);
-            $this->data['document'] = $document;
-            $this->data['filename'] = $document->file()?->filename;
-            $this->data['issuer'] = $document->issuer();
-            $this->data['storage'] = $document->storage()?->place;
-            $this->data['keywords'] = Keywords::fromModelArray($document->keywords())->toString();
+            $data = [
+                'document' => $document,
+                'filename' => $document->file()?->filename,
+                'issuer' => $document->issuer(),
+                'storage' => $document->storage()?->place,
+                'keywords' => Keywords::fromModelArray($document->keywords())->toString(),
+            ];
         } catch (RecordNotFoundException) {
             $this->redirect('404');
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            $this->view('documents/show', $this->data);
+            $this->view('documents/show');
         }
 
-        $this->view('documents/show', $this->data);
+        $this->view('documents/show', $data ?? []);
     }
 
     public function edit($id = null): void
@@ -194,31 +181,31 @@ class DocumentsController extends Controller
             $this->redirect('404');
         }
 
-        $this->data['title'] = config('app.page.titles')['documents/edit'];
-
         try {
             /** @var Document $document */
             $document = Document::go()->query()
                 ->where('id', '=', $id)
                 ->where('user_id', '=', auth()->id())
                 ->firstOrFail();
-            $this->data['document'] = $document;
-            $this->data['filename'] = $document->file()?->filename;
-            $this->data['issuer'] = $document->issuer();
-            $this->data['storage'] = $document->storage()?->place;
-            $this->data['keywords'] = Keywords::fromModelArray($document->keywords())->toString();
+            $data = [
+                'document' => $document,
+                'filename' => $document->file()?->filename,
+                'issuer' => $document->issuer(),
+                'storage' => $document->storage()?->place,
+                'keywords' => Keywords::fromModelArray($document->keywords())->toString(),
+            ];
         } catch (RecordNotFoundException) {
             $this->redirect('404');
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            $this->view('documents/edit', $this->data);
+            $this->view('documents/edit');
         }
 
         $this->destroyToken();
-        $this->data['token'] = $this->generateToken();
+        $data['token'] = $this->generateToken();
 
-        $this->view('documents/edit', $this->data);
+        $this->view('documents/edit', $data);
     }
 
     /**
@@ -362,15 +349,6 @@ class DocumentsController extends Controller
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
             $this->redirect('documents');
         }
-    }
-
-    protected function setData(): void
-    {
-        $this->data = [
-            'title' => config('app.page.titles')['documents'],
-            'filename' => null,
-            'documents' => [],
-        ];
     }
 
     protected function validationRules(): array
