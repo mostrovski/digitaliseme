@@ -7,6 +7,7 @@ use Digitaliseme\Core\Database\MySQL;
 use Digitaliseme\Core\Database\Query;
 use Digitaliseme\Core\Exceptions\DatabaseException;
 use Digitaliseme\Core\Exceptions\ValidatorException;
+use Digitaliseme\Core\Http\Response;
 use Digitaliseme\DataEntities\Keywords;
 use Digitaliseme\Enumerations\DocumentType;
 use Digitaliseme\Exceptions\KeywordException;
@@ -17,45 +18,48 @@ use Digitaliseme\Models\StoragePlace;
 
 class SearchController extends Controller
 {
-    public function index(): void
+    public function index(): Response
     {
-        $results = $_SESSION['searchResults'] ?? [];
-        unset($_SESSION['searchResults']);
+        $results = $_SESSION['redirect-data'] ?? [];
+        unset($_SESSION['redirect-data']);
 
-        $this->view('search/index', ['results' => $results]);
+        return viewResponse('search/index', ['results' => $results]);
     }
 
     /**
      * @throws ValidatorException
      * @throws DatabaseException
      */
-    public function find(): void
+    public function find(): Response
     {
         if (! $this->isPostRequest() ||
             ! $this->hasValidToken()
         ) {
-            $this->redirect('404');
+            return redirectResponse('404');
         }
 
         $validator = $this->validate($_POST, $this->validationRules(), $this->validationMessages());
 
         if ($validator->fails()) {
-            $this->withErrors($validator->getErrors())->redirect('search');
+            return $this->withErrors($validator->getErrors())->redirect('search');
         }
 
-        $results = $this->searchResults($validator->getValidated());
+        try {
+            $results = $this->searchResults($validator->getValidated());
+        } catch (KeywordException $e) {
+            return $this->withErrors(['keywords' => [$e->getMessage()]])->redirect('search');
+        }
 
         if (empty($results)) {
             flash()->warning('There are no documents matching your search criteria');
         }
 
-        $_SESSION['searchResults'] = $results; // TODO: fix this approach?
-
-        $this->redirect('search');
+        return redirectResponse('search', $results);
     }
 
     /**
      * @throws DatabaseException
+     * @throws KeywordException
      */
     protected function searchResults(array $params): array
     {
@@ -100,11 +104,7 @@ class SearchController extends Controller
         }
 
         if (! empty($params['keywords'])) {
-            try {
-                $keywords = Keywords::fromString($params['keywords'])->all();
-            } catch (KeywordException $e) {
-                $this->withErrors(['keywords' => [$e->getMessage()]])->redirect('search');
-            }
+            $keywords = Keywords::fromString($params['keywords'])->all();
 
             if (! empty($keywords)) {
                 $records = Keyword::go()->query()

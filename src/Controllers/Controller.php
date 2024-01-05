@@ -3,6 +3,7 @@
 namespace Digitaliseme\Controllers;
 
 use Digitaliseme\Core\Exceptions\ValidatorException;
+use Digitaliseme\Core\Http\Response;
 use Digitaliseme\Core\Session\CSRF;
 use Digitaliseme\Core\Session\Errors;
 use Digitaliseme\Core\Validation\Validator;
@@ -29,24 +30,9 @@ abstract class Controller
         return (new Validator($params, $rules, $messages))->validate();
     }
 
-    protected function redirect($url): void
+    protected function redirect($url): Response
     {
-        redirect($url);
-    }
-
-    protected function view(string $view, array $data = []): void
-    {
-        extract($data);
-
-        ob_start();
-        include app()->root()."/views/$view.php";
-        $content = ob_get_clean();
-
-        ob_start();
-        include app()->root().'/views/templates/master.php';
-        $template = ob_get_clean();
-
-        echo str_replace('___\content/___', $content, subject: $template);
+        return redirectResponse($url);
     }
 
     protected function withErrors(array $errors): static

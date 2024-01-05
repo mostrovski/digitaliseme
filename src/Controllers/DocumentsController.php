@@ -5,6 +5,7 @@ namespace Digitaliseme\Controllers;
 use Digitaliseme\Core\Exceptions\FileNotFoundException;
 use Digitaliseme\Core\Exceptions\RecordNotFoundException;
 use Digitaliseme\Core\Exceptions\ValidatorException;
+use Digitaliseme\Core\Http\Response;
 use Digitaliseme\Core\Storage\File as FileObject;
 use Digitaliseme\DataEntities\Keywords;
 use Digitaliseme\Enumerations\DocumentType;
@@ -18,29 +19,25 @@ use Throwable;
 
 class DocumentsController extends Controller
 {
-    public function index(): void
+    public function index(): Response
     {
         try {
-            $records = Document::go()->query()->get();
+            $documents = Document::go()->query()->get();
+            if (count($documents) === 0) {
+                flash()->info('The archive is empty, upload new file <a href="https://digitaliseme.ddev.site/uploads/create">here</a>');
+            }
+            return viewResponse('documents/index', ['documents' => $documents]);
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            $this->view('documents/index');
+            return viewResponse('documents/index');
         }
-
-        $documents = $records ?? [];
-
-        if (count($documents) === 0) {
-            flash()->info('The archive is empty, upload new file <a href="https://digitaliseme.ddev.site/uploads/create">here</a>');
-        }
-
-        $this->view('documents/index', ['documents' => $documents]);
     }
 
-    public function create($id = null): void
+    public function create($id = null): Response
     {
         if (! isset($id)) {
-            $this->redirect('404');
+            return redirectResponse('404');
         }
 
         try {
@@ -51,34 +48,34 @@ class DocumentsController extends Controller
                 ->whereNull('document_id')
                 ->firstOrFail();
         } catch (RecordNotFoundException) {
-            $this->redirect('404');
+            return redirectResponse('404');
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            $this->view('documents/create');
+            return viewResponse('documents/create');
         }
 
         $_SESSION['upfile'] = $file->id;
 
-        $this->view('documents/create', ['filename' => $file->filename]);
+        return viewResponse('documents/create', ['filename' => $file->filename]);
     }
 
     /**
      * @throws ValidatorException
      */
-    public function store(): void
+    public function store(): Response
     {
         if (! $this->isPostRequest() ||
             ! $this->hasValidToken()
         ) {
-            $this->redirect('404');
+            return redirectResponse('404');
         }
 
         $fileId = $_SESSION['upfile'] ?? null;
 
         if (empty($fileId) || $fileId !== (int) $_POST['fileId']) {
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            $this->redirect('uploads');
+            return redirectResponse('uploads');
         }
 
         unset($_SESSION['upfile']);
@@ -86,7 +83,7 @@ class DocumentsController extends Controller
         $validator = $this->validate($_POST, $this->validationRules(), $this->validationMessages());
 
         if ($validator->fails()) {
-            $this->withErrors($validator->getErrors())->redirect('documents/create/'.$fileId);
+            return $this->withErrors($validator->getErrors())->redirect('documents/create/'.$fileId);
         }
 
         $values = $validator->getValidated();
@@ -95,7 +92,7 @@ class DocumentsController extends Controller
             try {
                 $keywords = Keywords::fromString($values['keywords'])->all();
             } catch (KeywordException $e) {
-                $this->withErrors(['keywords' => [$e->getMessage()]])->redirect('documents/create/'.$fileId);
+                return $this->withErrors(['keywords' => [$e->getMessage()]])->redirect('documents/create/'.$fileId);
             }
         }
 
@@ -140,43 +137,42 @@ class DocumentsController extends Controller
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            $this->redirect('documents/create/'.$fileId);
+            return redirectResponse('documents/create/'.$fileId);
         }
 
         flash()->success('Document was successfully saved');
-        $this->redirect('documents');
+        return redirectResponse('documents');
     }
 
-    public function show($id = null): void
+    public function show($id = null): Response
     {
         if (! isset($id)) {
-            $this->redirect('404');
+            return redirectResponse('404');
         }
 
         try {
             $document = Document::go()->findOrFail($id);
-            $data = [
+
+            return viewResponse('documents/show', [
                 'document' => $document,
                 'filename' => $document->file()?->filename,
                 'issuer' => $document->issuer(),
                 'storage' => $document->storage()?->place,
                 'keywords' => Keywords::fromModelArray($document->keywords())->toString(),
-            ];
+            ]);
         } catch (RecordNotFoundException) {
-            $this->redirect('404');
+            return redirectResponse('404');
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            $this->view('documents/show');
+            return viewResponse('documents/show');
         }
-
-        $this->view('documents/show', $data ?? []);
     }
 
-    public function edit($id = null): void
+    public function edit($id = null): Response
     {
         if (! isset($id)) {
-            $this->redirect('404');
+            return redirectResponse('404');
         }
 
         try {
@@ -185,40 +181,39 @@ class DocumentsController extends Controller
                 ->where('id', '=', $id)
                 ->where('user_id', '=', auth()->id())
                 ->firstOrFail();
-            $data = [
+
+            return viewResponse('documents/edit', [
                 'document' => $document,
                 'filename' => $document->file()?->filename,
                 'issuer' => $document->issuer(),
                 'storage' => $document->storage()?->place,
                 'keywords' => Keywords::fromModelArray($document->keywords())->toString(),
-            ];
+            ]);
         } catch (RecordNotFoundException) {
-            $this->redirect('404');
+            return redirectResponse('404');
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            $this->view('documents/edit');
+            return viewResponse('documents/edit');
         }
-
-        $this->view('documents/edit', $data);
     }
 
     /**
      * @throws ValidatorException
      */
-    public function update($id = null): void
+    public function update($id = null): Response
     {
         if (! isset($id) ||
             ! $this->isPostRequest() ||
             ! $this->hasValidToken()
         ) {
-            $this->redirect('404');
+            return redirectResponse('404');
         }
 
         $validator = $this->validate($_POST, $this->validationRules(), $this->validationMessages());
 
         if ($validator->fails()) {
-            $this->withErrors($validator->getErrors())->redirect('documents/edit/'.$id);
+            return $this->withErrors($validator->getErrors())->redirect('documents/edit/'.$id);
         }
 
         $values = $validator->getValidated();
@@ -226,7 +221,7 @@ class DocumentsController extends Controller
         try {
             $keywords = Keywords::fromString((string) $values['keywords'])->all();
         } catch (KeywordException $e) {
-            $this->withErrors(['keywords' => [$e->getMessage()]])->redirect('documents/edit/'.$id);
+            return $this->withErrors(['keywords' => [$e->getMessage()]])->redirect('documents/edit/'.$id);
         }
 
         try {
@@ -271,24 +266,24 @@ class DocumentsController extends Controller
                 }
             }
         } catch (RecordNotFoundException) {
-            $this->redirect('404');
+            return redirectResponse('404');
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            $this->redirect('documents/edit/'.$id);
+            return redirectResponse('documents/edit/'.$id);
         }
 
         flash()->success('Document updated successfully');
-        $this->redirect('documents');
+        return redirectResponse('documents');
     }
 
-    public function delete($id = null): void
+    public function delete($id = null): Response
     {
         if (! isset($id) ||
             ! $this->isPostRequest() ||
             ! $this->hasValidToken()
         ) {
-            $this->redirect('404');
+            return redirectResponse('404');
         }
 
         try {
@@ -307,21 +302,21 @@ class DocumentsController extends Controller
 
             $document->delete();
         } catch (RecordNotFoundException) {
-            $this->redirect('404');
+            return redirectResponse('404');
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            $this->redirect('documents');
+            return redirectResponse('documents');
         }
 
         flash()->success('Document deleted successfully');
-        $this->redirect('documents');
+        return redirectResponse('documents');
     }
 
-    public function download($id = null): void
+    public function download($id = null): Response
     {
         if (! isset($id)) {
-            $this->redirect('404');
+            return redirectResponse('404');
         }
 
         try {
@@ -329,16 +324,16 @@ class DocumentsController extends Controller
             if (! $file instanceof File) {
                 throw new RecordNotFoundException;
             }
-            FileObject::fromExisting($file->fullPath())->download($file->filename);
+            return downloadResponse(FileObject::fromExisting($file->fullPath()));
         } catch (RecordNotFoundException) {
-            $this->redirect('404');
+            return redirectResponse('404');
         } catch (FileNotFoundException $e) {
             flash()->error($e->getMessage());
-            $this->redirect('documents');
+            return redirectResponse('documents');
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            $this->redirect('documents');
+            return redirectResponse('documents');
         }
     }
 

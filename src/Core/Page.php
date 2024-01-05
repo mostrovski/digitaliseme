@@ -10,10 +10,10 @@ class Page
     protected static string $action = 'index';
     protected static array $params = [];
 
-    public static function render(): void
+    public static function render(): mixed
     {
         self::defineController();
-        self::invoke();
+        return self::invoke();
     }
 
     protected static function defineController(): void
@@ -42,9 +42,9 @@ class Page
         self::parse($request);
     }
 
-    protected static function invoke(): void
+    protected static function invoke(): mixed
     {
-        call_user_func_array([new self::$controller, self::$action], self::$params);
+        return call_user_func_array([new self::$controller, self::$action], self::$params);
     }
 
     /**

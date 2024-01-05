@@ -2,22 +2,16 @@
 
 namespace Digitaliseme\Controllers;
 
+use Digitaliseme\Core\Http\Response;
+
 class DefaultController extends Controller
 {
-    public function index(): void
+    public function index(): Response
     {
-        if ($_SERVER['REQUEST_URI'] !== '/') {
-            $this->view('404');
-        } else {
-            auth()->isIntact() ? $this->show('private') : $this->show('public');
+        if ($_SERVER['REQUEST_URI'] === '/') {
+            return redirectResponse(auth()->isIntact() ? 'uploads/create' : 'login');
         }
-    }
 
-    protected function show($route)
-    {
-        $defaults = config('app.routes.default');
-        $controller = new $defaults[$route]['controller'];
-        $method = $defaults[$route]['method'];
-        return $controller->$method();
+        return viewResponse('404', statusCode: 404);
     }
 }

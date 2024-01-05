@@ -6,5 +6,6 @@ session_start();
 
 $app = Digitaliseme\Core\Application::resolve();
 $app->start();
-Digitaliseme\Core\Page::render();
+$response = Digitaliseme\Core\Page::render(); // TODO
+$response instanceof \Digitaliseme\Core\Http\Response && $response->send(); // TODO
 $app->terminate();
