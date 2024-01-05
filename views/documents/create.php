@@ -129,7 +129,7 @@
 
             <input type="submit" value="Save new document" name="saveme">
 
-            <input type="hidden" id="token" name="token" value="<?= $token ?>">
+            <input type="hidden" id="token" name="token" value="<?= csrf()->token() ?>">
         </form>
 </div>
 <?php endif; ?>

@@ -70,7 +70,7 @@
 
         <input type="submit" value="Sign up" name="signme">
 
-        <input type="hidden" id="token" name="token" value="<?= $token ?>">
+        <input type="hidden" id="token" name="token" value="<?= csrf()->token() ?>">
     </form>
 </div>
 <div class="info">

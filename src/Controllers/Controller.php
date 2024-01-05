@@ -3,6 +3,7 @@
 namespace Digitaliseme\Controllers;
 
 use Digitaliseme\Core\Exceptions\ValidatorException;
+use Digitaliseme\Core\Session\CSRF;
 use Digitaliseme\Core\Session\Errors;
 use Digitaliseme\Core\Validation\Validator;
 
@@ -13,26 +14,11 @@ abstract class Controller
         return $_SERVER['REQUEST_METHOD'] === 'POST';
     }
 
-    protected function isValidToken(string $token): bool
+    protected function hasValidToken(): bool
     {
-        if (! isset($_SESSION['token'])) {
-            return false;
-        }
+        $token = $_POST['token'] ?? '';
 
-        return $_SESSION['token'] === $token;
-    }
-
-    protected function generateToken(): string
-    {
-        $token = hash('sha256', uniqid());
-        $_SESSION['token'] = $token;
-
-        return $token;
-    }
-
-    protected function destroyToken(): void
-    {
-        unset($_SESSION['token']);
+        return ! empty($token) && (CSRF::handler()->token() === $token);
     }
 
     /**

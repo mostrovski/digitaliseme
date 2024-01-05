@@ -36,20 +36,16 @@ class UploadsController extends Controller
 
     public function create(): void
     {
-        $this->destroyToken();
-
-        $this->view('uploads/create', ['token' => $this->generateToken()]);
+        $this->view('uploads/create');
     }
 
     public function store(): void
     {
         if (! $this->isPostRequest() ||
-            ! $this->isValidToken($_POST['token'])
+            ! $this->hasValidToken()
         ) {
             $this->redirect('404');
         }
-
-        $this->destroyToken();
 
         try {
             $file = File::fromUpload($_FILES['docfile']);

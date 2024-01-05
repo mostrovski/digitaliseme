@@ -15,9 +15,7 @@ class SignupController extends Controller
             $this->redirect('/');
         }
 
-        $this->destroyToken();
-
-        $this->view('signup', ['token' => $this->generateToken()]);
+        $this->view('signup');
     }
 
     /**
@@ -26,12 +24,10 @@ class SignupController extends Controller
     public function init(): void
     {
         if (! $this->isPostRequest() ||
-            ! $this->isValidToken($_POST['token'])
+            ! $this->hasValidToken()
         ) {
             $this->redirect('404');
         }
-
-        $this->destroyToken();
 
         $validator = $this->validate($_POST, $this->validationRules(), $this->validationMessages());
 

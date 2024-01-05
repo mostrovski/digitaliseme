@@ -30,7 +30,7 @@
 
         <input type="submit" value="Log in" name="logme">
 
-        <input type="hidden" id="token" name="token" value="<?= $token ?>">
+        <input type="hidden" id="token" name="token" value="<?= csrf()->token() ?>">
     </form>
 </div>
 <div class="info">

@@ -25,6 +25,7 @@ class Auth
             return;
         }
         $_SESSION['authenticated'] = $user;
+        CSRF::handler()->generateToken(force: true);
     }
 
     public function user(): ?Authenticatable
@@ -50,5 +51,6 @@ class Auth
     public function clear(): void
     {
         unset($_SESSION['authenticated']);
+        CSRF::handler()->clear();
     }
 }

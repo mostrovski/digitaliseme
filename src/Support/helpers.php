@@ -3,6 +3,7 @@
 use Digitaliseme\Core\Application;
 use Digitaliseme\Core\Logging\Logger;
 use Digitaliseme\Core\Session\Auth;
+use Digitaliseme\Core\Session\CSRF;
 use Digitaliseme\Core\Session\Errors;
 use Digitaliseme\Core\Session\Flash;
 use Digitaliseme\Core\Session\OldInput;
@@ -102,6 +103,11 @@ function old(?string $key = null): mixed
 function auth(): Auth
 {
     return Auth::handler();
+}
+
+function csrf(): CSRF
+{
+    return CSRF::handler();
 }
 
 function show(mixed $input): string

@@ -128,12 +128,12 @@
 
             <input type="submit" value="Update document" name="updateme" onclick="return confirm('Update this document?')">
 
-            <input type="hidden" id="token" name="token" value="<?= $token ?>">
+            <input type="hidden" id="token" name="token" value="<?= csrf()->token() ?>">
         </form>
         <form action="<?= config('app.url').'documents/delete/'.$document->id ?>" method="POST">
             <input type="submit" class="delete" value="Delete document" name="deleteme" onclick="return confirm('Delete this document?')">
 
-            <input type="hidden" id="token" name="token" value="<?= $token ?>">
+            <input type="hidden" id="token" name="token" value="<?= csrf()->token() ?>">
         </form>
     </div>
 <?php endif; ?>

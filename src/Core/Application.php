@@ -2,6 +2,7 @@
 
 namespace Digitaliseme\Core;
 
+use Digitaliseme\Core\Session\CSRF;
 use Digitaliseme\Core\Session\Errors;
 use Digitaliseme\Core\Session\Flash;
 use Digitaliseme\Core\Session\OldInput;
@@ -32,6 +33,7 @@ class Application
 
     public function start(): void
     {
+        CSRF::handler()->generateToken();
         OldInput::handler()->set();
     }
 

@@ -15,9 +15,7 @@ class LoginController extends Controller
             $this->redirect('/');
         }
 
-        $this->destroyToken();
-
-        $this->view('login', ['token' => $this->generateToken()]);
+        $this->view('login');
     }
 
     /**
@@ -25,13 +23,11 @@ class LoginController extends Controller
      */
     public function init(): void
     {
-        if (!$this->isPostRequest() ||
-            !$this->isValidToken($_POST['token'])
+        if (! $this->isPostRequest() ||
+            ! $this->hasValidToken()
         ) {
             $this->redirect('404');
         }
-
-        $this->destroyToken();
 
         $params = [
             'username' => $_POST["username"],

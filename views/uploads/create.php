@@ -15,6 +15,6 @@
 
         <input type="submit" value="Upload" name="upload">
 
-        <input type="hidden" id="token" name="token" value="<?= $token ?>">
+        <input type="hidden" id="token" name="token" value="<?= csrf()->token() ?>">
     </form>
 </div>

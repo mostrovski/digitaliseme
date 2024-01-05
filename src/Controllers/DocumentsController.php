@@ -58,10 +58,9 @@ class DocumentsController extends Controller
             $this->view('documents/create');
         }
 
-        $this->destroyToken();
         $_SESSION['upfile'] = $file->id;
 
-        $this->view('documents/create', ['filename' => $file->filename, 'token' => $this->generateToken()]);
+        $this->view('documents/create', ['filename' => $file->filename]);
     }
 
     /**
@@ -70,12 +69,11 @@ class DocumentsController extends Controller
     public function store(): void
     {
         if (! $this->isPostRequest() ||
-            ! $this->isValidToken($_POST['token'])
+            ! $this->hasValidToken()
         ) {
             $this->redirect('404');
         }
 
-        $this->destroyToken();
         $fileId = $_SESSION['upfile'] ?? null;
 
         if (empty($fileId) || $fileId !== (int) $_POST['fileId']) {
@@ -202,9 +200,6 @@ class DocumentsController extends Controller
             $this->view('documents/edit');
         }
 
-        $this->destroyToken();
-        $data['token'] = $this->generateToken();
-
         $this->view('documents/edit', $data);
     }
 
@@ -215,12 +210,10 @@ class DocumentsController extends Controller
     {
         if (! isset($id) ||
             ! $this->isPostRequest() ||
-            ! $this->isValidToken($_POST['token'])
+            ! $this->hasValidToken()
         ) {
             $this->redirect('404');
         }
-
-        $this->destroyToken();
 
         $validator = $this->validate($_POST, $this->validationRules(), $this->validationMessages());
 
@@ -293,12 +286,10 @@ class DocumentsController extends Controller
     {
         if (! isset($id) ||
             ! $this->isPostRequest() ||
-            ! $this->isValidToken($_POST['token'])
+            ! $this->hasValidToken()
         ) {
             $this->redirect('404');
         }
-
-        $this->destroyToken();
 
         try {
             /** @var Document $document */

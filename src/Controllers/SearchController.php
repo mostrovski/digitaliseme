@@ -19,11 +19,10 @@ class SearchController extends Controller
 {
     public function index(): void
     {
-        $this->destroyToken();
         $results = $_SESSION['searchResults'] ?? [];
         unset($_SESSION['searchResults']);
 
-        $this->view('search/index', ['results' => $results, 'token' => $this->generateToken()]);
+        $this->view('search/index', ['results' => $results]);
     }
 
     /**
@@ -33,12 +32,10 @@ class SearchController extends Controller
     public function find(): void
     {
         if (! $this->isPostRequest() ||
-            ! $this->isValidToken($_POST['token'])
+            ! $this->hasValidToken()
         ) {
             $this->redirect('404');
         }
-
-        $this->destroyToken();
 
         $validator = $this->validate($_POST, $this->validationRules(), $this->validationMessages());
 

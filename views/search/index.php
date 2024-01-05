@@ -136,7 +136,7 @@
 
                 <input type="submit" value="Find the document" name="findme">
 
-                <input type="hidden" id="token" name="token" value="<?= $token ?>">
+                <input type="hidden" id="token" name="token" value="<?= csrf()->token() ?>">
             </form>
         </div>
     <?php endif; ?>
