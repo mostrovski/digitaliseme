@@ -7,7 +7,9 @@ use Digitaliseme\Core\Database\MySQL;
 use Digitaliseme\Core\Database\Query;
 use Digitaliseme\Core\Exceptions\DatabaseException;
 use Digitaliseme\Core\Exceptions\ValidatorException;
-use Digitaliseme\Core\Http\Response;
+use Digitaliseme\Core\Http\Responses\Redirect;
+use Digitaliseme\Core\Http\Responses\View;
+use Digitaliseme\Core\Session\RedirectData;
 use Digitaliseme\DataEntities\Keywords;
 use Digitaliseme\Enumerations\DocumentType;
 use Digitaliseme\Exceptions\KeywordException;
@@ -18,24 +20,21 @@ use Digitaliseme\Models\StoragePlace;
 
 class SearchController extends Controller
 {
-    public function index(): Response
+    public function index(): View
     {
-        $results = $_SESSION['redirect-data'] ?? [];
-        unset($_SESSION['redirect-data']);
-
-        return viewResponse('search/index', ['results' => $results]);
+        return $this->view('search/index', ['results' => RedirectData::handler()->get()]);
     }
 
     /**
      * @throws ValidatorException
      * @throws DatabaseException
      */
-    public function find(): Response
+    public function find(): Redirect
     {
         if (! $this->isPostRequest() ||
             ! $this->hasValidToken()
         ) {
-            return redirectResponse('404');
+            return $this->redirect('404');
         }
 
         $validator = $this->validate($_POST, $this->validationRules(), $this->validationMessages());
@@ -54,7 +53,7 @@ class SearchController extends Controller
             flash()->warning('There are no documents matching your search criteria');
         }
 
-        return redirectResponse('search', $results);
+        return $this->redirect('search', $results);
     }
 
     /**

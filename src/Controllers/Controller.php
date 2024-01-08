@@ -3,10 +3,12 @@
 namespace Digitaliseme\Controllers;
 
 use Digitaliseme\Core\Exceptions\ValidatorException;
-use Digitaliseme\Core\Http\Response;
+use Digitaliseme\Core\Http\Responses\Redirect;
+use Digitaliseme\Core\Http\Responses\View as ViewResponse;
 use Digitaliseme\Core\Session\CSRF;
 use Digitaliseme\Core\Session\Errors;
 use Digitaliseme\Core\Validation\Validator;
+use Digitaliseme\Core\View\View;
 
 abstract class Controller
 {
@@ -30,9 +32,16 @@ abstract class Controller
         return (new Validator($params, $rules, $messages))->validate();
     }
 
-    protected function redirect($url): Response
+    protected function view(string $view, array $data = [], int $statusCode = 200): ViewResponse
     {
-        return redirectResponse($url);
+        return (new ViewResponse)
+            ->setStatusCode($statusCode)
+            ->setContent(View::make($view, $data)->render());
+    }
+
+    protected function redirect($url, array $data = []): Redirect
+    {
+        return redirectResponse($url, $data);
     }
 
     protected function withErrors(array $errors): static

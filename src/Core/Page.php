@@ -36,7 +36,7 @@ class Page
 
         if (! $loggedIn && in_array($request['resource'], $private, true)) {
             flash()->error('You have to be logged in to visit this page');
-            redirect('/');
+            redirectResponse('/')->send();
         }
 
         self::parse($request);

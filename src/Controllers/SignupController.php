@@ -3,31 +3,32 @@
 namespace Digitaliseme\Controllers;
 
 use Digitaliseme\Core\Exceptions\ValidatorException;
-use Digitaliseme\Core\Http\Response;
+use Digitaliseme\Core\Http\Responses\Redirect;
+use Digitaliseme\Core\Http\Responses\View;
 use Digitaliseme\Models\User;
 use Throwable;
 
 class SignupController extends Controller
 {
-    public function index(): Response
+    public function index(): Redirect|View
     {
         if (auth()->isIntact()) {
             flash()->info('You have already signed up');
-            return redirectResponse('/');
+            return $this->redirect('/');
         }
 
-        return viewResponse('signup');
+        return $this->view('signup');
     }
 
     /**
      * @throws ValidatorException
      */
-    public function init(): Response
+    public function init(): Redirect
     {
         if (! $this->isPostRequest() ||
             ! $this->hasValidToken()
         ) {
-            return redirectResponse('404');
+            return $this->redirect('404');
         }
 
         $validator = $this->validate($_POST, $this->validationRules(), $this->validationMessages());
@@ -39,11 +40,11 @@ class SignupController extends Controller
         try {
             User::go()->create($validator->getValidated());
             flash()->success('Kudos, you can now log in with your username and password');
-            return redirectResponse('login');
+            return $this->redirect('login');
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error('Something went wrong... Try again!');
-            return redirectResponse('signup');
+            return $this->redirect('signup');
         }
     }
 

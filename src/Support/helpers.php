@@ -1,15 +1,13 @@
 <?php
 
 use Digitaliseme\Core\Application;
-use Digitaliseme\Core\Http\Response;
+use Digitaliseme\Core\Http\Responses\Redirect;
 use Digitaliseme\Core\Logging\Logger;
 use Digitaliseme\Core\Session\Auth;
 use Digitaliseme\Core\Session\CSRF;
 use Digitaliseme\Core\Session\Errors;
 use Digitaliseme\Core\Session\Flash;
 use Digitaliseme\Core\Session\OldInput;
-use Digitaliseme\Core\Storage\File;
-use Digitaliseme\Core\View\View;
 
 function app(): Application
 {
@@ -123,40 +121,13 @@ function randomString(string $prefix = ''): string
     return str_replace('.', '', uniqid($prefix, true));
 }
 
-function viewResponse(string $view, array $data = [], int $statusCode = 200): Response
-{
-    return (new Response)
-        ->setStatusCode($statusCode)
-        ->setContent(View::make($view, $data)->render());
-}
-
-function redirectResponse(string $url, array $withData = []): Response
+function redirectResponse(string $url, array $data = []): Redirect
 {
     if (! str_starts_with($url, config('app.url'))) {
         $url = config('app.url').ltrim($url, '/');
     }
 
-    if (! empty($withData)) {
-        $_SESSION['redirect-data'] = $withData;
-    }
-
-    return (new Response)
-        ->setStatusCode(302)
-        ->setRedirectTo($url);
-}
-
-function downloadResponse(File $file): Response
-{
-    return (new Response)->setFile($file);
-}
-
-function redirect(string $url): void
-{
-    if (! str_starts_with($url, config('app.url'))) {
-        $url = config('app.url').ltrim($url, '/');
-    }
-    header('Location: '.$url);
-    exit;
+    return (new Redirect($url))->with($data);
 }
 
 function dump(...$values): void

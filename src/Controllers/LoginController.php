@@ -3,31 +3,32 @@
 namespace Digitaliseme\Controllers;
 
 use Digitaliseme\Core\Exceptions\ValidatorException;
-use Digitaliseme\Core\Http\Response;
+use Digitaliseme\Core\Http\Responses\Redirect;
+use Digitaliseme\Core\Http\Responses\View;
 use Digitaliseme\Models\User;
 use Throwable;
 
 class LoginController extends Controller
 {
-    public function index(): Response
+    public function index(): Redirect|View
     {
         if (auth()->isIntact()) {
             flash()->info('You are logged in');
-            return redirectResponse('/');
+            return $this->redirect('/');
         }
 
-        return viewResponse('login');
+        return $this->view('login');
     }
 
     /**
      * @throws ValidatorException
      */
-    public function init(): Response
+    public function init(): Redirect
     {
         if (! $this->isPostRequest() ||
             ! $this->hasValidToken()
         ) {
-            return redirectResponse('404');
+            return $this->redirect('404');
         }
 
         $params = [
@@ -63,12 +64,12 @@ class LoginController extends Controller
 
         if (! $validCredentials) {
             flash()->error('Username or password is wrong');
-            return redirectResponse('login');
+            return $this->redirect('login');
         }
 
         /** @var User $user */
         auth()->persist($user);
         flash()->success('You have successfully been logged in');
-        return redirectResponse('/');
+        return $this->redirect('/');
     }
 }

@@ -105,15 +105,6 @@ final class File
         return unlink($this->getPath());
     }
 
-    public function download(string $name = 'document'): void
-    {
-        ob_end_clean();
-        header('Content-Type: '.$this->mimeType());
-        header('Content-Disposition: attachment; filename='.$name.'.'.$this->extension());
-        header('Content-Length: '.$this->getInfo()->getSize());
-        readfile($this->getPath());
-    }
-
     public function setPath(string $path): self
     {
         $this->path = $path;

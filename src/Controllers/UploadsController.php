@@ -4,7 +4,8 @@ namespace Digitaliseme\Controllers;
 
 use Digitaliseme\Core\Exceptions\FileNotFoundException;
 use Digitaliseme\Core\Exceptions\RecordNotFoundException;
-use Digitaliseme\Core\Http\Response;
+use Digitaliseme\Core\Http\Responses\Redirect;
+use Digitaliseme\Core\Http\Responses\View;
 use Digitaliseme\Core\Storage\File;
 use Digitaliseme\Exceptions\FileException;
 use Digitaliseme\Exceptions\UploadedFileException;
@@ -13,7 +14,7 @@ use Throwable;
 
 class UploadsController extends Controller
 {
-    public function index(): Response
+    public function index(): View
     {
         try {
             $uploads = FileModel::go()->query()
@@ -24,25 +25,25 @@ class UploadsController extends Controller
                 flash()->info('There is nothing to work on, upload new file <a href="https://digitaliseme.ddev.site/uploads/create">here</a>');
             }
 
-            return viewResponse('uploads/index', ['uploads' => $uploads]);
+            return $this->view('uploads/index', ['uploads' => $uploads]);
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            return viewResponse('uploads/index');
+            return $this->view('uploads/index');
         }
     }
 
-    public function create(): Response
+    public function create(): View
     {
-        return viewResponse('uploads/create');
+        return $this->view('uploads/create');
     }
 
-    public function store(): Response
+    public function store(): Redirect
     {
         if (! $this->isPostRequest() ||
             ! $this->hasValidToken()
         ) {
-            return redirectResponse('404');
+            return $this->redirect('404');
         }
 
         try {
@@ -50,10 +51,10 @@ class UploadsController extends Controller
             $this->verify($file);
         } catch (FileNotFoundException) {
             flash()->error('File was not chosen');
-            return redirectResponse('uploads/create');
+            return $this->redirect('uploads/create');
         } catch (UploadedFileException $e) {
             flash()->error($e->getMessage());
-            return redirectResponse('uploads/create');
+            return $this->redirect('uploads/create');
         }
 
         $extension = empty($file->extension()) ? '' : '.'.$file->extension();
@@ -67,22 +68,22 @@ class UploadsController extends Controller
                     'user_id' => auth()->id(),
                 ]);
                 flash()->success('File was successfully uploaded');
-                return redirectResponse('uploads');
+                return $this->redirect('uploads');
             } catch (Throwable $e) {
                 logger()->error($e->getMessage());
                 flash()->error(config('app.messages.error.GENERAL_ERROR'));
-                return redirectResponse('uploads/create');
+                return $this->redirect('uploads/create');
             }
         }
 
         flash()->error('Failed to save uploaded file.');
-        return redirectResponse('uploads/create');
+        return $this->redirect('uploads/create');
     }
 
-    public function delete($id = null): Response
+    public function delete($id = null): Redirect
     {
         if (! isset($id)) {
-            return redirectResponse('404');
+            return $this->redirect('404');
         }
 
         try {
@@ -101,16 +102,16 @@ class UploadsController extends Controller
             }
 
             flash()->success('File was successfully deleted');
-            return redirectResponse('uploads');
+            return $this->redirect('uploads');
         } catch (RecordNotFoundException) {
-            return redirectResponse('404');
+            return $this->redirect('404');
         } catch (FileException $e) {
             flash()->error($e->getMessage());
-            return redirectResponse('uploads');
+            return $this->redirect('uploads');
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            return redirectResponse('uploads');
+            return $this->redirect('uploads');
         }
     }
 

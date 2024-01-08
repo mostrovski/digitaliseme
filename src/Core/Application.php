@@ -6,6 +6,7 @@ use Digitaliseme\Core\Session\CSRF;
 use Digitaliseme\Core\Session\Errors;
 use Digitaliseme\Core\Session\Flash;
 use Digitaliseme\Core\Session\OldInput;
+use Digitaliseme\Core\Session\RedirectData;
 
 class Application
 {
@@ -42,6 +43,7 @@ class Application
         Errors::handler()->clear();
         Flash::handler()->clear();
         OldInput::handler()->clear();
+        RedirectData::handler()->clear();
     }
 
     public function root(): string

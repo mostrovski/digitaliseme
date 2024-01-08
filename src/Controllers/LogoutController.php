@@ -2,19 +2,19 @@
 
 namespace Digitaliseme\Controllers;
 
-use Digitaliseme\Core\Http\Response;
+use Digitaliseme\Core\Http\Responses\Redirect;
 
 class LogoutController extends Controller
 {
-    public function index(): Response
+    public function index(): Redirect
     {
         if (auth()->isMissing()) {
             flash()->info('You are not logged in');
-            return redirectResponse('/');
+            return $this->redirect('/');
         }
 
         auth()->clear();
         flash()->success('You have successfully been logged out');
-        return redirectResponse('/');
+        return $this->redirect('/');
     }
 }
