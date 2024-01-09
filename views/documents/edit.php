@@ -10,7 +10,8 @@
     </p>
 <?php else: ?>
     <div class="form">
-        <form action="<?= config('app.url').'documents/update/'.$document->id ?>" method="POST">
+        <form action="<?= config('app.url').'documents/'.$document->id ?>" method="POST">
+            <input type="hidden" name="_r_method" value="PATCH">
             <div class="form_section">
                 <label for="filename" class="field_header">Filename</label>
                 <input type="text"
@@ -128,12 +129,13 @@
 
             <input type="submit" value="Update document" name="updateme" onclick="return confirm('Update this document?')">
 
-            <?php include_once app()->root().'/views/partials/token.php'; ?>
+            <?php include app()->root().'/views/partials/token.php'; ?>
         </form>
-        <form action="<?= config('app.url').'documents/delete/'.$document->id ?>" method="POST">
+        <form action="<?= config('app.url').'documents/'.$document->id ?>" method="POST">
+            <input type="hidden" name="_r_method" value="DELETE">
             <input type="submit" class="delete" value="Delete document" name="deleteme" onclick="return confirm('Delete this document?')">
 
-            <?php include_once app()->root().'/views/partials/token.php'; ?>
+            <?php include app()->root().'/views/partials/token.php'; ?>
         </form>
     </div>
 <?php endif; ?>

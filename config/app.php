@@ -1,8 +1,5 @@
 <?php
 
-use Digitaliseme\Controllers\UploadsController;
-use Digitaliseme\Controllers\LoginController;
-
 return [
     'db' => [
         'host' => 'db',
@@ -13,21 +10,6 @@ return [
     ],
 
     'url' => 'https://digitaliseme.ddev.site/',
-
-    'routes' => [
-        'public' => ['signup', 'login', 'logout'],
-        'private' => ['uploads', 'documents', 'search'],
-        'default' => [
-            'public'  => [
-                'controller' => LoginController::class,
-                'method' => 'index',
-            ],
-            'private' => [
-                'controller' => UploadsController::class,
-                'method' => 'create',
-            ],
-        ],
-    ],
 
     'info' => [
         'name' => 'digitalise me',

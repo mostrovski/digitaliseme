@@ -4,11 +4,15 @@ namespace Digitaliseme\Core;
 
 use Digitaliseme\Core\Contracts\Response;
 use Digitaliseme\Core\Http\Request;
+use Digitaliseme\Core\Routing\Route;
+use Digitaliseme\Core\Routing\Router;
 use Digitaliseme\Core\Session\CSRF;
 use Digitaliseme\Core\Session\Errors;
 use Digitaliseme\Core\Session\Flash;
 use Digitaliseme\Core\Session\OldInput;
 use Digitaliseme\Core\Session\RedirectData;
+use RuntimeException;
+use Throwable;
 
 class Application
 {
@@ -17,6 +21,9 @@ class Application
     private string $root;
     private string $configPath;
     private array $config = [];
+    private Router $router;
+
+    private Response $response;
 
     final private function __construct()
     {
@@ -36,6 +43,7 @@ class Application
 
     public function start(): void
     {
+        $this->setRouter();
         CSRF::handler()->generateToken();
         OldInput::handler()->set();
     }
@@ -48,15 +56,42 @@ class Application
         RedirectData::handler()->clear();
     }
 
-    public function handleRequest()
+    public function handleRequest(): Response
     {
         $request = Request::resolve();
 
-        if ($request->method() !== 'GET' && ! $request->hasValidToken()) {
-            return redirectResponse(403);
+        if ($request->method() !== 'GET' && $request->missingValidToken()) {
+            return redirectResponse('403');
         }
 
-        return Page::render(); // TODO
+        $route = $this->router->match($request);
+
+        if (! $route instanceof Route) {
+            return redirectResponse('404');
+        }
+
+        if (in_array('auth', $route->middleware(), true) &&
+            auth()->isMissing()
+        ) {
+            flash()->error('You must be logged in to access this page');
+            return redirectResponse('login');
+        }
+
+        try {
+            $response = call_user_func_array(
+                [new ($route->controller()), $route->action()],
+                $route->params()
+            );
+
+            if (! $response instanceof Response) {
+                throw new RuntimeException('Controller action must return a Response');
+            }
+        } catch (Throwable $e) {
+            logger()->error($e->getMessage());
+            return redirectResponse('500');
+        }
+
+        return $response;
     }
 
     public function root(): string
@@ -87,6 +122,11 @@ class Application
             $key = str_replace('.php', '', $configFile);
             $this->config[$key] = require $this->configPath.'/'.$configFile;
         }
+    }
+
+    private function setRouter(): void
+    {
+        $this->router = Router::register();
     }
 
     private function configFiles(): array

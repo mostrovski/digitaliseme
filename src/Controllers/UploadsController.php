@@ -40,10 +40,6 @@ class UploadsController extends Controller
 
     public function store(): Redirect
     {
-        if (! $this->isPostRequest()) {
-            return $this->redirect('404');
-        }
-
         try {
             $file = File::fromUpload($this->request()->files()['docfile']);
             $this->verify($file);
@@ -78,12 +74,8 @@ class UploadsController extends Controller
         return $this->redirect('uploads/create');
     }
 
-    public function delete($id = null): Redirect
+    public function destroy($id): Redirect
     {
-        if (! isset($id)) {
-            return $this->redirect('404');
-        }
-
         try {
             /** @var FileModel $file */
             $file = FileModel::go()->query()

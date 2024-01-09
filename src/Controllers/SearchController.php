@@ -31,10 +31,6 @@ class SearchController extends Controller
      */
     public function find(): Redirect
     {
-        if (! $this->isPostRequest()) {
-            return $this->redirect('404');
-        }
-
         $validator = $this->validate(
             $this->request()->data(),
             $this->validationRules(),

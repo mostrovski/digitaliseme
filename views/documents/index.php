@@ -31,14 +31,14 @@
                         <td><?= $document->updated_at ?></td>
                         <td>
                             <a class="green_button"
-                               href="<?= config('app.url').'documents/show/'.$document->id ?>"
+                               href="<?= config('app.url').'documents/'.$document->id ?>"
                             >
                                 details
                             </a>
                         </td>
                         <td>
                             <a class="gray_button"
-                               href="<?= config('app.url').'documents/download/'.$document->id ?>"
+                               href="<?= config('app.url').'documents/'.$document->id.'/download' ?>"
                             >
                                 download
                             </a>

@@ -8,12 +8,14 @@ class Request
 {
     private static ?self $instance = null;
     private string $uri;
+    private string $query;
     private string $method;
     private array $data;
     private array $files;
 
     final private function __construct()
     {
+        $this->setQuery();
         $this->setUri();
         $this->setData();
         $this->setFiles();
@@ -36,6 +38,11 @@ class Request
         return ! empty($token) && (CSRF::handler()->token() === $token);
     }
 
+    public function missingValidToken(): bool
+    {
+        return ! $this->hasValidToken();
+    }
+
     public function is(string $uri): bool
     {
         return $this->uri() === $uri;
@@ -44,6 +51,11 @@ class Request
     public function get(string $key, mixed $default = null): mixed
     {
         return $this->data()[$key] ?? $default;
+    }
+
+    public function query(): string
+    {
+        return $this->query;
     }
 
     public function uri(): string
@@ -65,9 +77,14 @@ class Request
     {
         return $this->files;
     }
+
+    private function setQuery(): void
+    {
+        $this->query = $_SERVER['QUERY_STRING'];
+    }
     private function setUri(): void
     {
-        $this->uri = $_SERVER['REQUEST_URI'];
+        $this->uri = str_replace('?'.$this->query(), '', $_SERVER['REQUEST_URI']);
     }
 
     private function setData(): void

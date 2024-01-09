@@ -10,7 +10,7 @@
     </p>
 <?php else: ?>
     <div class="form">
-        <form action="<?= config('app.url').'documents/store' ?>" method="POST">
+        <form action="<?= config('app.url').'documents' ?>" method="POST">
             <div class="form_section">
                 <label for="filename" class="field_header">Filename</label>
                 <input type="text"
@@ -129,7 +129,7 @@
 
             <input type="submit" value="Save new document" name="saveme">
 
-            <?php include_once app()->root().'/views/partials/token.php'; ?>
+            <?php include app()->root().'/views/partials/token.php'; ?>
         </form>
 </div>
 <?php endif; ?>

@@ -25,10 +25,6 @@ class LoginController extends Controller
      */
     public function init(): Redirect
     {
-        if (! $this->isPostRequest()) {
-            return $this->redirect('404');
-        }
-
         $validator = $this->validate($this->request()->data(), [
             'username' => ['required'],
             'password' => ['required'],

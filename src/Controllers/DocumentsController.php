@@ -36,11 +36,9 @@ class DocumentsController extends Controller
         }
     }
 
-    public function create($id = null): Redirect|View
+    public function create(): Redirect|View
     {
-        if (! isset($id)) {
-            return $this->redirect('404');
-        }
+        $id = $this->request()->get('fileId');
 
         try {
             /** @var File $file */
@@ -67,13 +65,11 @@ class DocumentsController extends Controller
      */
     public function store(): Redirect
     {
-        if (! $this->isPostRequest()) {
-            return $this->redirect('404');
-        }
-
         $fileId = $_SESSION['upfile'] ?? null;
 
-        if (empty($fileId) || $fileId !== (int) $_POST['fileId']) {
+        if (empty($fileId) ||
+            $fileId !== (int) $this->request()->get('fileId')
+        ) {
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
             return $this->redirect('uploads');
         }
@@ -87,7 +83,7 @@ class DocumentsController extends Controller
         );
 
         if ($validator->fails()) {
-            return $this->withErrors($validator->getErrors())->redirect('documents/create/'.$fileId);
+            return $this->withErrors($validator->getErrors())->redirect('documents/create?fileId='.$fileId);
         }
 
         $values = $validator->getValidated();
@@ -96,7 +92,7 @@ class DocumentsController extends Controller
             try {
                 $keywords = Keywords::fromString($values['keywords'])->all();
             } catch (KeywordException $e) {
-                return $this->withErrors(['keywords' => [$e->getMessage()]])->redirect('documents/create/'.$fileId);
+                return $this->withErrors(['keywords' => [$e->getMessage()]])->redirect('documents/create?fileId='.$fileId);
             }
         }
 
@@ -141,19 +137,15 @@ class DocumentsController extends Controller
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            return $this->redirect('documents/create/'.$fileId);
+            return $this->redirect('documents/create?fileId='.$fileId);
         }
 
         flash()->success('Document was successfully saved');
         return $this->redirect('documents');
     }
 
-    public function show($id = null): Redirect|View
+    public function show($id): Redirect|View
     {
-        if (! isset($id)) {
-            return $this->redirect('404');
-        }
-
         try {
             $document = Document::go()->findOrFail($id);
 
@@ -173,12 +165,8 @@ class DocumentsController extends Controller
         }
     }
 
-    public function edit($id = null): Redirect|View
+    public function edit($id): Redirect|View
     {
-        if (! isset($id)) {
-            return $this->redirect('404');
-        }
-
         try {
             /** @var Document $document */
             $document = Document::go()->query()
@@ -205,14 +193,8 @@ class DocumentsController extends Controller
     /**
      * @throws ValidatorException
      */
-    public function update($id = null): Redirect
+    public function update($id): Redirect
     {
-        if (! isset($id) ||
-            ! $this->isPostRequest()
-        ) {
-            return $this->redirect('404');
-        }
-
         $validator = $this->validate(
             $this->request()->data(),
             $this->validationRules(),
@@ -220,7 +202,7 @@ class DocumentsController extends Controller
         );
 
         if ($validator->fails()) {
-            return $this->withErrors($validator->getErrors())->redirect('documents/edit/'.$id);
+            return $this->withErrors($validator->getErrors())->redirect('documents/'.$id.'/edit');
         }
 
         $values = $validator->getValidated();
@@ -228,7 +210,7 @@ class DocumentsController extends Controller
         try {
             $keywords = Keywords::fromString((string) $values['keywords'])->all();
         } catch (KeywordException $e) {
-            return $this->withErrors(['keywords' => [$e->getMessage()]])->redirect('documents/edit/'.$id);
+            return $this->withErrors(['keywords' => [$e->getMessage()]])->redirect('documents/'.$id.'/edit');
         }
 
         try {
@@ -260,38 +242,30 @@ class DocumentsController extends Controller
                 'storage_id' => $storage->id,
             ]);
 
-            if (isset($keywords)) {
-                $pivot = $document->pivot('document_keywords');
-                $pivot->where('document_id', '=', $document->id)->delete();
+            $pivot = $document->pivot('document_keywords');
+            $pivot->where('document_id', '=', $document->id)->delete();
 
-                foreach ($keywords as $word) {
-                    $keyword = Keyword::go()->firstOrCreate(['word' => $word]);
-                    $pivot->create([
-                        'document_id' => $document->id,
-                        'keyword_id' => $keyword->id,
-                    ]);
-                }
+            foreach ($keywords as $word) {
+                $keyword = Keyword::go()->firstOrCreate(['word' => $word]);
+                $pivot->create([
+                    'document_id' => $document->id,
+                    'keyword_id' => $keyword->id,
+                ]);
             }
         } catch (RecordNotFoundException) {
             return $this->redirect('404');
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
-            return $this->redirect('documents/edit/'.$id);
+            return $this->redirect('documents/'.$id.'/edit');
         }
 
         flash()->success('Document updated successfully');
         return $this->redirect('documents');
     }
 
-    public function delete($id = null): Redirect
+    public function destroy($id): Redirect
     {
-        if (! isset($id) ||
-            ! $this->isPostRequest()
-        ) {
-            return $this->redirect('404');
-        }
-
         try {
             /** @var Document $document */
             $document = Document::go()->query()
@@ -319,12 +293,8 @@ class DocumentsController extends Controller
         return $this->redirect('documents');
     }
 
-    public function download($id = null): Redirect|Download
+    public function download($id): Redirect|Download
     {
-        if (! isset($id)) {
-            return $this->redirect('404');
-        }
-
         try {
             $file = Document::go()->findOrFail($id)->file();
             if (! $file instanceof File) {

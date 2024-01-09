@@ -38,18 +38,22 @@
                         </td>
                         <td>
                             <a class="green_button"
-                               href="<?= config('app.url').'documents/create/'.$upload->id ?>"
+                               href="<?= config('app.url').'documents/create?fileId='.$upload->id ?>"
                             >
                                 process
                             </a>
                         </td>
                         <td>
-                            <a class="red_button"
-                               href="<?= config('app.url').'uploads/delete/'.$upload->id ?>"
-                               onclick="return confirm('Delete this file?')"
-                            >
-                                delete
-                            </a>
+                            <form action="<?= config('app.url').'uploads/'.$upload->id ?>" method="POST">
+                                <input type="hidden" name="_r_method" value="DELETE">
+                                <button class="red_button"
+                                        onclick="return confirm('Delete this file?')"
+                                >
+                                    delete
+                                </button>
+
+                                <?php include app()->root().'/views/partials/token.php'; ?>
+                            </form>
                         </td>
                     </tr>
                 <?php endforeach; ?>

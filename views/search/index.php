@@ -31,14 +31,14 @@
                         <td><?= $document->updated_at ?></td>
                         <td>
                             <a class="green_button"
-                               href="<?= config('app.url').'documents/show/'.$document->id ?>"
+                               href="<?= config('app.url').'documents/'.$document->id ?>"
                             >
                                 details
                             </a>
                         </td>
                         <td>
                             <a class="gray_button"
-                               href="<?= config('app.url').'documents/download/'.$document->id ?>"
+                               href="<?= config('app.url').'documents/'.$document->id.'/download' ?>"
                             >
                                 download
                             </a>
@@ -50,7 +50,7 @@
         </div>
     <?php else: ?>
         <div class="form">
-            <form action="<?= config('app.url').'search/find' ?>" method="POST">
+            <form action="<?= config('app.url').'search' ?>" method="POST">
                 <div class="form_section">
                     <label for="title" class="field_header">Document title</label>
                     <input type="text"
@@ -136,7 +136,7 @@
 
                 <input type="submit" value="Find the document" name="findme">
 
-                <?php include_once app()->root().'/views/partials/token.php'; ?>
+                <?php include app()->root().'/views/partials/token.php'; ?>
             </form>
         </div>
     <?php endif; ?>

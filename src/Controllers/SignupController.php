@@ -25,10 +25,6 @@ class SignupController extends Controller
      */
     public function init(): Redirect
     {
-        if (! $this->isPostRequest()) {
-            return $this->redirect('404');
-        }
-
         $validator = $this->validate(
             $this->request()->data(),
             $this->validationRules(),

@@ -2,7 +2,7 @@
 <span class="form_header">&nbsp;&#9784; Log in </span>
 <?php include_once app()->root().'/views/partials/flash-message.php'; ?>
 <div class="form">
-    <form action="<?= config('app.url').'login/init' ?>" method="POST">
+    <form action="<?= config('app.url').'login' ?>" method="POST">
         <div class="form_section">
             <label for="username" class="field_header">Username</label>
             <input type="text"
@@ -30,7 +30,7 @@
 
         <input type="submit" value="Log in" name="logme">
 
-        <?php include_once app()->root().'/views/partials/token.php'; ?>
+        <?php include app()->root().'/views/partials/token.php'; ?>
     </form>
 </div>
 <div class="info">
