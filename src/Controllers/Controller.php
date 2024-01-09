@@ -3,6 +3,7 @@
 namespace Digitaliseme\Controllers;
 
 use Digitaliseme\Core\Exceptions\ValidatorException;
+use Digitaliseme\Core\Http\Request;
 use Digitaliseme\Core\Http\Responses\Redirect;
 use Digitaliseme\Core\Http\Responses\View as ViewResponse;
 use Digitaliseme\Core\Session\CSRF;
@@ -14,14 +15,12 @@ abstract class Controller
 {
     protected function isPostRequest(): bool
     {
-        return $_SERVER['REQUEST_METHOD'] === 'POST';
+        return $this->request()->method() === 'POST';
     }
 
-    protected function hasValidToken(): bool
+    protected function request(): Request
     {
-        $token = $_POST['token'] ?? '';
-
-        return ! empty($token) && (CSRF::handler()->token() === $token);
+        return request();
     }
 
     /**

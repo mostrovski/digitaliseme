@@ -19,7 +19,7 @@ class CSRF
 
     public function token(): ?string
     {
-        return $_SESSION['token'] ?? null;
+        return $_SESSION['_s_token'] ?? null;
     }
 
     public function generateToken(bool $force = false): void
@@ -27,7 +27,7 @@ class CSRF
         $mustGenerate = $force || $this->missing();
 
         if ($mustGenerate) {
-            $_SESSION['token'] = hash('sha256', randomString());
+            $_SESSION['_s_token'] = hash('sha256', randomString());
         }
     }
 
@@ -43,6 +43,6 @@ class CSRF
 
     public function clear(): void
     {
-        unset($_SESSION['token']);
+        unset($_SESSION['_s_token']);
     }
 }

@@ -17,7 +17,7 @@ class Redirect extends Response
     public function send(): void
     {
         RedirectData::handler()->set($this->getData());
-        header("Location: {$this->getRedirectTo()}");
+        header("Location: {$this->getRedirectTo()}", response_code: $this->getStatusCode());
         exit;
     }
 

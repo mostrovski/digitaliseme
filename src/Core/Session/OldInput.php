@@ -2,6 +2,8 @@
 
 namespace Digitaliseme\Core\Session;
 
+use Digitaliseme\Core\Http\Request;
+
 class OldInput
 {
     private static ?self $instance = null;
@@ -22,7 +24,7 @@ class OldInput
             return;
         }
 
-        $_SESSION['old'] = array_merge($_POST, $_GET);
+        $_SESSION['old'] = Request::resolve()->data();
     }
 
     public function get(string $key): mixed

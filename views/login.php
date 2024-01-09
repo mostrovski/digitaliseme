@@ -30,7 +30,7 @@
 
         <input type="submit" value="Log in" name="logme">
 
-        <input type="hidden" id="token" name="token" value="<?= csrf()->token() ?>">
+        <?php include_once app()->root().'/views/partials/token.php'; ?>
     </form>
 </div>
 <div class="info">

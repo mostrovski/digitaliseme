@@ -31,13 +31,15 @@ class SearchController extends Controller
      */
     public function find(): Redirect
     {
-        if (! $this->isPostRequest() ||
-            ! $this->hasValidToken()
-        ) {
+        if (! $this->isPostRequest()) {
             return $this->redirect('404');
         }
 
-        $validator = $this->validate($_POST, $this->validationRules(), $this->validationMessages());
+        $validator = $this->validate(
+            $this->request()->data(),
+            $this->validationRules(),
+            $this->validationMessages(),
+        );
 
         if ($validator->fails()) {
             return $this->withErrors($validator->getErrors())->redirect('search');

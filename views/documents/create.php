@@ -129,7 +129,7 @@
 
             <input type="submit" value="Save new document" name="saveme">
 
-            <input type="hidden" id="token" name="token" value="<?= csrf()->token() ?>">
+            <?php include_once app()->root().'/views/partials/token.php'; ?>
         </form>
 </div>
 <?php endif; ?>

@@ -67,9 +67,7 @@ class DocumentsController extends Controller
      */
     public function store(): Redirect
     {
-        if (! $this->isPostRequest() ||
-            ! $this->hasValidToken()
-        ) {
+        if (! $this->isPostRequest()) {
             return $this->redirect('404');
         }
 
@@ -82,7 +80,11 @@ class DocumentsController extends Controller
 
         unset($_SESSION['upfile']);
 
-        $validator = $this->validate($_POST, $this->validationRules(), $this->validationMessages());
+        $validator = $this->validate(
+            $this->request()->data(),
+            $this->validationRules(),
+            $this->validationMessages(),
+        );
 
         if ($validator->fails()) {
             return $this->withErrors($validator->getErrors())->redirect('documents/create/'.$fileId);
@@ -206,13 +208,16 @@ class DocumentsController extends Controller
     public function update($id = null): Redirect
     {
         if (! isset($id) ||
-            ! $this->isPostRequest() ||
-            ! $this->hasValidToken()
+            ! $this->isPostRequest()
         ) {
             return $this->redirect('404');
         }
 
-        $validator = $this->validate($_POST, $this->validationRules(), $this->validationMessages());
+        $validator = $this->validate(
+            $this->request()->data(),
+            $this->validationRules(),
+            $this->validationMessages(),
+        );
 
         if ($validator->fails()) {
             return $this->withErrors($validator->getErrors())->redirect('documents/edit/'.$id);
@@ -282,8 +287,7 @@ class DocumentsController extends Controller
     public function delete($id = null): Redirect
     {
         if (! isset($id) ||
-            ! $this->isPostRequest() ||
-            ! $this->hasValidToken()
+            ! $this->isPostRequest()
         ) {
             return $this->redirect('404');
         }

@@ -40,14 +40,12 @@ class UploadsController extends Controller
 
     public function store(): Redirect
     {
-        if (! $this->isPostRequest() ||
-            ! $this->hasValidToken()
-        ) {
+        if (! $this->isPostRequest()) {
             return $this->redirect('404');
         }
 
         try {
-            $file = File::fromUpload($_FILES['docfile']);
+            $file = File::fromUpload($this->request()->files()['docfile']);
             $this->verify($file);
         } catch (FileNotFoundException) {
             flash()->error('File was not chosen');

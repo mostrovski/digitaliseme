@@ -25,18 +25,11 @@ class LoginController extends Controller
      */
     public function init(): Redirect
     {
-        if (! $this->isPostRequest() ||
-            ! $this->hasValidToken()
-        ) {
+        if (! $this->isPostRequest()) {
             return $this->redirect('404');
         }
 
-        $params = [
-            'username' => $_POST["username"],
-            'password' => $_POST["password"]
-        ];
-
-        $validator = $this->validate($params, [
+        $validator = $this->validate($this->request()->data(), [
             'username' => ['required'],
             'password' => ['required'],
         ], [
@@ -48,6 +41,7 @@ class LoginController extends Controller
             return $this->withErrors($validator->getErrors())->redirect('login');
         }
 
+        $params = $validator->getValidated();
         $validCredentials = false;
 
         try {

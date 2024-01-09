@@ -1,6 +1,7 @@
 <?php
 
 use Digitaliseme\Core\Application;
+use Digitaliseme\Core\Http\Request;
 use Digitaliseme\Core\Http\Responses\Redirect;
 use Digitaliseme\Core\Logging\Logger;
 use Digitaliseme\Core\Session\Auth;
@@ -128,6 +129,11 @@ function redirectResponse(string $url, array $data = []): Redirect
     }
 
     return (new Redirect($url))->with($data);
+}
+
+function request(): Request
+{
+    return Request::resolve();
 }
 
 function dump(...$values): void

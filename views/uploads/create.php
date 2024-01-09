@@ -15,6 +15,6 @@
 
         <input type="submit" value="Upload" name="upload">
 
-        <input type="hidden" id="token" name="token" value="<?= csrf()->token() ?>">
+        <?php include_once app()->root().'/views/partials/token.php'; ?>
     </form>
 </div>

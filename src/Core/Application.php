@@ -2,6 +2,8 @@
 
 namespace Digitaliseme\Core;
 
+use Digitaliseme\Core\Contracts\Response;
+use Digitaliseme\Core\Http\Request;
 use Digitaliseme\Core\Session\CSRF;
 use Digitaliseme\Core\Session\Errors;
 use Digitaliseme\Core\Session\Flash;
@@ -44,6 +46,17 @@ class Application
         Flash::handler()->clear();
         OldInput::handler()->clear();
         RedirectData::handler()->clear();
+    }
+
+    public function handleRequest()
+    {
+        $request = Request::resolve();
+
+        if ($request->method() !== 'GET' && ! $request->hasValidToken()) {
+            return redirectResponse(403);
+        }
+
+        return Page::render(); // TODO
     }
 
     public function root(): string
