@@ -2,6 +2,9 @@
 
 namespace Digitaliseme\Core\Routing;
 
+use Digitaliseme\Core\Contracts\Middleware;
+use Digitaliseme\Core\Http\Method;
+
 class Route
 {
     protected array $segments = ['/'];
@@ -11,7 +14,7 @@ class Route
 
     public function __construct(
         protected string $uri,
-        protected string $method,
+        protected Method $method,
         protected string $controller,
         protected string $action,
         protected array $middleware = [],
@@ -23,12 +26,24 @@ class Route
 
     public static function define(
         string $uri,
-        string $method,
+        Method $method,
         string $controller,
         string $action,
         array $middleware = [],
     ): static {
         return new static($uri, $method, $controller, $action, $middleware);
+    }
+
+    /**
+     * @param Route[] $routes
+     * @return Route[]
+     */
+    public static function groupMiddleware(array $middleware, array $routes): array
+    {
+        return array_map(
+            static fn ($route) => $route->setMiddleware($middleware),
+            $routes,
+        );
     }
 
     public function segments(): array
@@ -53,7 +68,7 @@ class Route
 
     public function method(): string
     {
-        return $this->method;
+        return $this->method->value;
     }
 
     public function controller(): string
@@ -66,9 +81,19 @@ class Route
         return $this->action;
     }
 
+    /**
+     * @return Middleware[]
+     */
     public function middleware(): array
     {
         return $this->middleware;
+    }
+
+    public function setMiddleware(array $middleware): static
+    {
+        $this->middleware = $middleware;
+
+        return $this;
     }
 
     public function params(): array
@@ -102,6 +127,6 @@ class Route
 
     protected function setKey(): void
     {
-        $this->key = $this->method.'|'.$this->uri;
+        $this->key = $this->method->value.'|'.$this->uri;
     }
 }

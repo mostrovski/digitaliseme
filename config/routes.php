@@ -7,31 +7,35 @@ use Digitaliseme\Controllers\LogoutController;
 use Digitaliseme\Controllers\SearchController;
 use Digitaliseme\Controllers\SignupController;
 use Digitaliseme\Controllers\UploadsController;
+use Digitaliseme\Core\Http\Method;
+use Digitaliseme\Core\Http\Middleware\Authenticated;
 use Digitaliseme\Core\Routing\Route;
 
 return [
-    Route::define('/', 'GET', DefaultController::class, 'index'),
-    Route::define('403', 'GET', DefaultController::class, 'index'),
-    Route::define('404', 'GET', DefaultController::class, 'index'),
-    Route::define('500', 'GET', DefaultController::class, 'index'),
-    Route::define('login', 'GET', LoginController::class, 'index'),
-    Route::define('login', 'POST', LoginController::class, 'init'),
-    Route::define('logout', 'GET', LogoutController::class, 'index'),
-    Route::define('signup', 'GET', SignupController::class, 'index'),
-    Route::define('signup', 'POST', SignupController::class, 'init'),
-    // Authenticated routes TODO: groups
-    Route::define('uploads', 'GET', UploadsController::class, 'index', ['auth']),
-    Route::define('uploads', 'POST', UploadsController::class, 'store', ['auth']),
-    Route::define('uploads/create', 'GET', UploadsController::class, 'create', ['auth']),
-    Route::define('uploads/{id}', 'DELETE', UploadsController::class, 'destroy', ['auth']),
-    Route::define('documents', 'GET', DocumentsController::class, 'index', ['auth']),
-    Route::define('documents', 'POST', DocumentsController::class, 'store', ['auth']),
-    Route::define('documents/create', 'GET', DocumentsController::class, 'create', ['auth']),
-    Route::define('documents/{id}', 'GET', DocumentsController::class, 'show', ['auth']),
-    Route::define('documents/{id}', 'PATCH', DocumentsController::class, 'update', ['auth']),
-    Route::define('documents/{id}', 'DELETE', DocumentsController::class, 'destroy', ['auth']),
-    Route::define('documents/{id}/edit', 'GET', DocumentsController::class, 'edit', ['auth']),
-    Route::define('documents/{id}/download', 'GET', DocumentsController::class, 'download', ['auth']),
-    Route::define('search', 'GET', SearchController::class, 'index', ['auth']),
-    Route::define('search', 'POST', SearchController::class, 'find', ['auth']),
+    Route::define('/', Method::GET, DefaultController::class, 'index'),
+    Route::define('403', Method::GET, DefaultController::class, 'index'),
+    Route::define('404', Method::GET, DefaultController::class, 'index'),
+    Route::define('500', Method::GET, DefaultController::class, 'index'),
+    Route::define('login', Method::GET, LoginController::class, 'index'),
+    Route::define('login', Method::POST, LoginController::class, 'init'),
+    Route::define('logout', Method::GET, LogoutController::class, 'index'),
+    Route::define('signup', Method::GET, SignupController::class, 'index'),
+    Route::define('signup', Method::POST, SignupController::class, 'init'),
+
+    ...Route::groupMiddleware([Authenticated::class], [
+        Route::define('uploads', Method::GET, UploadsController::class, 'index'),
+        Route::define('uploads', Method::POST, UploadsController::class, 'store'),
+        Route::define('uploads/create', Method::GET, UploadsController::class, 'create'),
+        Route::define('uploads/{id}', Method::DELETE, UploadsController::class, 'destroy'),
+        Route::define('documents', Method::GET, DocumentsController::class, 'index'),
+        Route::define('documents', Method::POST, DocumentsController::class, 'store'),
+        Route::define('documents/create', Method::GET, DocumentsController::class, 'create'),
+        Route::define('documents/{id}', Method::GET, DocumentsController::class, 'show'),
+        Route::define('documents/{id}', Method::PATCH, DocumentsController::class, 'update'),
+        Route::define('documents/{id}', Method::DELETE, DocumentsController::class, 'destroy'),
+        Route::define('documents/{id}/edit', Method::GET, DocumentsController::class, 'edit'),
+        Route::define('documents/{id}/download', Method::GET, DocumentsController::class, 'download'),
+        Route::define('search', Method::GET, SearchController::class, 'index'),
+        Route::define('search', Method::POST, SearchController::class, 'find'),
+    ]),
 ];

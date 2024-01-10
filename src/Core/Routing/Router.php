@@ -11,19 +11,13 @@ class Router
      */
     protected array $routes = [];
 
-    final private function __construct() {}
-
-    public static function register(): self
-    {
-        /** @var Route[] $routes */
-        $routes = config('routes');
-        $instance = new self;
-
+    /**
+     * @param Route[] $routes
+     */
+    public function __construct(array $routes) {
         foreach ($routes as $route) {
-            $instance->routes[$route->key()] = $route;
+            $this->routes[$route->key()] = $route;
         }
-
-        return $instance;
     }
 
     public function match(Request $request): ?Route

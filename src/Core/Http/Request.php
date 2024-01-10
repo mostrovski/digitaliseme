@@ -107,7 +107,7 @@ class Request
 
         $altMethod = strtoupper ((string) $this->get('_r_method'));
 
-        if (in_array($altMethod, ['PUT', 'PATCH', 'DELETE'], true)) {
+        if (in_array($altMethod, Method::postAlternatives(), true)) {
             $this->method = $altMethod;
         }
     }

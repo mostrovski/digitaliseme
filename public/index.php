@@ -6,6 +6,6 @@ session_start();
 
 $app = Digitaliseme\Core\Application::resolve();
 $app->start();
-$response = $app->handleRequest();
-$response->send();
+$http = new Digitaliseme\Core\Http\Http($app);
+$http->handleRequest()->sendResponse();
 $app->terminate();
