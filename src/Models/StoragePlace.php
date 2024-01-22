@@ -9,6 +9,7 @@ class StoragePlace extends Model
 {
     #[ModelAttribute(protectedOnCreate: true, protectedOnUpdate: true)]
     public int $id;
+
     #[ModelAttribute]
     public string $place;
 }

@@ -60,7 +60,7 @@ class SearchController extends Controller
      */
     protected function searchResults(array $params): array
     {
-        $query = Document::go()->query()->unsetFetchClass();
+        $query = Document::go()->query();
 
         if (! empty($params['title'])) {
             $query->where('title', 'LIKE', "%{$params['title']}%");

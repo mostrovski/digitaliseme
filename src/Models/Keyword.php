@@ -9,6 +9,7 @@ class Keyword extends Model
 {
     #[ModelAttribute(protectedOnCreate: true, protectedOnUpdate: true)]
     public int $id;
+
     #[ModelAttribute]
     public string $word;
 }

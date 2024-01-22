@@ -10,16 +10,22 @@ class Document extends Model
 {
     #[ModelAttribute(protectedOnCreate: true, protectedOnUpdate: true)]
     public int $id;
+
     #[ModelAttribute]
     public string $title;
+
     #[ModelAttribute]
     public string $type;
+
     #[ModelAttribute]
     public string $issue_date;
+
     #[ModelAttribute]
     public ?int $issuer_id;
+
     #[ModelAttribute]
     public ?int $storage_id;
+
     #[ModelAttribute(protectedOnUpdate: true)]
     public int $user_id;
 
@@ -28,7 +34,7 @@ class Document extends Model
      */
     public function file(): ?File
     {
-        return (new File)->query()
+        return File::go()->query()
             ->where('document_id', '=', $this->id)
             ->first();
     }
@@ -38,7 +44,7 @@ class Document extends Model
      */
     public function issuer(): ?Issuer
     {
-        return (new Issuer)->find($this->issuer_id);
+        return Issuer::go()->find($this->issuer_id);
     }
 
     /**
@@ -46,7 +52,7 @@ class Document extends Model
      */
     public function storage(): ?StoragePlace
     {
-        return (new StoragePlace)->find($this->storage_id);
+        return StoragePlace::go()->find($this->storage_id);
     }
 
     /**
@@ -68,8 +74,15 @@ class Document extends Model
             $pivotRecords,
         );
 
-        return (new Keyword)->query()
+        return Keyword::go()->query()
             ->whereIn('id', $keywordIds)
             ->get();
+    }
+
+    public function __serialize(): array
+    {
+        return array_merge(parent::__serialize(), [
+            'updated_at' => $this->updated_at ?? null,
+        ]);
     }
 }

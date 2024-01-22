@@ -9,12 +9,16 @@ class File extends Model
 {
     #[ModelAttribute(protectedOnCreate: true, protectedOnUpdate: true)]
     public int $id;
+
     #[ModelAttribute]
     public string $filename;
+
     #[ModelAttribute]
     public string $path;
+
     #[ModelAttribute]
     public ?int $document_id;
+
     #[ModelAttribute(protectedOnUpdate: true)]
     public ?int $user_id;
 

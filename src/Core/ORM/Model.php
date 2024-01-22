@@ -201,6 +201,17 @@ abstract class Model
         return empty($this->table) ? $this->guessTableName() : $this->table;
     }
 
+    public function __serialize(): array
+    {
+        $serialized = [];
+
+        foreach ($this->attributes as $attribute) {
+            $serialized[$attribute] = $this->$attribute;
+        }
+
+        return $serialized;
+    }
+
     protected function registerSetters(): void
     {
         $attributes = $this->getAttributeProperties();

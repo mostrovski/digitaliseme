@@ -11,14 +11,19 @@ class User extends Model implements Authenticatable
 {
     #[ModelAttribute(protectedOnCreate: true, protectedOnUpdate: true)]
     public int $id;
+
     #[ModelAttribute]
     public string $username;
+
     #[ModelAttribute]
     public string $first_name;
+
     #[ModelAttribute]
     public string $last_name;
+
     #[ModelAttribute]
     public string $email;
+
     #[
         ModelAttribute(protectedOnUpdate: true),
         Setter(methodName: 'convert')
