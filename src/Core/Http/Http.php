@@ -64,7 +64,6 @@ class Http
         return $this->response;
     }
 
-
     /**
      * @param Middleware[] $layers
      */

@@ -4,8 +4,8 @@
 
 <?php if (flash()->getType() === 'error') : ?>
     <p>
-        <a href="<?= config('app.url').'uploads' ?>">
-            <img src="<?= config('app.url').'img/error.png' ?>" alt="Error">
+        <a href="<?= url('uploads') ?>">
+            <img src="<?= url('img/error.png') ?>" alt="Error">
         </a>
     </p>
 <?php else: ?>
@@ -38,21 +38,20 @@
                         </td>
                         <td>
                             <a class="green_button"
-                               href="<?= config('app.url').'documents/create?fileId='.$upload->id ?>"
+                               href="<?= url('documents/create?fileId='.$upload->id) ?>"
                             >
                                 process
                             </a>
                         </td>
                         <td>
-                            <form action="<?= config('app.url').'uploads/'.$upload->id ?>" method="POST">
-                                <input type="hidden" name="_r_method" value="DELETE">
+                            <form action="<?= url('uploads/'.$upload->id) ?>" method="POST">
+                                <?= formAltMethod('DELETE') ?>
                                 <button class="red_button"
                                         onclick="return confirm('Delete this file?')"
                                 >
                                     delete
                                 </button>
-
-                                <?php include app()->root().'/views/partials/token.php'; ?>
+                                <?= formToken() ?>
                             </form>
                         </td>
                     </tr>
@@ -62,8 +61,8 @@
         </div>
     <?php else: ?>
         <p>
-            <a href="<?= config('app.url').'uploads/create' ?>">
-                <img src="<?= config('app.url').'img/empty.png' ?>" alt="Empty">
+            <a href="<?= url('uploads/create') ?>">
+                <img src="<?= url('img/empty.png') ?>" alt="Empty">
             </a>
         </p>
     <?php endif; ?>

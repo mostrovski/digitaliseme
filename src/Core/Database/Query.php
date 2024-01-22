@@ -3,6 +3,8 @@
 namespace Digitaliseme\Core\Database;
 
 use Digitaliseme\Core\Contracts\SqlBuilder;
+use Digitaliseme\Core\Enumerations\Database\Action;
+use Digitaliseme\Core\Enumerations\Database\WhereGlue;
 use Digitaliseme\Core\Exceptions\DatabaseException;
 
 class Query implements SqlBuilder

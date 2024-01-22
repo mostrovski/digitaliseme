@@ -1,6 +1,6 @@
 <?php
 
-namespace Digitaliseme\Core\Http;
+namespace Digitaliseme\Core\Enumerations\Http;
 
 enum Method: string
 {

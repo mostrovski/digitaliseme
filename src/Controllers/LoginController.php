@@ -12,11 +12,6 @@ class LoginController extends Controller
 {
     public function index(): Redirect|View
     {
-        if (auth()->isIntact()) {
-            flash()->info('You are logged in');
-            return $this->redirect('/');
-        }
-
         return $this->view('login');
     }
 

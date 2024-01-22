@@ -7,8 +7,9 @@ use Digitaliseme\Controllers\LogoutController;
 use Digitaliseme\Controllers\SearchController;
 use Digitaliseme\Controllers\SignupController;
 use Digitaliseme\Controllers\UploadsController;
-use Digitaliseme\Core\Http\Method;
+use Digitaliseme\Core\Enumerations\Http\Method;
 use Digitaliseme\Core\Http\Middleware\Authenticated;
+use Digitaliseme\Core\Http\Middleware\Guest;
 use Digitaliseme\Core\Routing\Route;
 
 return [
@@ -16,13 +17,16 @@ return [
     Route::define('403', Method::GET, DefaultController::class, 'index'),
     Route::define('404', Method::GET, DefaultController::class, 'index'),
     Route::define('500', Method::GET, DefaultController::class, 'index'),
-    Route::define('login', Method::GET, LoginController::class, 'index'),
-    Route::define('login', Method::POST, LoginController::class, 'init'),
-    Route::define('logout', Method::GET, LogoutController::class, 'index'),
-    Route::define('signup', Method::GET, SignupController::class, 'index'),
-    Route::define('signup', Method::POST, SignupController::class, 'init'),
+
+    ...Route::groupMiddleware([Guest::class], [
+        Route::define('login', Method::GET, LoginController::class, 'index'),
+        Route::define('login', Method::POST, LoginController::class, 'init'),
+        Route::define('signup', Method::GET, SignupController::class, 'index'),
+        Route::define('signup', Method::POST, SignupController::class, 'init'),
+    ]),
 
     ...Route::groupMiddleware([Authenticated::class], [
+        Route::define('logout', Method::GET, LogoutController::class, 'index'),
         Route::define('uploads', Method::GET, UploadsController::class, 'index'),
         Route::define('uploads', Method::POST, UploadsController::class, 'store'),
         Route::define('uploads/create', Method::GET, UploadsController::class, 'create'),

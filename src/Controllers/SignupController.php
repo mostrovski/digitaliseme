@@ -12,11 +12,6 @@ class SignupController extends Controller
 {
     public function index(): Redirect|View
     {
-        if (auth()->isIntact()) {
-            flash()->info('You have already signed up');
-            return $this->redirect('/');
-        }
-
         return $this->view('signup');
     }
 

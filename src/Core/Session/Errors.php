@@ -2,10 +2,17 @@
 
 namespace Digitaliseme\Core\Session;
 
+use Digitaliseme\Core\Enumerations\Key;
+
 class Errors
 {
     private static ?self $instance = null;
-    final private function __construct() {}
+    private string $key;
+
+    final private function __construct()
+    {
+        $this->key = Key::Errors->value;
+    }
 
     public static function handler(): self
     {
@@ -21,12 +28,12 @@ class Errors
      */
     public function set(array $errors): void
     {
-        $_SESSION['errors'] = $errors;
+        $_SESSION[$this->key] = $errors;
     }
 
     public function get(?string $key = null, bool $allPerKey = false): array|string|null
     {
-        $errors = $_SESSION['errors'] ?? null;
+        $errors = $_SESSION[$this->key] ?? null;
 
         if (empty($errors) || ! is_array($errors)) {
             return null;
@@ -45,6 +52,6 @@ class Errors
 
     public function clear(): void
     {
-        unset($_SESSION['errors']);
+        unset($_SESSION[$this->key]);
     }
 }

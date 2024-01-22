@@ -4,14 +4,14 @@
 
 <?php if (flash()->getType() === 'error') : ?>
     <p>
-        <a href="<?= config('app.url').'documents' ?>">
-            <img src="<?= config('app.url').'img/error.png' ?>" alt="Error">
+        <a href="<?= url('documents') ?>">
+            <img src="<?= url('img/error.png') ?>" alt="Error">
         </a>
     </p>
 <?php else: ?>
     <div class="form">
-        <form action="<?= config('app.url').'documents/'.$document->id ?>" method="POST">
-            <input type="hidden" name="_r_method" value="PATCH">
+        <form action="<?= url('documents/'.$document->id) ?>" method="POST">
+            <?= formAltMethod('PATCH') ?>
             <div class="form_section">
                 <label for="filename" class="field_header">Filename</label>
                 <input type="text"
@@ -129,13 +129,12 @@
 
             <input type="submit" value="Update document" name="updateme" onclick="return confirm('Update this document?')">
 
-            <?php include app()->root().'/views/partials/token.php'; ?>
+            <?= formToken() ?>
         </form>
-        <form action="<?= config('app.url').'documents/'.$document->id ?>" method="POST">
-            <input type="hidden" name="_r_method" value="DELETE">
+        <form action="<?= url('documents/'.$document->id) ?>" method="POST">
+            <?= formAltMethod('DELETE') ?>
             <input type="submit" class="delete" value="Delete document" name="deleteme" onclick="return confirm('Delete this document?')">
-
-            <?php include app()->root().'/views/partials/token.php'; ?>
+            <?= formToken() ?>
         </form>
     </div>
 <?php endif; ?>

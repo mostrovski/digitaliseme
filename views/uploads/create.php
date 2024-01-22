@@ -2,7 +2,7 @@
 <span class="form_header">&nbsp;&#10064; Upload new file </span>
 <?php include_once app()->root().'/views/partials/flash-message.php'; ?>
 <div class="form">
-    <form action="<?= config('app.url').'uploads' ?>" method="POST" enctype="multipart/form-data">
+    <form action="<?= url('uploads') ?>" method="POST" enctype="multipart/form-data">
         <label for="docfile" class="field_header">
             Choose the file to upload
         </label>
@@ -15,6 +15,6 @@
 
         <input type="submit" value="Upload" name="upload">
 
-        <?php include app()->root().'/views/partials/token.php'; ?>
+        <?= formToken() ?>
     </form>
 </div>

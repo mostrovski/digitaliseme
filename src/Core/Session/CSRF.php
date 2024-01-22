@@ -2,11 +2,17 @@
 
 namespace Digitaliseme\Core\Session;
 
+use Digitaliseme\Core\Enumerations\Key;
+
 class CSRF
 {
     private static ?self $instance = null;
+    private string $key;
 
-    final private function __construct() {}
+    final private function __construct()
+    {
+        $this->key = Key::CsrfToken->value;
+    }
 
     public static function handler(): self
     {
@@ -19,7 +25,7 @@ class CSRF
 
     public function token(): ?string
     {
-        return $_SESSION['_s_token'] ?? null;
+        return $_SESSION[$this->key] ?? null;
     }
 
     public function generateToken(bool $force = false): void
@@ -27,7 +33,7 @@ class CSRF
         $mustGenerate = $force || $this->missing();
 
         if ($mustGenerate) {
-            $_SESSION['_s_token'] = hash('sha256', randomString());
+            $_SESSION[$this->key] = hash('sha256', randomString());
         }
     }
 
@@ -43,6 +49,6 @@ class CSRF
 
     public function clear(): void
     {
-        unset($_SESSION['_s_token']);
+        unset($_SESSION[$this->key]);
     }
 }

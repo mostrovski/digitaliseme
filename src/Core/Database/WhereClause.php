@@ -2,6 +2,8 @@
 
 namespace Digitaliseme\Core\Database;
 
+use Digitaliseme\Core\Enumerations\Database\WhereGlue;
+
 class WhereClause
 {
     public function __construct(

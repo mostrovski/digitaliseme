@@ -2,10 +2,17 @@
 
 namespace Digitaliseme\Core\Session;
 
+use Digitaliseme\Core\Enumerations\Key;
+
 class Flash
 {
     private static ?self $instance = null;
-    final private function __construct() {}
+    private string $key;
+
+    final private function __construct()
+    {
+        $this->key = Key::Flash->value;
+    }
 
     public static function handler(): self
     {
@@ -38,7 +45,7 @@ class Flash
 
     public function clear(): void
     {
-        unset($_SESSION['flash']);
+        unset($_SESSION[$this->key]);
     }
 
     public function getMessage(): ?string
@@ -65,7 +72,7 @@ class Flash
 
     protected function set(string $message, string $type): void
     {
-        $_SESSION['flash'] = ['message' => $message, 'type' => $type];
+        $_SESSION[$this->key] = ['message' => $message, 'type' => $type];
     }
     protected function get(): ?array
     {
@@ -73,12 +80,12 @@ class Flash
             return null;
         }
 
-        return $_SESSION['flash'];
+        return $_SESSION[$this->key];
     }
 
     protected function exists(): bool
     {
-        $flash = $_SESSION['flash'] ?? null;
+        $flash = $_SESSION[$this->key] ?? null;
 
         if (empty($flash)) {
             return false;

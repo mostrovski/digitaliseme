@@ -4,13 +4,13 @@
 
 <?php if (flash()->getType() === 'error') : ?>
     <p>
-        <a href="<?= config('app.url').'uploads' ?>">
-            <img src="<?= config('app.url').'img/error.png' ?>" alt="Error">
+        <a href="<?= url('uploads') ?>">
+            <img src="<?= url('img/error.png') ?>" alt="Error">
         </a>
     </p>
 <?php else: ?>
     <div class="form">
-        <form action="<?= config('app.url').'documents' ?>" method="POST">
+        <form action="<?= url('documents') ?>" method="POST">
             <div class="form_section">
                 <label for="filename" class="field_header">Filename</label>
                 <input type="text"
@@ -129,7 +129,7 @@
 
             <input type="submit" value="Save new document" name="saveme">
 
-            <?php include app()->root().'/views/partials/token.php'; ?>
+            <?= formToken() ?>
         </form>
 </div>
 <?php endif; ?>

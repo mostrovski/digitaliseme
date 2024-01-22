@@ -2,6 +2,8 @@
 
 namespace Digitaliseme\Core\Http;
 
+use Digitaliseme\Core\Enumerations\Http\Method;
+use Digitaliseme\Core\Enumerations\Key;
 use Digitaliseme\Core\Session\CSRF;
 
 class Request
@@ -33,7 +35,7 @@ class Request
 
     public function hasValidToken(): bool
     {
-        $token = $this->get('_s_token', default: '');
+        $token = $this->get(Key::CsrfToken->value, default: '');
 
         return ! empty($token) && (CSRF::handler()->token() === $token);
     }
@@ -101,11 +103,11 @@ class Request
     {
         $this->method = $_SERVER['REQUEST_METHOD'];
 
-        if ($this->method !== 'POST') {
+        if ($this->method !== Method::POST->value) {
             return;
         }
 
-        $altMethod = strtoupper ((string) $this->get('_r_method'));
+        $altMethod = strtoupper ((string) $this->get(Key::AltMethod->value));
 
         if (in_array($altMethod, Method::postAlternatives(), true)) {
             $this->method = $altMethod;

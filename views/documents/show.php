@@ -4,8 +4,8 @@
 
 <?php if (flash()->getType() === 'error') : ?>
     <p>
-        <a href="<?= config('app.url').'documents' ?>">
-            <img src="<?= config('app.url').'img/error.png' ?>" alt="error">
+        <a href="<?= url('documents') ?>">
+            <img src="<?= url('img/error.png') ?>" alt="error">
         </a>
     </p>
 <?php else: ?>
@@ -57,7 +57,7 @@
             </div>
         </form>
         <?php if ($document->user_id === auth()->id()) : ?>
-            <a href="<?= config('app.url').'documents/'.$document->id.'/edit' ?>">
+            <a href="<?= url('documents/'.$document->id.'/edit') ?>">
                 <button>Edit</button>
             </a>
         <?php endif; ?>

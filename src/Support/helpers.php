@@ -1,6 +1,7 @@
 <?php
 
 use Digitaliseme\Core\Application;
+use Digitaliseme\Core\Enumerations\Key;
 use Digitaliseme\Core\Http\Request;
 use Digitaliseme\Core\Http\Responses\Redirect;
 use Digitaliseme\Core\Logging\Logger;
@@ -40,6 +41,21 @@ function config(string $key, $default = null): mixed
     }
 
     return $default;
+}
+
+function url(?string $relative = null): string
+{
+    $root = trim(config('app.url'), '/');
+
+    if (empty($relative)) {
+        return $root;
+    }
+
+    if (str_starts_with($relative, $root)) {
+        return $relative;
+    }
+
+    return $root.'/'.ltrim($relative, '/');
 }
 
 function storage_path(?string $relativePath = null, bool $public = false): string
@@ -122,11 +138,9 @@ function randomString(string $prefix = ''): string
     return str_replace('.', '', uniqid($prefix, true));
 }
 
-function redirectResponse(string $url, array $data = []): Redirect
+function redirectResponse(string $target, array $data = []): Redirect
 {
-    if (! str_starts_with($url, config('app.url'))) {
-        $url = config('app.url').ltrim($url, '/');
-    }
+    $url = url($target);
 
     return (new Redirect($url))->with($data);
 }
@@ -134,6 +148,30 @@ function redirectResponse(string $url, array $data = []): Redirect
 function request(): Request
 {
     return Request::resolve();
+}
+
+function formToken(): string
+{
+    $name = Key::CsrfToken->value;
+    $token = csrf()->token();
+
+    return <<<HTML
+        <input type="hidden" name="$name" value="$token">
+    HTML;
+}
+
+function formAltMethod(string $method): string
+{
+    $name = Key::AltMethod->value;
+
+    $requestMethod = match (strtoupper($method)) {
+        'PUT', 'PATCH', 'DELETE' => $method,
+        default => 'POST',
+    };
+
+    return <<<HTML
+        <input type="hidden" name="$name" value="$requestMethod">
+    HTML;
 }
 
 function dump(...$values): void

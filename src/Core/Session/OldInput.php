@@ -2,12 +2,18 @@
 
 namespace Digitaliseme\Core\Session;
 
+use Digitaliseme\Core\Enumerations\Key;
 use Digitaliseme\Core\Http\Request;
 
 class OldInput
 {
     private static ?self $instance = null;
-    final private function __construct() {}
+    private string $key;
+
+    final private function __construct()
+    {
+        $this->key = Key::OldInput->value;
+    }
 
     public static function handler(): self
     {
@@ -24,7 +30,7 @@ class OldInput
             return;
         }
 
-        $_SESSION['old'] = Request::resolve()->data();
+        $_SESSION[$this->key] = Request::resolve()->data();
     }
 
     public function get(string $key): mixed
@@ -33,17 +39,17 @@ class OldInput
             return null;
         }
 
-        return $_SESSION['old'][$key] ?? null;
+        return $_SESSION[$this->key][$key] ?? null;
     }
 
     public function clear(): void
     {
-        unset($_SESSION['old']);
+        unset($_SESSION[$this->key]);
     }
 
     protected function exists(): bool
     {
-        $old = $_SESSION['old'] ?? null;
+        $old = $_SESSION[$this->key] ?? null;
 
         if (empty($old)) {
             return false;

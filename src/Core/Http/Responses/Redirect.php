@@ -8,11 +8,11 @@ use Digitaliseme\Core\Session\RedirectData;
 class Redirect extends Response
 {
     protected int $statusCode = 302;
+
     public function __construct(
         protected string $redirectTo,
         protected array $data = [],
     ) {}
-
 
     public function send(): void
     {

@@ -3,7 +3,7 @@
 namespace Digitaliseme\Core\Routing;
 
 use Digitaliseme\Core\Contracts\Middleware;
-use Digitaliseme\Core\Http\Method;
+use Digitaliseme\Core\Enumerations\Http\Method;
 
 class Route
 {

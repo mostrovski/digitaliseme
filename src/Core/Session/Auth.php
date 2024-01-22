@@ -3,12 +3,17 @@
 namespace Digitaliseme\Core\Session;
 
 use Digitaliseme\Core\Contracts\Authenticatable;
+use Digitaliseme\Core\Enumerations\Key;
 
 class Auth
 {
     private static ?self $instance = null;
+    private string $key;
 
-    final private function __construct() {}
+    final private function __construct()
+    {
+        $this->key = Key::Authenticated->value;
+    }
 
     public static function handler(): self
     {
@@ -24,13 +29,13 @@ class Auth
         if ($this->isIntact()) {
             return;
         }
-        $_SESSION['authenticated'] = $user;
+        $_SESSION[$this->key] = $user;
         CSRF::handler()->generateToken(force: true);
     }
 
     public function user(): ?Authenticatable
     {
-        return $_SESSION['authenticated'] ?? null;
+        return $_SESSION[$this->key] ?? null;
     }
 
     public function id(): int|string|null
@@ -50,7 +55,7 @@ class Auth
 
     public function clear(): void
     {
-        unset($_SESSION['authenticated']);
+        unset($_SESSION[$this->key]);
         CSRF::handler()->clear();
     }
 }

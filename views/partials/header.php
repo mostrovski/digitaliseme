@@ -1,6 +1,6 @@
 <header>
     <div id="logo">
-        <img src="<?= config('app.url').'img/logo.png' ?>" alt="Logo">
+        <img src="<?= url('img/logo.png') ?>" alt="Logo">
     </div>
     <div id="site_title">
         <h1><?= config('app.info.name') ?></h1>

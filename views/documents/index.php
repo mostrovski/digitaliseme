@@ -4,8 +4,8 @@
 
 <?php if (flash()->getType() === 'error') : ?>
     <p>
-        <a href="<?= config('app.url').'documents' ?>">
-            <img src="<?= config('app.url').'img/error.png' ?>" alt="Error">
+        <a href="<?= url('documents') ?>">
+            <img src="<?= url('img/error.png') ?>" alt="Error">
         </a>
     </p>
 <?php else: ?>
@@ -31,14 +31,14 @@
                         <td><?= $document->updated_at ?></td>
                         <td>
                             <a class="green_button"
-                               href="<?= config('app.url').'documents/'.$document->id ?>"
+                               href="<?= url('documents/'.$document->id) ?>"
                             >
                                 details
                             </a>
                         </td>
                         <td>
                             <a class="gray_button"
-                               href="<?= config('app.url').'documents/'.$document->id.'/download' ?>"
+                               href="<?= url('documents/'.$document->id.'/download') ?>"
                             >
                                 download
                             </a>
@@ -50,8 +50,8 @@
         </div>
     <?php else: ?>
         <p>
-            <a href="<?= config('app.url').'uploads/create' ?>">
-                <img src="<?= config('app.url').'img/empty.png' ?>" alt="Empty">
+            <a href="<?= url('uploads/create') ?>">
+                <img src="<?= url('img/empty.png') ?>" alt="Empty">
             </a>
         </p>
     <?php endif; ?>

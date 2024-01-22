@@ -1,6 +1,6 @@
 <?php
 
-namespace Digitaliseme\Core\Database;
+namespace Digitaliseme\Core\Enumerations\Database;
 
 enum Action: string
 {

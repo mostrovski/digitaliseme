@@ -2,7 +2,7 @@
 <span class="form_header">&nbsp;&#9784; Sign up </span>
 <?php include_once app()->root().'/views/partials/flash-message.php'; ?>
 <div class="form">
-    <form action="<?= config('app.url').'signup' ?>" method="POST">
+    <form action="<?= url('signup') ?>" method="POST">
         <div class="form_section">
             <label for="first_name" class="field_header">First Name </label>
             <input type="text"
@@ -70,9 +70,9 @@
 
         <input type="submit" value="Sign up" name="signme">
 
-        <?php include app()->root().'/views/partials/token.php'; ?>
+        <?= formToken() ?>
     </form>
 </div>
 <div class="info">
-    * Already a user? Log in <a href="<?= config('app.url').'login' ?>">here</a>.
+    * Already a user? Log in <a href="<?= url('login') ?>">here</a>.
 </div>

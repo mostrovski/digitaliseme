@@ -2,8 +2,8 @@
 
 namespace Digitaliseme\Core\Contracts;
 
-use Digitaliseme\Core\Database\Action;
-use Digitaliseme\Core\Database\WhereGlue;
+use Digitaliseme\Core\Enumerations\Database\Action;
+use Digitaliseme\Core\Enumerations\Database\WhereGlue;
 use Digitaliseme\Core\Exceptions\DatabaseException;
 
 interface SqlBuilder

@@ -6,14 +6,14 @@ use Digitaliseme\Core\Contracts\Middleware;
 use Digitaliseme\Core\Contracts\Response;
 use Digitaliseme\Core\Http\Request;
 
-class Authenticated implements Middleware
+class Guest implements Middleware
 {
     public static function handle(Request $request): Request|Response
     {
-        if (auth()->isMissing()) {
-            flash()->error('You are not logged in');
+        if (auth()->isIntact()) {
+            flash()->error('You are logged in');
 
-            return redirectResponse('login');
+            return redirectResponse('/');
         }
 
         return $request;

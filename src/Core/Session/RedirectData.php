@@ -2,10 +2,17 @@
 
 namespace Digitaliseme\Core\Session;
 
+use Digitaliseme\Core\Enumerations\Key;
+
 class RedirectData
 {
     private static ?self $instance = null;
-    final private function __construct() {}
+    private string $key;
+
+    final private function __construct()
+    {
+        $this->key = Key::RedirectData->value;
+    }
 
     public static function handler(): self
     {
@@ -18,16 +25,16 @@ class RedirectData
 
     public function set(array $data): void
     {
-        $_SESSION['redirect-data'] = $data;
+        $_SESSION[$this->key] = $data;
     }
 
     public function get(): array
     {
-        return $_SESSION['redirect-data'] ?? [];
+        return $_SESSION[$this->key] ?? [];
     }
 
     public function clear(): void
     {
-        unset($_SESSION['redirect-data']);
+        unset($_SESSION[$this->key]);
     }
 }

@@ -5,7 +5,7 @@
     <title>
         <?= config('app.info.name').' | '.($metaTitle ?? '') ?>
     </title>
-    <link rel="stylesheet" href="<?= config('app.url').'css/main.css' ?>">
+    <link rel="stylesheet" href="<?= url('css/main.css') ?>">
 </head>
 <body>
     <?php include_once app()->root().'/views/partials/header.php'; ?>
