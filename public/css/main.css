@@ -130,7 +130,7 @@ header {
 #user_info p {
     font-size: 17px;
     letter-spacing: 2px;
-    padding-right: 20px;
+    padding-right: 14px;
 }
 
 /*
@@ -143,6 +143,9 @@ header {
     margin-bottom: 10px;
 }
 .nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     list-style-type: none;
     margin: 0;
     overflow: hidden;
@@ -306,7 +309,7 @@ label, .error_message {
 
 footer {
     border-top: 1px solid lightgrey;
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 .footer_header {
