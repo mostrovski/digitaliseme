@@ -179,8 +179,9 @@ class Validator
             return false;
         } catch (RecordNotFoundException) {
             return true;
-        } catch (Throwable) {
-            // Log error
+        } catch (Throwable $e) {
+            logger()->error($e->getMessage());
+
             return false;
         }
     }

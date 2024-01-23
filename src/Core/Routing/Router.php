@@ -14,7 +14,8 @@ class Router
     /**
      * @param Route[] $routes
      */
-    public function __construct(array $routes) {
+    public function __construct(array $routes)
+    {
         foreach ($routes as $route) {
             $this->routes[$route->key()] = $route;
         }
@@ -52,9 +53,7 @@ class Router
     {
         return array_filter(
             array_values($this->routes),
-            static fn ($route) => (
-                ($route->segmentCount() === $segmentCount) && ($route->method() === $method)
-            ),
+            static fn ($route) => ($route->segmentCount() === $segmentCount) && ($route->method() === $method),
         );
     }
 

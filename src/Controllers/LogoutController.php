@@ -10,6 +10,7 @@ class LogoutController extends Controller
     {
         auth()->clear();
         flash()->success('You have successfully been logged out');
+
         return $this->redirect('/');
     }
 }

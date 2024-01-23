@@ -36,6 +36,7 @@ class Route
 
     /**
      * @param Route[] $routes
+     *
      * @return Route[]
      */
     public static function groupMiddleware(array $middleware, array $routes): array

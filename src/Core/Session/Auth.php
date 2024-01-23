@@ -38,7 +38,7 @@ class Auth
         return $_SESSION[$this->key] ?? null;
     }
 
-    public function id(): int|string|null
+    public function id(): null|int|string
     {
         return $this->user()?->authIdentifier();
     }

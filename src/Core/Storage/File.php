@@ -31,11 +31,11 @@ final class File
      */
     public static function fromUpload(array $file): self
     {
-        if (! array_key_exists('tmp_name', $file) ||
-            ! array_key_exists('name', $file) ||
-            empty($file['tmp_name']) ||
-            empty($file['name']) ||
-            ! file_exists($file['tmp_name'])
+        if (! array_key_exists('tmp_name', $file)
+            || ! array_key_exists('name', $file)
+            || empty($file['tmp_name'])
+            || empty($file['name'])
+            || ! file_exists($file['tmp_name'])
         ) {
             throw new FileNotFoundException;
         }
@@ -53,6 +53,7 @@ final class File
         if ($this->info === null) {
             $this->info = new SplFileInfo($this->getPath());
         }
+
         return $this->info;
     }
 

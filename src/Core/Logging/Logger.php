@@ -18,17 +18,6 @@ class Logger
     protected string $level = 'debug';
     protected string $message = '';
 
-    public function __call(string $name, array $arguments)
-    {
-        if (! in_array($name, $this->levels, true)) {
-            throw new BadMethodCallException('Method '.$name.' does not exist.');
-        }
-
-        $this->level = $name;
-        $this->message = (string) current($arguments);
-        $this->write();
-    }
-
     protected function write(): void
     {
         $log = '['.date('Y-m-d H:i:s.u').'] ['.strtoupper($this->level).'] '.$this->message.PHP_EOL;
@@ -42,5 +31,16 @@ class Logger
     protected function fileName(): string
     {
         return 'digitaliseme_'.date('Y-m-d').'_'.$this->level.'.log';
+    }
+
+    public function __call(string $name, array $arguments)
+    {
+        if (! in_array($name, $this->levels, true)) {
+            throw new BadMethodCallException('Method '.$name.' does not exist.');
+        }
+
+        $this->level = $name;
+        $this->message = (string) current($arguments);
+        $this->write();
     }
 }

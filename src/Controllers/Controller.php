@@ -12,7 +12,6 @@ use Digitaliseme\Core\View\View;
 
 abstract class Controller
 {
-
     protected function request(): Request
     {
         return request();

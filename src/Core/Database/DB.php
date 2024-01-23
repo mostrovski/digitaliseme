@@ -20,7 +20,8 @@ class DB
     protected ?string $fetchClass = null;
     protected mixed $statement = null;
 
-    final public function __construct(Connection $connection, SqlBuilder $query) {
+    final public function __construct(Connection $connection, SqlBuilder $query)
+    {
         $this->handler = $connection->handler();
         $this->query = $query;
     }
@@ -121,6 +122,7 @@ class DB
     public function firstOrFail(): ?object
     {
         $result = $this->first();
+
         if ($result === null) {
             throw new RecordNotFoundException;
         }

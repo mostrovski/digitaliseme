@@ -21,6 +21,7 @@ class UploadsController extends Controller
                 ->whereNull('document_id')
                 ->where('user_id', '=', auth()->id())
                 ->get();
+
             if (count($uploads) === 0) {
                 flash()->info('There is nothing to work on, upload new file <a href="https://digitaliseme.ddev.site/uploads/create">here</a>');
             }
@@ -29,6 +30,7 @@ class UploadsController extends Controller
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
+
             return $this->view('uploads/index');
         }
     }
@@ -45,9 +47,11 @@ class UploadsController extends Controller
             $this->verify($file);
         } catch (FileNotFoundException) {
             flash()->error('File was not chosen');
+
             return $this->redirect('uploads/create');
         } catch (UploadedFileException $e) {
             flash()->error($e->getMessage());
+
             return $this->redirect('uploads/create');
         }
 
@@ -62,19 +66,22 @@ class UploadsController extends Controller
                     'user_id' => auth()->id(),
                 ]);
                 flash()->success('File was successfully uploaded');
+
                 return $this->redirect('uploads');
             } catch (Throwable $e) {
                 logger()->error($e->getMessage());
                 flash()->error(config('app.messages.error.GENERAL_ERROR'));
+
                 return $this->redirect('uploads/create');
             }
         }
 
         flash()->error('Failed to save uploaded file.');
+
         return $this->redirect('uploads/create');
     }
 
-    public function destroy($id): Redirect
+    public function destroy(int|string $id): Redirect
     {
         try {
             /** @var FileModel $file */
@@ -92,15 +99,18 @@ class UploadsController extends Controller
             }
 
             flash()->success('File was successfully deleted');
+
             return $this->redirect('uploads');
         } catch (RecordNotFoundException) {
             return $this->redirect('404');
         } catch (FileException $e) {
             flash()->error($e->getMessage());
+
             return $this->redirect('uploads');
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
+
             return $this->redirect('uploads');
         }
     }

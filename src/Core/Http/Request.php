@@ -84,6 +84,7 @@ class Request
     {
         $this->query = $_SERVER['QUERY_STRING'];
     }
+
     private function setUri(): void
     {
         $this->uri = str_replace('?'.$this->query(), '', $_SERVER['REQUEST_URI']);
@@ -107,7 +108,7 @@ class Request
             return;
         }
 
-        $altMethod = strtoupper ((string) $this->get(Key::AltMethod->value));
+        $altMethod = strtoupper((string) $this->get(Key::AltMethod->value));
 
         if (in_array($altMethod, Method::postAlternatives(), true)) {
             $this->method = $altMethod;

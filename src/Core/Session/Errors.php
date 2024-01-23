@@ -31,7 +31,7 @@ class Errors
         $_SESSION[$this->key] = $errors;
     }
 
-    public function get(?string $key = null, bool $allPerKey = false): array|string|null
+    public function get(?string $key = null, bool $allPerKey = false): null|array|string
     {
         $errors = $_SESSION[$this->key] ?? null;
 

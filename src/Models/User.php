@@ -35,15 +35,16 @@ class User extends Model implements Authenticatable
         return $this->id;
     }
 
+    protected function convert(string $password): string
+    {
+        return password_hash($password, PASSWORD_DEFAULT);
+    }
+
     public function __serialize(): array
     {
         return [
             'id' => $this->id,
             'first_name' => $this->first_name,
         ];
-    }
-
-    protected function convert(string $password): string {
-        return password_hash($password, PASSWORD_DEFAULT);
     }
 }

@@ -74,6 +74,7 @@ class Flash
     {
         $_SESSION[$this->key] = ['message' => $message, 'type' => $type];
     }
+
     protected function get(): ?array
     {
         if (! $this->exists()) {

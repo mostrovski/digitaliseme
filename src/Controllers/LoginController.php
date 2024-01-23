@@ -40,6 +40,7 @@ class LoginController extends Controller
                 ->where('username', '=', $params['username'])
                 ->first();
             $password = (string) $user?->password;
+
             if (password_verify($params['password'], $password)) {
                 $validCredentials = true;
             }
@@ -49,12 +50,14 @@ class LoginController extends Controller
 
         if (! $validCredentials) {
             flash()->error('Username or password is wrong');
+
             return $this->redirect('login');
         }
 
         /** @var User $user */
         auth()->persist($user);
         flash()->success('You have successfully been logged in');
+
         return $this->redirect('/');
     }
 }

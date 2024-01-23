@@ -25,13 +25,16 @@ class DocumentsController extends Controller
     {
         try {
             $documents = Document::go()->query()->get();
+
             if (count($documents) === 0) {
                 flash()->info('The archive is empty, upload new file <a href="https://digitaliseme.ddev.site/uploads/create">here</a>');
             }
+
             return $this->view('documents/index', ['documents' => $documents]);
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
+
             return $this->view('documents/index');
         }
     }
@@ -52,6 +55,7 @@ class DocumentsController extends Controller
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
+
             return $this->view('documents/create');
         }
 
@@ -67,10 +71,11 @@ class DocumentsController extends Controller
     {
         $fileId = $_SESSION['upfile'] ?? null;
 
-        if (empty($fileId) ||
-            $fileId !== (int) $this->request()->get('fileId')
+        if (empty($fileId)
+            || $fileId !== (int) $this->request()->get('fileId')
         ) {
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
+
             return $this->redirect('uploads');
         }
 
@@ -137,14 +142,16 @@ class DocumentsController extends Controller
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
+
             return $this->redirect('documents/create?fileId='.$fileId);
         }
 
         flash()->success('Document was successfully saved');
+
         return $this->redirect('documents');
     }
 
-    public function show($id): Redirect|View
+    public function show(int|string $id): Redirect|View
     {
         try {
             $document = Document::go()->findOrFail($id);
@@ -161,11 +168,12 @@ class DocumentsController extends Controller
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
+
             return $this->view('documents/show');
         }
     }
 
-    public function edit($id): Redirect|View
+    public function edit(int|string $id): Redirect|View
     {
         try {
             /** @var Document $document */
@@ -186,6 +194,7 @@ class DocumentsController extends Controller
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
+
             return $this->view('documents/edit');
         }
     }
@@ -193,7 +202,7 @@ class DocumentsController extends Controller
     /**
      * @throws ValidatorException
      */
-    public function update($id): Redirect
+    public function update(int|string $id): Redirect
     {
         $validator = $this->validate(
             $this->request()->data(),
@@ -257,14 +266,16 @@ class DocumentsController extends Controller
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
+
             return $this->redirect('documents/'.$id.'/edit');
         }
 
         flash()->success('Document updated successfully');
+
         return $this->redirect('documents');
     }
 
-    public function destroy($id): Redirect
+    public function destroy(int|string $id): Redirect
     {
         try {
             /** @var Document $document */
@@ -274,7 +285,7 @@ class DocumentsController extends Controller
                 ->firstOrFail();
 
             try {
-                FileObject::fromExisting((string)$document->file()?->fullPath())
+                FileObject::fromExisting((string) $document->file()?->fullPath())
                     ->delete();
             } catch (FileNotFoundException $e) {
                 logger()->error($e->getMessage());
@@ -286,20 +297,24 @@ class DocumentsController extends Controller
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
+
             return $this->redirect('documents');
         }
 
         flash()->success('Document deleted successfully');
+
         return $this->redirect('documents');
     }
 
-    public function download($id): Redirect|Download
+    public function download(int|string $id): Download|Redirect
     {
         try {
             $file = Document::go()->findOrFail($id)->file();
+
             if (! $file instanceof File) {
                 throw new RecordNotFoundException;
             }
+
             return new Download(
                 FileObject::fromExisting($file->fullPath()),
                 $file->filename
@@ -308,10 +323,12 @@ class DocumentsController extends Controller
             return $this->redirect('404');
         } catch (FileNotFoundException $e) {
             flash()->error($e->getMessage());
+
             return $this->redirect('documents');
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error(config('app.messages.error.GENERAL_ERROR'));
+
             return $this->redirect('documents');
         }
     }

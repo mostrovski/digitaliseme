@@ -7,11 +7,11 @@ use Digitaliseme\Models\Keyword;
 
 final class Keywords
 {
-    protected const WORD_MIN_LENGTH = 3;
+    private const WORD_MIN_LENGTH = 3;
     /**
      * @var array<int,string>
      */
-    protected array $keywords = [];
+    private array $keywords = [];
 
     /**
      * @param array<int,Keyword> $source

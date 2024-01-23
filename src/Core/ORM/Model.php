@@ -65,11 +65,13 @@ abstract class Model
 
     /**
      * @param array<string,mixed> $params
+     *
      * @throws DatabaseException
      */
     public function create(array $params): static
     {
         $params = $this->filteredParams($params, $this->protectedOnCreate);
+
         try {
             $id = $this->db->create($params);
             $newInstance = $this->db->where($this->primaryKey, '=', $id)->first();
@@ -86,11 +88,13 @@ abstract class Model
 
     /**
      * @param array<string,mixed> $params
+     *
      * @throws DatabaseException
      */
     public function update(array $params): void
     {
         $params = $this->filteredParams($params, $this->protectedOnUpdate);
+
         try {
             $this->db
                 ->where($this->primaryKey, '=', $this->{$this->primaryKey})
@@ -102,6 +106,7 @@ abstract class Model
 
     /**
      * @param array<string,mixed> $params
+     *
      * @throws DatabaseException
      */
     public function firstOrCreate(array $params, ?string $uniqueKey = null): static
@@ -109,9 +114,11 @@ abstract class Model
         if (empty($uniqueKey)) {
             /** @var array<int,string> $keys */
             $keys = array_keys($params);
+
             if (count($keys) > 1) {
                 throw new DatabaseException('A unique key is missing.');
             }
+
             $uniqueKey = $keys[0];
         }
 
@@ -129,6 +136,7 @@ abstract class Model
 
     /**
      * @param array<string,mixed> $params
+     *
      * @throws DatabaseException
      */
     public function updateOrCreate(array $params, string $uniqueKey): static
@@ -201,17 +209,6 @@ abstract class Model
         return empty($this->table) ? $this->guessTableName() : $this->table;
     }
 
-    public function __serialize(): array
-    {
-        $serialized = [];
-
-        foreach ($this->attributes as $attribute) {
-            $serialized[$attribute] = $this->$attribute;
-        }
-
-        return $serialized;
-    }
-
     protected function registerSetters(): void
     {
         $attributes = $this->getAttributeProperties();
@@ -222,11 +219,13 @@ abstract class Model
 
         foreach ($attributes as $property) {
             $reflectionAttribute = current($property->getAttributes(Setter::class));
+
             if (! $reflectionAttribute instanceof ReflectionAttribute) {
                 continue;
             }
             /** @var Setter $setter */
             $setter = $reflectionAttribute->newInstance();
+
             if ($this->reflection()->hasMethod($setter->methodName)) {
                 $this->setters[$property->getName()] = $setter->methodName;
             }
@@ -266,7 +265,7 @@ abstract class Model
     {
         $properties = $this->reflection()->getProperties();
 
-        return array_filter($properties, static fn($property) => (
+        return array_filter($properties, static fn ($property) => (
             ! empty($property->getAttributes(ModelAttribute::class))
         ));
     }
@@ -279,6 +278,7 @@ abstract class Model
     protected function filteredParams(array $params, array $protected): array
     {
         $filtered = [];
+
         foreach ($params as $key => $value) {
             if (in_array($key, $protected, true)) {
                 continue;
@@ -290,7 +290,7 @@ abstract class Model
 
             if (array_key_exists($key, $this->setters)) {
                 $method = $this->setters[$key];
-                $filtered[$key] = $this->$method($value);
+                $filtered[$key] = $this->{$method}($value);
                 continue;
             }
 
@@ -306,8 +306,9 @@ abstract class Model
         $tableName = '';
         $length = strlen($modelast_name);
 
-        for ($i = 0; $i < $length; $i++) {
+        for ($i = 0; $i < $length; ++$i) {
             $char = $modelast_name[$i];
+
             if ($i !== 0 && ctype_upper($char)) {
                 $tableName .= '_';
             }
@@ -315,5 +316,16 @@ abstract class Model
         }
 
         return rtrim($tableName, 's').'s';
+    }
+
+    public function __serialize(): array
+    {
+        $serialized = [];
+
+        foreach ($this->attributes as $attribute) {
+            $serialized[$attribute] = $this->{$attribute};
+        }
+
+        return $serialized;
     }
 }

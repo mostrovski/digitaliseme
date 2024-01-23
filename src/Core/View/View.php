@@ -29,7 +29,7 @@ class View
         extract($this->data);
 
         ob_start();
-        include $this->path."$this->view.php";
+        include $this->path."{$this->view}.php";
         $content = ob_get_clean();
 
         ob_start();

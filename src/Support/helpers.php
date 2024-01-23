@@ -88,7 +88,7 @@ function logger(): Logger
     return new Logger;
 }
 
-function errors(?string $key = null, bool $allPerKey = false): Errors|array|string|null
+function errors(?string $key = null, bool $allPerKey = false): null|array|Errors|string
 {
     $errors = Errors::handler();
 
@@ -105,7 +105,7 @@ function flash(): Flash
 }
 
 /**
- * @return OldInput|mixed
+ * @return mixed|OldInput
  */
 function old(?string $key = null): mixed
 {
@@ -156,8 +156,8 @@ function formToken(): string
     $token = csrf()->token();
 
     return <<<HTML
-        <input type="hidden" name="$name" value="$token">
-    HTML;
+            <input type="hidden" name="{$name}" value="{$token}">
+        HTML;
 }
 
 function formAltMethod(string $method): string
@@ -170,16 +170,18 @@ function formAltMethod(string $method): string
     };
 
     return <<<HTML
-        <input type="hidden" name="$name" value="$requestMethod">
-    HTML;
+            <input type="hidden" name="{$name}" value="{$requestMethod}">
+        HTML;
 }
 
 function dump(...$values): void
 {
     echo '<pre>';
+
     foreach ($values as $value) {
         var_dump($value);
     }
+
     echo '</pre>';
     exit;
 }

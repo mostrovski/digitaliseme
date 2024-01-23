@@ -79,10 +79,11 @@ class SearchController extends Controller
                 ->select('id')
                 ->where('name', 'LIKE', "%{$params['issuer_name']}%")
                 ->get();
+
             if (empty($issuers)) {
                 return [];
             }
-            $issuerIds = array_map(static fn(Issuer $issuer) => $issuer->id, $issuers);
+            $issuerIds = array_map(static fn (Issuer $issuer) => $issuer->id, $issuers);
 
             $query->whereIn('issuer_id', $issuerIds);
         }
@@ -92,10 +93,11 @@ class SearchController extends Controller
                 ->select('id')
                 ->where('place', 'LIKE', "%{$params['storage']}%")
                 ->get();
+
             if (empty($places)) {
                 return [];
             }
-            $placeIds = array_map(static fn(StoragePlace $place) => $place->id, $places);
+            $placeIds = array_map(static fn (StoragePlace $place) => $place->id, $places);
 
             $query->whereIn('storage_id', $placeIds);
         }
@@ -108,19 +110,22 @@ class SearchController extends Controller
                     ->select('id')
                     ->whereIn('word', $keywords)
                     ->get();
+
                 if (empty($records)) {
                     return [];
                 }
-                $keywordIds = array_map(static fn(Keyword $keyword) => $keyword->id, $records);
+
+                $keywordIds = array_map(static fn (Keyword $keyword) => $keyword->id, $records);
                 $documentIds = DB::wire(MySQL::connect(), new Query)->table('document_keywords')
                     ->select('document_id')
                     ->whereIn('keyword_id', $keywordIds)
                     ->get();
+
                 if (empty($documentIds)) {
                     return [];
                 }
 
-                $query->whereIn('id', array_map(static fn($record) => $record->document_id, $documentIds));
+                $query->whereIn('id', array_map(static fn ($record) => $record->document_id, $documentIds));
             }
         }
 

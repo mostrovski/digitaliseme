@@ -48,6 +48,7 @@ class Http
             }
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
+
             return $this->setResponse(redirectResponse('500'));
         }
 

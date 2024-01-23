@@ -33,10 +33,12 @@ class SignupController extends Controller
         try {
             User::go()->create($validator->getValidated());
             flash()->success('Kudos, you can now log in with your username and password');
+
             return $this->redirect('login');
         } catch (Throwable $e) {
             logger()->error($e->getMessage());
             flash()->error('Something went wrong... Try again!');
+
             return $this->redirect('signup');
         }
     }
