@@ -1,25 +1,18 @@
 # Digitalise Me :: cozy document archive
-*the MVC application*
 
-- [The task](#the-task)
-- [Implementation](#implementation)
-    - [The structure](#the-structure-of-the-application)
-    - [What's in code](#whats-in-code)
-- [Dependencies](#dependencies-built-with)
-- [How to run it](#how-to-run-it)
-- [Acknowledgments](#acknowledgments)
+## A demo PHP project showcasing building the MVC application from scratch.
 
-## The task
+### Minimum requirements
 
 A client deals with lots of physical documents. The application should store
 digital copies of that documents as well as the following information for
 each document:
 
 - title;
-- date of creation;
-- name, email, and phone number of the document agent (creator);
+- date of issue;
+- name, email, and phone number of the document issuer;
 - type (category) of the document;
-- information on where the physical version is stored;
+- information on where the original (physical) version is stored;
 - keywords.
 
 The application should provide the possibility to *create, read, update,
@@ -33,117 +26,69 @@ access the application using their usernames and passwords.
 and search for document records. They should be *authorized* to update and
 delete only the records they created.
 
-## Implementation
+### Approach
 
-The application attempts to follow the **Model-View-Controller** pattern.
-A flow from the request to the view looks as follows:
+The original implementation of this project dates back to 2018 - it happened to be my very first PHP project.
+Since then, my skills and preferences naturally evolved, so I decided to make a rebuild, changing a lot but preserving the original spirit:
 
-> Requested url -> Controller -> [Model -> Controller] -> View
+- the project should be designed as the Model-view-controller (MVC) application;
+- the productive part of the application should have zero dependencies on any third-party libraries or frameworks;
+- for the backend architecture is the main focus, styles are irrelevant.
 
-### The structure of the application:
+Here are some of the changes that come with the rebuild:
 
-- **app**
-    - public
-        - *css*
-            - `main.css`
-        - *img*
-            - `404.png`
-            - `empty.phg`
-            - `error.png`
-            - `logo.png`
-    - archive (storage for documents arranged by type)
-        - *bill*
-        - *contract*
-        - *information*
-        - *invoice*
-        - *notice*
-        - *proposal*
-        - *reminder*
-        - *report*
-        - *request*
-        - *others*
-    - uploads
-    - downloads
-- **config**
-    - `autoload.php`
-    - `config.php`
-    - db (can be deleted after [setup](#how-to-run-it))
-        - `digitaliseme.sql`
-        - `digitaliseme_schema.png`
-- **core**
-    - `Database.php`
-    - `Page.php`
-    - `Helper.php`
-    - `Validator.php`
-- **controllers**
-    - `Controller.php` (abstract)
-    - `DefaultController.php`
-    - `DocumentsController.php`
-    - `LoginController.php`
-    - `LogoutController.php`
-    - `SignupController.php`
-    - `SearchController.php`
-    - `UploadsController.php`
-- **models**
-    - `User.php`
-    - `File.php` (abstract)
-    - `RawFile.php`
-    - `UploadedFile.php`
-    - `DocumentFile.php`
-    - `Document.php` (abstract)
-    - `RawDocument.php`
-    - `ArchiveDocument.php`
-    - `SearchDocument.php`
-    - `DocumentAgent.php`
-    - `DocumentType.php`
-    - `DocumentStorage.php`
-    - `DocumentKeyword.php`
-- **views**
-    - partials
-        - `header.php`
-        - `navigation.php`
-        - `footer.php`
-    - templates
-        - *uploads*
-            - `index.php`
-            - `create.php`
-        - *documents*
-            - `index.php`
-            - `show.php`
-            - `create.php`
-            - `edit.php`
-        - *search*
-            - `index.php`
-        - `login.php`
-        - `signup.php`
-        - `404.php`
-- `.htaccess`
-- `index.php`
+- project structure;
+- approach to the configuration;
+- application bootstrap;
+- request cycle;
+- database abstraction;
+- routing;
+- messaging between the models and controllers;
+- view rendering.
 
-### What's in code:
+For "then and now" kind of thing, the old code is still available in the [xampp](https://github.com/mostrovski/digitaliseme/tree/xampp) branch.
 
-- namespaces;
-- autoloading classes;
-- abstract classes;
-- static methods;
-- null coalescing operators;
-- sessions;
-- basic CSRF protection;
-- regular expressions.
+### How to run it
 
-## Dependencies (built with)
+1. Make sure you have [DDEV](https://ddev.readthedocs.io/en/latest/users/install/ddev-installation/) installed.
+2. Clone, or download and extract the repository.
+3. Change to the root of the project.
+4. Run the following commands:
+   ```bash
+   ddev start
+   ddev import-db --file=_db/dump.sql
+   ddev storage-link
+   ```
+5. Head over to the https://digitaliseme.ddev.site in your browser.
 
-- [PHP 7](https://www.php.net/)
-- [MySQL](https://www.mysql.com/)
-- [HTML](https://www.w3.org/html/)
-- [CSS](https://www.w3.org/Style/CSS/)
+### Useful commands
 
-## How to run it
-*(Homestead)*
+```bash
+# Start containers (will also trigger the composer install)
+ddev start
 
- @TODO
+# If you make changes to the .ddev/config.yaml
+ddev restart
 
-## Acknowledgments
+# Import the database from the dump file
+ddev import-db --file=<filename>.sql
 
-- [Brad Traversy](https://github.com/bradtraversy) inspired the Database and Page classes;
+# Open the application in the browser
+ddev launch
+
+# Open the database GUI in the browser
+ddev phpmyadmin
+
+# Symlink the storage directory to the public directory
+ddev storage-link
+
+# Lint the code
+ddev exec './vendor/bin/php-cs-fixer fix'
+
+# Stop containers
+ddev stop
+```
+
+### Kudos
+- [Brad Traversy](https://github.com/bradtraversy) inspired original [Database](https://github.com/mostrovski/digitaliseme/blob/xampp/core/Database.php) and [Page](https://github.com/mostrovski/digitaliseme/blob/xampp/core/Page.php) classes;
 - [Sergii Makagon](https://github.com/smakagon) provided invaluable advice and motivation.
