@@ -13,9 +13,14 @@ class Http
 {
     protected Response $response;
 
-    public function __construct(
+    final private function __construct(
         protected Application $app,
     ) {}
+
+    public static function handler(Application $app): static
+    {
+        return new static($app);
+    }
 
     public function handleRequest(): static
     {

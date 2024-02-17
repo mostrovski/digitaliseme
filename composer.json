@@ -3,6 +3,7 @@
   "description": "Cozy document archive.",
   "keywords": [
     "php",
+    "mysql",
     "MVC"
   ],
   "type": "project",
